@@ -1,0 +1,21 @@
+{{ define "docstring" }}
+  {{- template "introduction" . }}
+  {{- if (or .Properties (nonBaseTypeProperties .AllOf)) }}
+
+    Attributes
+    ----------
+    {{- range nonBaseTypeProperties .AllOf }}
+    {{- template "propertydoc" . }}
+    {{- end }}
+
+    {{- range .Properties }}
+    {{- template "propertydoc" . }}
+    {{- end -}}
+  {{- end }}
+  {{- if .Example }}
+
+    Examples
+    --------
+    demo = {{ toKCLValue .Example }}
+  {{- end -}}
+{{- end }}

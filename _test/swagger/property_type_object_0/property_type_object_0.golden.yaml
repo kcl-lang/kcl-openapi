@@ -1,0 +1,11 @@
+definitions:
+  Socket:
+    type: object
+    properties:
+      protocol:
+        type: object
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: {}

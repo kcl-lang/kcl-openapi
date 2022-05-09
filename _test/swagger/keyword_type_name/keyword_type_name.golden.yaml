@@ -1,0 +1,30 @@
+definitions:
+  main.relaxed:
+    type: object
+    properties:
+      name:
+        type: string
+      check:
+        $ref: "#/definitions/base.import"
+    x-kcl-type:
+      import:
+        package: main.relaxed
+        alias: relaxed
+      type: relaxed
+  base.import:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+    x-kcl-type:
+      import:
+        package: base.import
+        alias: import
+      type: import
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: { }

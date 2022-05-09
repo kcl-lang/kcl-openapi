@@ -1,0 +1,18 @@
+# Mac OS X files
+.DS_Store
+
+# ide
+.idea/
+*.iml
+
+# build
+_build
+
+# models
+models/
+
+# tmp test data
+test_data/tmp*
+
+vendor/
+

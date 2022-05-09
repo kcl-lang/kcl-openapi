@@ -1,0 +1,17 @@
+definitions:
+  Net:
+    type: object
+    properties:
+      socket:
+        type: object
+        additionalProperties:
+          type: integer
+          format: int64
+        default:
+          HTTP: 80
+          HTTPS: 443
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: {}

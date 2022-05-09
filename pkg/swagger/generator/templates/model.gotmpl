@@ -1,0 +1,5 @@
+{{- template "header" . -}}
+{{- template "schema" . }}
+{{- range .ExtraSchemas }}
+{{- template "schema" . }}
+{{- end -}}

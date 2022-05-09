@@ -1,0 +1,12 @@
+definitions:
+  extensibleObject:
+    type: object
+    properties:
+      prop1:
+        type: integer
+    additionalProperties: true
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: {}

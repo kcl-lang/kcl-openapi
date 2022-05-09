@@ -1,0 +1,28 @@
+definitions:
+  CatalogItem:
+    type: object
+    properties:
+      title:
+        type: string
+        default: T
+        x-order: 0
+      id:
+        type: integer
+        default: 0
+        x-order: 1
+      info:
+        type: object
+        additionalProperties: true
+        default:
+          name:
+            value: default
+            x-order: 0
+          description:
+            value: ""
+            x-order: 1
+        x-order: 2
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: {}

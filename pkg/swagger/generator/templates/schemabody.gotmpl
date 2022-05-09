@@ -1,0 +1,43 @@
+{{- define "schemaBody" -}}
+schema {{ shortType .KclType }} {{- if gt (len (baseTypes .AllOf)) 0 }} ({{ range $i, $e := baseTypes .AllOf }}{{if $i }}, {{ end }}{{ $e.KclType }}{{- end }}) {{- end }}:
+    """{{ template "docstring" . }}
+    """
+{{- "\n" -}}
+{{- "\n" -}}
+
+{{- range nonBaseTypes .AllOf }}
+{{- range .Properties }}
+    {{ .EscapedName }}: {{ if .ReadOnly }}{{ if .Default }}{{ toKCLValue .Default }}{{ else }}{{ .KclType }}{{ end }}{{ else }}{{ .KclType }}{{ end }}{{ if .Default }} = {{ toKCLValue .Default }}{{ end }}
+{{- "\n" -}}
+{{- end }}
+{{- "\n" -}}
+{{- "\n" -}}
+{{- end }}
+
+{{- if .Properties }}
+{{- range .Properties }}
+    {{ .EscapedName }}{{ if not .Required }}?{{ end }}: {{ if .Enum }}{{ range $i, $e := .Enum }}{{ if $i }} | {{ end }}{{ toKCLValue $e }}{{ end }}{{ else }}{{ if .ReadOnly }}{{ if .Default }}{{ toKCLValue .Default }}{{ else }}{{ .KclType }}{{ end }}{{ else }}{{ .KclType }}{{ end }}{{- end }}{{ if .Default }} = {{ toKCLValue .Default }}{{ end }}
+{{- "\n" -}}
+{{- end -}}
+{{- if .HasAdditionalProperties }}
+{{- if .AdditionalProperties }}
+    {{ .AdditionalProperties.Name }} {str:{{ if ne .AdditionalProperties.KclType  "object" }}{{ .AdditionalProperties.KclType }}{{ end }}}
+{{- "\n" -}}
+{{- end }}
+{{- end }}
+{{- "\n" -}}
+{{- "\n" -}}
+{{- end -}}
+
+{{- if .HasValidations -}}{{ "    check:" }}
+{{- template "schemavalidator" .Properties }}
+{{- range nonBaseTypes .AllOf }}
+{{- template "schemavalidator" .Properties }}
+{{- end }}
+{{- "\n" -}}
+{{- "\n" -}}
+{{- "\n" -}}
+{{- end }}
+
+
+{{- end -}}

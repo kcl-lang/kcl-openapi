@@ -1,0 +1,29 @@
+definitions:
+  Pet:
+    type: object
+    discriminator: petType
+    properties:
+      name:
+        type: string
+      petType:
+        type: string
+    required:
+      - name
+      - petType
+  Kennel:
+    type: object
+    required:
+      - pets
+    properties:
+      id:
+        type: integer
+        format: int64
+      pets:          # <-- this may contain Cats and Dogs
+        type: array
+        items:
+          $ref: "#/definitions/Pet"
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: {}

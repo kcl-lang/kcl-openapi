@@ -1,0 +1,9 @@
+definitions:
+  extensibleObject:
+    type: object
+    additionalProperties: { }
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: { }

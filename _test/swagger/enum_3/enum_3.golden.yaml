@@ -1,0 +1,20 @@
+definitions:
+  Question:
+    type: object
+    properties:
+      answer:
+        type: object
+        properties:
+          value:
+            type: object
+            enum:
+              - true
+              - false
+              - "yes"
+              - "no"
+              - null
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: { }

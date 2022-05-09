@@ -1,0 +1,14 @@
+definitions:
+  Socket:
+    type: object
+    properties:
+      port:
+        anyOf:
+          - type: integer
+          - type: string
+        x-kubernetes-int-or-string: true
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: { }

@@ -1,0 +1,33 @@
+definitions:
+  CatalogItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 38
+      title:
+        type: string
+        example: T-shirt
+      image:
+        type: object
+        properties:
+          url:
+            type: string
+          width:
+            type: integer
+          height:
+            type: integer
+        required:
+          - url
+        example:   # <-----
+          url: images/38.png
+          width: 100
+          height: 100
+    required:
+      - id
+      - title
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: {}
