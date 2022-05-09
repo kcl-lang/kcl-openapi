@@ -1,0 +1,16 @@
+definitions:
+  Socket:
+    type: object
+    properties:
+      port:
+        type: object
+        enum:
+          - 8443
+          - 443
+          - "8443"
+          - "443"
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: {}

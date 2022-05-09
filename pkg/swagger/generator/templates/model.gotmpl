@@ -1,0 +1,9 @@
+{{- template "header" . -}}
+{{- if .IncludeModel }}
+{{- template "schema" . }}
+{{- end }}
+{{- range .ExtraSchemas }}
+{{- if .IncludeModel }}
+{{- template "schema" . }}
+{{- end -}}
+{{- end -}}

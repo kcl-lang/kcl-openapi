@@ -1,0 +1,3 @@
+go-bindata -debug -pkg=generator -ignore='.*\.sw?' -ignore='.*\.md' ./templates/...
+go generate
+echo regenerated

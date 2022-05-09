@@ -1,0 +1,24 @@
+definitions:
+  Model:
+    type: object
+    properties:
+      type:
+        type: string
+      assert:
+        type: integer
+        format: int64
+        maximum: 100
+      rule:
+        type: string
+      protocol:
+        type: string
+      schema:
+        type: string
+    required:
+    - assert
+    - rule
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: { }

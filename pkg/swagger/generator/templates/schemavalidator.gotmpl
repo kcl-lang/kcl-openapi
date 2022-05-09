@@ -1,0 +1,24 @@
+{{- define "schemavalidator" -}}
+{{- range . -}}
+{{- if or .Required .Maximum .Minimum .MaxLength .MinLength .Pattern .UniqueItems .Enum }}
+    {{- if .Maximum }}
+        {{ if .ExclusiveMaximum }}{{ .EscapedName }} < {{.Maximum}}{{- else }}{{ .EscapedName }} <= {{.Maximum}}{{ end }}
+    {{- end }}
+    {{- if .Minimum }}
+        {{ if .ExclusiveMinimum }}{{ .EscapedName }} > {{.Minimum}}{{- else }}{{ .EscapedName }} >= {{.Minimum}}{{ end }}
+    {{- end }}
+    {{- if .MaxLength }}
+        len({{ .EscapedName }}) <= {{.MaxLength}}
+    {{- end }}
+    {{- if .MinLength }}
+        len({{ .EscapedName }}) >= {{.MinLength}}
+    {{- end }}
+    {{- if .Pattern }}
+        matchPattern({{ .EscapedName }}, {{.Pattern}})
+    {{- end }}
+    {{- if .UniqueItems }}
+        isunique({{ .EscapedName }})
+    {{- end }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,4 @@
+{{ define "propertydoc" }}
+    {{ .EscapedName }} : {{ .KclType }}, default is {{ if .Default }}{{ toKCLValue .Default }}{{ else }}Undefined{{ end }}, {{ if not .Required }}optional{{else}}required{{ end }}
+        {{ template "introduction" . }}
+{{- end }}

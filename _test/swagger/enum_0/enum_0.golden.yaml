@@ -1,0 +1,17 @@
+definitions:
+  Socket:
+    type: object
+    properties:
+      protocol:
+        type: string
+        enum:
+          - TCP
+          - UDP
+      port:
+        type: integer
+        format: int64
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: {}

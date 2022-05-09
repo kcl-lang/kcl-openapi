@@ -1,0 +1,17 @@
+definitions:
+  Pet:
+    type: object
+    properties:
+      name:
+        type: string
+      age:
+        type: integer
+        format: int64
+    example:
+      name: doge
+      age: 12
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: {}
