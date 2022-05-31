@@ -3,7 +3,7 @@ module kusionstack.io/kcl-openapi
 go 1.18
 
 require (
-	github.com/go-openapi/analysis v0.21.3
+	github.com/go-openapi/analysis v0.21.2
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/inflect v0.19.0
 	github.com/go-openapi/loads v0.21.1
@@ -20,6 +20,7 @@ require (
 	k8s.io/client-go v0.24.1
 	k8s.io/kube-openapi v0.0.0-20220413171646-5e7f5fdc6da6
 )
+
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
