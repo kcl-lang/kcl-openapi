@@ -1,0 +1,12 @@
+definitions:
+  tuple:
+    type: array
+    items:
+      - type: integer
+      - type: string
+      - type: string
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: { }

@@ -1,0 +1,12 @@
+definitions:
+  Pet:
+    type: object
+    properties:
+      name:
+        type: string
+        format: int-or-string
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: { }

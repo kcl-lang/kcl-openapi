@@ -9,7 +9,7 @@
 _build
 
 # models
-models/
+/models/
 
 # tmp test data
 test_data/tmp*

@@ -6,9 +6,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
-	"kusionstack.io/kcl-openapi/_test/integration"
+	"kusionstack.io/kcl-openapi/pkg/utils"
 )
 
 func main() {
@@ -17,22 +16,26 @@ func main() {
 		fmt.Println(fmt.Errorf("get current work dir failed: %v", err))
 		os.Exit(1)
 	}
-	integration.InitTestDirs(cwd, true)
-	doRegenerate(integration.OaiTestDirs, false)
-	doRegenerate(integration.KubeTestDirs, true)
+	err = utils.InitTestDirs(cwd, true)
+	if err != nil {
+		fmt.Println(fmt.Errorf("init test dirs failed: %v", err))
+		os.Exit(1)
+	}
+	doRegenerate(utils.OaiTestDirs, false)
+	doRegenerate(utils.KubeTestDirs, true)
 }
 
 func doRegenerate(testDirs []string, crd bool) {
 	for _, dir := range testDirs {
-		testCases, err := integration.FindCases(dir)
+		testCases, err := utils.FindCases(dir)
 		if err != nil {
-			fmt.Println(err.Error())
+			fmt.Println(fmt.Errorf("find test cases failed: %v", err))
 			os.Exit(1)
 		}
 		for _, tCase := range testCases {
-			_, stderr, err := integration.RunConvertModel(tCase.SpecPath, filepath.Dir(tCase.GenPath), crd)
+			err := utils.BinaryConvertModel(utils.BinaryPath, tCase.SpecPath, tCase.GenPath, crd)
 			if err != nil {
-				fmt.Printf("[ERROR] convert failed, stderr: %s, err: %v\n", stderr, err)
+				fmt.Printf("[ERROR] convert failed: %v\n", err)
 			}
 		}
 	}
