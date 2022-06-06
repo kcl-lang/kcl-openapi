@@ -49,7 +49,7 @@ func InitTestDirs(projectRoot string, buildBinary bool) error {
 	// build binary
 	if buildBinary {
 		buildArgs := []string{
-			"build", "-mod=vendor", "-o", BinaryPath, filepath.Join(ProjectRoot),
+			"build", "-o", BinaryPath, filepath.Join(ProjectRoot),
 		}
 		cmd := exec.Command("go", buildArgs...)
 		cmd.Env = os.Environ()

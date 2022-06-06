@@ -21,7 +21,6 @@ require (
 	k8s.io/kube-openapi v0.0.0-20220413171646-5e7f5fdc6da6
 )
 
-
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
