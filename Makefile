@@ -12,22 +12,22 @@ build-local:
 build-darwin:
 	rm -rf ${PROJECT_ROOT}/_build/bin/darwin
 	mkdir -p ${PROJECT_ROOT}/_build/bin/darwin
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -mod=vendor -o ${PROJECT_ROOT}/_build/bin/darwin/kcl-openapi ${PROJECT_ROOT}
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ${PROJECT_ROOT}/_build/bin/darwin/kcl-openapi ${PROJECT_ROOT}
 
 build-darwin-arm64:
 	rm -rf ${PROJECT_ROOT}/_build/bin/darwin-arm64
 	mkdir -p ${PROJECT_ROOT}/_build/bin/darwin-arm64
-	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -mod=vendor -o ${PROJECT_ROOT}/_build/bin/darwin-arm64/kcl-openapi ${PROJECT_ROOT}
+	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o ${PROJECT_ROOT}/_build/bin/darwin-arm64/kcl-openapi ${PROJECT_ROOT}
 
 build-linux:
 	rm -rf ${PROJECT_ROOT}/_build/bin/linux
 	mkdir -p ${PROJECT_ROOT}/_build/bin/linux
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=vendor -o ${PROJECT_ROOT}/_build/bin/linux/kcl-openapi ${PROJECT_ROOT}
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${PROJECT_ROOT}/_build/bin/linux/kcl-openapi ${PROJECT_ROOT}
 
 build-windows:
 	rm -rf ${PROJECT_ROOT}/_build/bin/windows
 	mkdir -p ${PROJECT_ROOT}/_build/bin/windows
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -mod=vendor -o ${PROJECT_ROOT}/_build/bin/windows/kcl-openapi ${PROJECT_ROOT}
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${PROJECT_ROOT}/_build/bin/windows/kcl-openapi.exe ${PROJECT_ROOT}
 
 test:
 	cd ${PROJECT_ROOT}/pkg

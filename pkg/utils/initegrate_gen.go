@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -45,7 +46,9 @@ func InitTestDirs(projectRoot string, buildBinary bool) error {
 	OaiTestDataRoot = filepath.Join(ProjectRoot, "pkg", swagger, "generator", "testdata", "integration")
 	CrdTestDataRoot = filepath.Join(ProjectRoot, "pkg", kubeResource, "generator", "testdata")
 	BinaryPath = filepath.Join(ProjectRoot, "_build", "bin", "kcl-openapi")
-
+	if runtime.GOOS == "windows" {
+		BinaryPath += ".exe"
+	}
 	// build binary
 	if buildBinary {
 		buildArgs := []string{
