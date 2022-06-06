@@ -8,15 +8,24 @@ basic OpenAPI logic in go-swagger.
 Main use cases:
 
 + Swagger Openapi
-  + Translate Swagger OpenAPI spec to KCL code
+    + Translate Swagger OpenAPI spec to KCL code
 + Kubernetes CRD
-  + Translate Kubernetes CRD to KCL code
+    + Translate Kubernetes CRD to KCL code
 
 ## Quick Start
 
-The kcl openapi tool is packaged with kusion distribution, and we highly recommend you
-to [install the Kusion tools package](https://kusionstack.io/docs/user_docs/getting-started/install) which contains the KCL language support
-and other tools.
+### Install
+
++ Since kcl openapi tool is packaged with kusion distribution, and we highly recommend you
+  to [install the Kusion tools package](https://kusionstack.io/docs/user_docs/getting-started/install) which contains the KCL language
+  support
+  and other tools.
+
++ Or we can only install the tool with go install:
+
+  ```shell
+  go install kusionstack.io/kcl-openapi
+  ```
 
 ## Features
 
@@ -30,7 +39,7 @@ tool will extract the defined models from it and generate the corresponding KCL 
 The command is as follows:
 
 ```shell
-kclopenapi generate model -f ${your_open_api_spec} -t ${the_kcl_files_output_dir}
+kcl-openapi generate model -f ${your_open_api_spec} -t ${the_kcl_files_output_dir}
 ```
 
 ### Translate Kubernetes CRD to KCL
@@ -43,7 +52,7 @@ OpenAPI tool will extract the structural schema and generate the corresponding K
 The command is as follows:
 
 ```shell
-kclopenapi generate model --crd -f ${your_CRD.yaml} -t ${the_kcl_files_output_dir} --skip-validation
+kcl-openapi generate model --crd -f ${your_CRD.yaml} -t ${the_kcl_files_output_dir} --skip-validation
 ```
 
 ## KCL OpenAPI Spec
