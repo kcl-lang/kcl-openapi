@@ -21,7 +21,7 @@ func TestAddXOrderToOAIDoc(t *testing.T) {
 	}
 	var cases []testCase
 
-	casesPath := filepath.Join("testdata", "x-order")
+	casesPath := filepath.Join("testdata", "unit", "x-order")
 	caseFiles, err := os.ReadDir(casesPath)
 	if err != nil {
 		t.Fatal(err)

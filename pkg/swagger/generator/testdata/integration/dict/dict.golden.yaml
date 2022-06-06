@@ -1,0 +1,15 @@
+definitions:
+  Pet:
+    type: object
+    properties:
+      name:
+        type: string
+      labels:
+        type: object
+        additionalProperties:
+          type: integer
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: { }

@@ -1,0 +1,37 @@
+definitions:
+  Animal:
+    type: object
+    discriminator: petType
+    properties:
+      name:
+        type: string
+    required:
+      - name
+  Pet:
+    type: object
+    discriminator: petType
+    properties:
+      petType:
+        type: string
+    required:
+      - petType
+  Dog:
+    type: object
+    description: A representation of a dog
+    allOf:
+      - $ref: '#/definitions/Animal'
+      - $ref: '#/definitions/Pet'
+      - properties:
+          packSize:
+            type: integer
+            format: int32
+            description: the size of the pack the dog is from
+            default: 0
+            minimum: 0
+        required:
+          - packSize
+swagger: "2.0"
+info:
+  title: Kusion
+  version: v0.0.2
+paths: { }
