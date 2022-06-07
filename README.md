@@ -1,5 +1,9 @@
 # KCL OpenAPI
 
+[![GoDoc](https://godoc.org/github.com/KusionStack/kcl-openapi?status.svg)](https://pkg.go.dev/kusionstack.io/kcl-openapi)
+[![license](https://img.shields.io/github/license/KusionStack/kcl-openapi.svg)](https://github.com/KusionStack/kcl-openapi/blob/master/LICENSE)
+[![Coverage Status](https://coveralls.io/repos/github/KusionStack/kcl-openapi/badge.svg)](https://coveralls.io/github/KusionStack/kcl-openapi)
+
 The work on this project is mainly based on [go-swagger](https://github.com/go-swagger/go-swagger), and this project just adds some
 KCL-specific templates and language features on it. We are grateful and sincerely respectful for the outstanding work
 in [go-swagger](https://github.com/go-swagger/go-swagger). Meanwhile, we are working on making the customized features separated from the
