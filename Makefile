@@ -1,6 +1,8 @@
 # note: call scripts from /scripts
 PROJECT_ROOT:=$(shell pwd)
 GO_FILES:=$$(find ./ -type f -name '*.go' -not -path ".//vendor/*")
+COVER_FILE			?= coverage.out
+SOURCE_PATHS		?= ./pkg/...
 
 build-local-all: build-darwin build-darwin-arm64 build-linux build-windows
 
@@ -30,8 +32,10 @@ build-windows:
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${PROJECT_ROOT}/_build/bin/windows/kcl-openapi.exe ${PROJECT_ROOT}
 
 test:
-	cd ${PROJECT_ROOT}/pkg
-	go test ./...
+	go test ${SOURCE_PATHS}
+
+cover:  ## Generates coverage report
+	go test -gcflags=all=-l -timeout=10m `go list $(SOURCE_PATHS)` -coverprofile $(COVER_FILE) ${TEST_FLAGS}
 
 vet-fmt:
 	go vet ./...
