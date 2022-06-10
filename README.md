@@ -24,7 +24,7 @@ Main use cases:
 + Or we can only install the tool with go install:
 
   ```shell
-  go install kusionstack.io/kcl-openapi
+  go install kusionstack.io/kcl-openapi@latest
   ```
 
 ## Features
