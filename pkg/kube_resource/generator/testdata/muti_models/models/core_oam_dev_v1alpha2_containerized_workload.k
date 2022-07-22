@@ -430,14 +430,14 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesExten
     ----------
     name : str, default is Undefined, required
          Name of the external resource. Resource names are specified in kind.group/version format, e.g. motionsensor.ext.example.com/v1.
-    required : int, default is Undefined, required
+    required : int | str, default is Undefined, required
          Required extended resource(s), e.g. 8 or "very-cool-widget"
     """
 
 
     name: str
 
-    required: int
+    required: int | str
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesGpu:
