@@ -167,13 +167,8 @@ func setKubeNative(schema *spec.Schema, group string, version string, kind strin
 	kindSchema.Typed("string", "")
 	kindSchema.WithDefault(kind)
 	kindSchema.WithDescription(swaggerTypeMetadataDescriptions["kind"])
-	standaloneSetting := map[string]interface{}{"output_type": "STANDALONE"}
-	settingsSchema := *spec.MapProperty(spec.StringProperty())
-	settingsSchema.WithDefault(standaloneSetting)
-	settingsSchema.WithDescription("existence of this attribute indicates that the model will be treated standalone by KCLVM.")
 	schema.SetProperty("apiVersion", apiVersionSchema)
 	schema.SetProperty("kind", kindSchema)
-	schema.SetProperty("__settings__", settingsSchema)
 	schema.SetProperty("metadata", *spec.RefSchema(objectMetaSchemaRef).
 		WithDescription(swaggerPartialObjectMetadataDescriptions["metadata"]))
 	// todo: update more k8s refs to kcl format
