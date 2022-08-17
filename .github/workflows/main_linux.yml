@@ -1,7 +1,7 @@
 # Reference from:
 # https://github.com/c-bata/go-prompt/blob/master/.github/workflows/test.yml
 name: build-and-test-linux with coverage
-on: push
+on: [push, pull_request]
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
