@@ -34,16 +34,18 @@ func TestGenerate_CRD2KCL(t *testing.T) {
 	utils.DoTestDirs(t, utils.KubeTestDirs, apiConvertModel, true)
 }
 
-func apiConvertModel(binaryPath string, sourceSpec string, outputDir string, crd bool) error {
+func apiConvertModel(integrationGenOpts utils.IntegrationGenOpts) error {
 	opts := new(GenOpts)
-	opts.Spec = sourceSpec
-	opts.Target = outputDir
+	opts.Spec = integrationGenOpts.SpecPath
+	opts.Target = integrationGenOpts.TargetDir
 	opts.KeepOrder = true
-	opts.ValidateSpec = !crd
+	opts.ValidateSpec = !integrationGenOpts.IsCrd
+	opts.ModelPackage = integrationGenOpts.ModelPackage
+
 	if err := opts.EnsureDefaults(); err != nil {
 		return fmt.Errorf("fill default options failed: %s", err.Error())
 	}
-	if crd {
+	if integrationGenOpts.IsCrd {
 		spec, err := crdGen.GetSpec(&crdGen.GenOpts{
 			Spec: opts.Spec,
 		})

@@ -39,6 +39,14 @@ type TestCase struct {
 	GenPath  string
 }
 
+type IntegrationGenOpts struct {
+	BinaryPath   string
+	SpecPath     string
+	TargetDir    string
+	IsCrd        bool
+	ModelPackage string
+}
+
 func InitTestDirs(projectRoot string, buildBinary bool) error {
 	// calculate root dir of project/testdata/examples
 	ProjectRoot = projectRoot
@@ -80,7 +88,7 @@ func InitTestDirs(projectRoot string, buildBinary bool) error {
 	return nil
 }
 
-func DoTestDirs(t *testing.T, dirs []string, convertFunc func(binaryPath, specPath, targetDir string, isCrd bool) error, crd bool) {
+func DoTestDirs(t *testing.T, dirs []string, convertFunc func(opts IntegrationGenOpts) error, crd bool) {
 	for _, dir := range dirs {
 		testCases, err := FindCases(dir)
 		if err != nil {
@@ -97,23 +105,26 @@ func DoTestDirs(t *testing.T, dirs []string, convertFunc func(binaryPath, specPa
 	}
 }
 
-func DoTestConvert(testDir string, tCase TestCase, convertFunc func(binaryPath, specPath, targetDir string, isCrd bool) error, crd bool) error {
+func DoTestConvert(testDir string, tCase TestCase, convertFunc func(opts IntegrationGenOpts) error, crd bool) error {
 	var tmpPrefix string
+	var modelPackage string
 	if crd {
 		tmpPrefix = tmpCrdGen
+		modelPackage = "crd_models"
 	} else {
 		tmpPrefix = tmpOaiGen
+		modelPackage = "models"
 	}
 	tmpDir, err := os.MkdirTemp(testDir, fmt.Sprintf("%s_%s", tmpPrefix, tCase.Name))
 	if err != nil {
 		return fmt.Errorf("creat temp output dir failed: %v", err)
 	}
-	err = convertFunc(BinaryPath, tCase.SpecPath, tmpDir, crd)
+	err = convertFunc(IntegrationGenOpts{BinaryPath: BinaryPath, SpecPath: tCase.SpecPath, TargetDir: tmpDir, IsCrd: crd, ModelPackage: modelPackage})
 	if err != nil {
 		return err
 	}
 	// compare two dir
-	err = CompareDir(filepath.Join(tCase.GenPath, "models"), filepath.Join(tmpDir, "models"))
+	err = CompareDir(filepath.Join(tCase.GenPath, "models"), filepath.Join(tmpDir, modelPackage))
 	if err != nil {
 		return err
 	}
@@ -218,15 +229,18 @@ func readLines(path string) ([]string, error) {
 	return lines, scanner.Err()
 }
 
-func BinaryConvertModel(binaryPath string, sourceSpec string, outputDir string, crd bool) error {
+func BinaryConvertModel(integrationGenOpts IntegrationGenOpts) error {
 	convertArgs := []string{
 		"generate", "model", "-f",
 	}
-	convertArgs = append(convertArgs, sourceSpec, "-t", outputDir)
-	if crd {
+	convertArgs = append(convertArgs, integrationGenOpts.SpecPath, "-t", integrationGenOpts.TargetDir)
+	if integrationGenOpts.ModelPackage != "models" {
+		convertArgs = append(convertArgs, "-m", integrationGenOpts.ModelPackage)
+	}
+	if integrationGenOpts.IsCrd {
 		convertArgs = append(convertArgs, "--skip-validation", "--crd")
 	}
-	cmd := exec.Command(binaryPath, convertArgs...)
+	cmd := exec.Command(integrationGenOpts.BinaryPath, convertArgs...)
 	cmd.Env = os.Environ()
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout

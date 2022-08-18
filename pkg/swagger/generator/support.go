@@ -54,7 +54,7 @@ func newGenerator(opts *GenOpts) (*generator, error) {
 		Analyzed:      analyzed,
 		Models:        models,
 		Target:        opts.Target,
-		ModelsPackage: opts.LanguageOpts.ManglePackagePath("", defaultModelsTarget),
+		ModelsPackage: opts.LanguageOpts.ManglePackagePath("", opts.ModelPackage),
 		GenOpts:       opts,
 	}, nil
 }
