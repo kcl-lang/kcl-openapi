@@ -36,11 +36,6 @@ import (
 
 //go:generate go-bindata -mode 420 -modtime 1482416923 -pkg=generator -ignore=.*\.sw? -ignore=.*\.md ./templates/...
 
-const (
-	// default generation targets structure
-	defaultModelsTarget = "models"
-)
-
 func init() {
 	// all initializations for the generator package
 	debugOptions()
