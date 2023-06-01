@@ -1,0 +1,78 @@
+# This is an example .goreleaser.yml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+builds:
+  - id: default
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    # 使用 ldflags="-s -w" 去掉符号表和调试信息，以减少发布包的大小
+    ldflags:
+      - -s
+      - -w
+    ignore:
+      - goos: linux
+        goarch: arm64
+      - goos: windows
+        goarch: arm64
+    main: .
+archives:
+  - id: default
+    builds:
+      - default
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+checksum:
+  name_template: 'checksums.txt'
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+release:
+  github:
+    owner: KusionStack
+    name: kcl-openapi
+  draft: false
+  footer: |
+    ## Docker Images
+    * `kusionstack/kcl-openapi:{{ .Env.RELEASE_VERSION }}`
+dockers:
+  - use: buildx
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile
+    image_templates:
+      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
+    build_flag_templates:
+      - "--target=goreleaser"
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/amd64"
+
+docker_manifests:
+  - use: docker
+    name_template: kusionstack/{{ .ProjectName }}:{{ .Tag }}
+    image_templates:
+      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
+  - use: docker
+    name_template:  kusionstack/{{ .ProjectName }}:latest
+    image_templates:
+      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
