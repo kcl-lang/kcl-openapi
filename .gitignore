@@ -4,6 +4,7 @@
 # ide
 .idea/
 *.iml
+.vscode/
 
 # build
 _build
