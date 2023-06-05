@@ -14,3 +14,13 @@ check-fmt:
 
 regenerate:
 	go run scripts/regenerate.go
+
+build-local-linux:
+	# Delete old artifacts
+	-rm -rf ./_build
+	mkdir -p ./_build/linux/
+
+	# Build kcl-openapi
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
+		go build -o ./_build/linux/kcl-openapi \
+		-ldflags="-s -w" .
