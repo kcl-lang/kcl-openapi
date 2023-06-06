@@ -8,8 +8,6 @@ ENV LANG=en_US.utf8
 
 FROM base AS goreleaser
 COPY kcl-openapi /usr/local/bin/kcl-openapi
-RUN /usr/local/bin/kcl-openapi
 
 FROM base
 COPY --from=build /src/_build/linux/kcl-openapi /usr/local/bin/kcl-openapi
-RUN /usr/local/bin/kcl-openapi
