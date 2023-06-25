@@ -38,7 +38,7 @@ type GenDefinition struct {
 	GenCommon
 	GenSchema
 	Package      string
-	Imports      map[string]string
+	Imports      []importStmt
 	ExtraSchemas GenSchemaList
 	DependsOn    []string
 	External     bool
