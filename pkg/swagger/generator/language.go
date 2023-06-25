@@ -16,6 +16,7 @@ package generator
 
 import (
 	"fmt"
+	"log"
 	"path"
 	"path/filepath"
 	"reflect"
@@ -79,6 +80,13 @@ func (l *LanguageOpts) MangleVarName(name string) string {
 
 // MangleModelName adds "$" prefix to name if it is conflict with KCL keyword
 func (l *LanguageOpts) MangleModelName(modelName string) string {
+	// replace all the "-" to "_" in the model name
+	lastDotIndex := strings.LastIndex(modelName, ".")
+	shortName := modelName[lastDotIndex+1:]
+	if strings.Contains(shortName, "-") {
+		log.Printf("[WARN] the modelName %s contains symbol '-' which is forbidden in KCL. Will be replaced by '_'", shortName)
+		modelName = modelName[:lastDotIndex+1] + strings.Replace(shortName, "-", "_", -1)
+	}
 	for _, kw := range l.ReservedWords {
 		if modelName == kw {
 			return fmt.Sprintf("$%s", modelName)
