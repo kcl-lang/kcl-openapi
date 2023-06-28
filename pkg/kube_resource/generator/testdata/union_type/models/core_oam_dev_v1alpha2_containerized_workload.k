@@ -6,14 +6,15 @@ import kusion_kubernetes.apimachinery.apis
 
 
 schema ContainerizedWorkload:
-    """ A ContainerizedWorkload is a workload that runs OCI containers.
+    """
+    A ContainerizedWorkload is a workload that runs OCI containers.
 
     Attributes
     ----------
     apiVersion : str, default is "core.oam.dev/v1alpha2", required
-         APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+        APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     kind : str, default is "ContainerizedWorkload", required
-         Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+        Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     metadata : apis.ObjectMeta, default is Undefined, optional
         metadata
     spec : CoreOamDevV1alpha2ContainerizedWorkloadSpec, default is Undefined, optional
@@ -31,7 +32,8 @@ schema ContainerizedWorkload:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpec:
-    """ A ContainerizedWorkloadSpec defines the desired state of a ContainerizedWorkload.
+    """
+    A ContainerizedWorkloadSpec defines the desired state of a ContainerizedWorkload.
 
     Attributes
     ----------
@@ -44,14 +46,15 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpec:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecSocket:
-    """core oam dev v1alpha2 containerized workload spec socket
+    """
+    core oam dev v1alpha2 containerized workload spec socket
 
     Attributes
     ----------
     name : str, default is Undefined, optional
-         Name of the external resource. Resource names are specified in kind.group/version format, e.g. motionsensor.ext.example.com/v1.
+        Name of the external resource. Resource names are specified in kind.group/version format, e.g. motionsensor.ext.example.com/v1.
     required : int | str, default is Undefined, optional
-         Required extended resource(s), e.g. 8 or "very-cool-widget"
+        Required extended resource(s), e.g. 8 or "very-cool-widget"
     """
 
 

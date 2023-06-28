@@ -7,7 +7,8 @@ import base
 
 
 schema $relaxed:
-    """main relaxed
+    """
+    main relaxed
 
     Attributes
     ----------

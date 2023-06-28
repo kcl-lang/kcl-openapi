@@ -5,14 +5,15 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 
 
 schema Pet:
-    """ the Pet model. See Also: https://swagger.io
+    """
+    the Pet model
 
     Attributes
     ----------
     name : str, default is Undefined, optional
-         the name of the pet. must be a DNS label. See Also: https://datatracker.ietf.org/doc/html/rfc1123
+        the name of the pet. must be a DNS label. See Also: https://datatracker.ietf.org/doc/html/rfc1123
     age : int, default is Undefined, optional
-         the age of the pet
+        the age of the pet
 
     Examples
     --------

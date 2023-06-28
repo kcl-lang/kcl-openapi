@@ -33,7 +33,9 @@ func doRegenerate(testDirs []string, crd bool) {
 			os.Exit(1)
 		}
 		for _, tCase := range testCases {
-			err := utils.BinaryConvertModel(utils.BinaryPath, tCase.SpecPath, tCase.GenPath, crd)
+			err := utils.BinaryConvertModel(utils.IntegrationGenOpts{
+				utils.BinaryPath, tCase.SpecPath, tCase.GenPath, crd, "models",
+			})
 			if err != nil {
 				fmt.Printf("[ERROR] convert failed: %v\n", err)
 			}

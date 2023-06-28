@@ -5,12 +5,13 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 
 
 schema Pet:
-    """pet. See Also: https://swagger.io
+    """
+    pet
 
     Attributes
     ----------
     name : str, default is Undefined, optional
-         the name of the pet. must be a RFC 1123 name. See Also: https://datatracker.ietf.org/doc/html/rfc1123
+        the name of the pet. must be a RFC 1123 name. See Also: https://datatracker.ietf.org/doc/html/rfc1123
     age : int, default is Undefined, optional
         age
     """
