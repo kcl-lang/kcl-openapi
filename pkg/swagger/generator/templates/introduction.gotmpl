@@ -1,11 +1,11 @@
 {{ define "introduction" }}
   {{- if .Title }}
-    {{- comment .Title }}
+    {{- doc .Title "        " }}
     {{- if .Description }}
-      {{- comment .Description }}
+      {{- doc .Description "        " }}
     {{- end }}
   {{- else if .Description}}
-    {{- comment .Description }}
+    {{- doc .Description "        " }}
   {{- else }}
     {{- humanize .Name }}
   {{- end }}{{- if .ExternalDocs }}. See Also: {{ .ExternalDocs.URL }}{{- end -}}

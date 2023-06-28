@@ -90,6 +90,7 @@ func DefaultFuncMap(lang *LanguageOpts) template.FuncMap {
 		"padSurround":    padSurround,
 		"joinFilePath":   filepath.Join,
 		"comment":        padComment,
+		"doc":            padDocument,
 		"blockcomment":   blockComment,
 		"inspect":        pretty.Sprint,
 		"cleanPath":      path.Clean,
@@ -485,6 +486,21 @@ func padSurround(entry, padWith string, i, ln int) string {
 		res = append(res, padWith)
 	}
 	return strings.Join(res, ",")
+}
+
+func padDocument(str string, pad string) string {
+	// indent multi line document with given pad
+	lines := strings.Split(str, "\n")
+	paddingLines := make([]string, 0, len(lines))
+	for index, line := range lines {
+		paddingLine := line
+		if index != 0 && line != "" {
+			paddingLine = fmt.Sprintf("%s%s", pad, line)
+		}
+		paddingLines = append(paddingLines, paddingLine)
+	}
+	// no indenting before cascading empty lines
+	return strings.Join(paddingLines, "\n")
 }
 
 func padComment(str string, pads ...string) string {
