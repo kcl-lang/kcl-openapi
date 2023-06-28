@@ -492,9 +492,9 @@ func padDocument(str string, pad string) string {
 	// indent multi line document with given pad
 	lines := strings.Split(str, "\n")
 	paddingLines := make([]string, 0, len(lines))
-	for index, line := range lines {
+	for _, line := range lines {
 		paddingLine := line
-		if index != 0 && line != "" {
+		if line != "" {
 			paddingLine = fmt.Sprintf("%s%s", pad, line)
 		}
 		paddingLines = append(paddingLines, paddingLine)

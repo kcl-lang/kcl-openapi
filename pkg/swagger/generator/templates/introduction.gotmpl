@@ -7,7 +7,7 @@
   {{- else if .Description}}
     {{- doc .Description "        " }}
   {{- else }}
-    {{- humanize .Name }}
+    {{- "        " }}{{- humanize .Name }}
   {{- end }}{{- if .ExternalDocs }}. See Also: {{ .ExternalDocs.URL }}{{- end -}}
 {{- end }}
 

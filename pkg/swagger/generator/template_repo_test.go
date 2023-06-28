@@ -108,10 +108,12 @@ func TestPadDocument(t *testing.T) {
 	}{
 		{
 			doc:      "one line doc",
-			indented: "one line doc",
+			indented: "        one line doc",
 			displayedInDocstring: `
 schema ABC:
-    """schema doc
+    """
+    schema doc
+
     Attributes
     ----------
     attrName : type, default is defaultValue, optional/required
@@ -120,10 +122,12 @@ schema ABC:
 		},
 		{
 			doc:      "multi line doc:\n\n- line1\n\n-line2\n\nline3",
-			indented: "multi line doc:\n\n        - line1\n\n        -line2\n\n        line3",
+			indented: "        multi line doc:\n\n        - line1\n\n        -line2\n\n        line3",
 			displayedInDocstring: `
 schema ABC:
-    """schema doc
+    """
+    schema doc
+
     Attributes
     ----------
     attrName : type, default is defaultValue, optional/required
@@ -138,10 +142,12 @@ schema ABC:
 		},
 		{
 			doc:      "multi line doc:\nline1\nline2\nline3",
-			indented: "multi line doc:\n        line1\n        line2\n        line3",
+			indented: "        multi line doc:\n        line1\n        line2\n        line3",
 			displayedInDocstring: `
 schema ABC:
-    """schema doc
+    """
+    schema doc
+
     Attributes
     ----------
     attrName : type, default is defaultValue, optional/required
@@ -158,11 +164,13 @@ schema ABC:
 			got := padDocument(testcase.doc, "        ")
 			displayed := fmt.Sprintf("%s%s%s", `
 schema ABC:
-    """schema doc
+    """
+    schema doc
+
     Attributes
     ----------
     attrName : type, default is defaultValue, optional/required
-        `, got, `
+`, got, `
 """`)
 			if got != testcase.indented || displayed != testcase.displayedInDocstring {
 				t.Fatalf("unexpected output, expect:\n%s\ngot:\n%s\n\nexpected display:\n%s\ngot display:\n%s\n", testcase.indented, got, testcase.displayedInDocstring, displayed)
