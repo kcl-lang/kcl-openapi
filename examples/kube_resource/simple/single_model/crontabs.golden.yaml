@@ -22,6 +22,9 @@ spec:
               properties:
                 cronSpec:
                   type: string
+                  description: |-
+                    This is the description of cronSpec attribute.
+                    The description contains multiple lines.
                 image:
                   type: string
                 replicas:

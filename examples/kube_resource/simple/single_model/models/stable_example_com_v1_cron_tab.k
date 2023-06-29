@@ -38,7 +38,8 @@ schema StableExampleComV1CronTabSpec:
     Attributes
     ----------
     cronSpec : str, default is Undefined, optional
-        cron spec
+        This is the description of cronSpec attribute.
+        The description contains multiple lines.
     image : str, default is Undefined, optional
         image
     replicas : int, default is Undefined, optional
