@@ -6,14 +6,15 @@ import kusion_kubernetes.apimachinery.apis
 
 
 schema CronTab:
-    """stable example com v1 cron tab
+    """
+    stable example com v1 cron tab
 
     Attributes
     ----------
     apiVersion : str, default is "stable.example.com/v1", required
-         APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+        APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     kind : str, default is "CronTab", required
-         Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+        Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     metadata : apis.ObjectMeta, default is Undefined, optional
         metadata
     spec : StableExampleComV1CronTabSpec, default is Undefined, optional
@@ -31,12 +32,14 @@ schema CronTab:
 
 
 schema StableExampleComV1CronTabSpec:
-    """stable example com v1 cron tab spec
+    """
+    stable example com v1 cron tab spec
 
     Attributes
     ----------
     cronSpec : str, default is Undefined, optional
-        cron spec
+        This is the description of cronSpec attribute.
+        The description contains multiple lines.
     image : str, default is Undefined, optional
         image
     replicas : int, default is Undefined, optional

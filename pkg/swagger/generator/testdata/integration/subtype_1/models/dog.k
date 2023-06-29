@@ -5,12 +5,13 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 
 
 schema Dog (Animal, Pet):
-    """ A representation of a dog
+    """
+    A representation of a dog
 
     Attributes
     ----------
     packSize : int, default is Undefined, required
-         the size of the pack the dog is from
+        the size of the pack the dog is from
     """
 
 

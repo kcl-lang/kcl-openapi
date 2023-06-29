@@ -5,6 +5,7 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 
 
 schema Dog (Animal, Pet):
-    """ A representation of a dog
+    """
+    A representation of a dog
     """
 

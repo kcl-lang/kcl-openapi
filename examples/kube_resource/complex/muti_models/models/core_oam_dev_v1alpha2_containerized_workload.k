@@ -6,14 +6,15 @@ import kusion_kubernetes.apimachinery.apis
 
 
 schema ContainerizedWorkload:
-    """ A ContainerizedWorkload is a workload that runs OCI containers.
+    """
+    A ContainerizedWorkload is a workload that runs OCI containers.
 
     Attributes
     ----------
     apiVersion : str, default is "core.oam.dev/v1alpha2", required
-         APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+        APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     kind : str, default is "ContainerizedWorkload", required
-         Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+        Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     metadata : apis.ObjectMeta, default is Undefined, optional
         metadata
     spec : CoreOamDevV1alpha2ContainerizedWorkloadSpec, default is Undefined, optional
@@ -35,16 +36,17 @@ schema ContainerizedWorkload:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpec:
-    """ A ContainerizedWorkloadSpec defines the desired state of a ContainerizedWorkload.
+    """
+    A ContainerizedWorkloadSpec defines the desired state of a ContainerizedWorkload.
 
     Attributes
     ----------
     arch : str, default is Undefined, optional
-         CPUArchitecture required by this workload.
+        CPUArchitecture required by this workload.
     containers : [CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0], default is Undefined, required
-         Containers of which this workload consists.
+        Containers of which this workload consists.
     osType : str, default is Undefined, optional
-         OperatingSystem required by this workload.
+        OperatingSystem required by this workload.
     """
 
 
@@ -56,28 +58,29 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpec:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0:
-    """ A Container represents an Open Containers Initiative (OCI) container.
+    """
+    A Container represents an Open Containers Initiative (OCI) container.
 
     Attributes
     ----------
     args : [str], default is Undefined, optional
-         Arguments to be passed to the command run by this container.
+        Arguments to be passed to the command run by this container.
     command : [str], default is Undefined, optional
-         Command to be run by this container.
+        Command to be run by this container.
     config : [CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ConfigItems0], default is Undefined, optional
-         ConfigFiles that should be written within this container.
+        ConfigFiles that should be written within this container.
     env : [CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0EnvItems0], default is Undefined, optional
-         Environment variables that should be set within this container.
+        Environment variables that should be set within this container.
     image : str, default is Undefined, required
-         Image this container should run. Must be a path-like or URI-like representation of an OCI image. May be prefixed with a registry address and should be suffixed with a tag.
+        Image this container should run. Must be a path-like or URI-like representation of an OCI image. May be prefixed with a registry address and should be suffixed with a tag.
     imagePullSecret : str, default is Undefined, optional
-         ImagePullSecret specifies the name of a Secret from which the credentials required to pull this container's image can be loaded.
+        ImagePullSecret specifies the name of a Secret from which the credentials required to pull this container's image can be loaded.
     livenessProbe : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbe, default is Undefined, optional
         liveness probe
     name : str, default is Undefined, required
-         Name of this container. Must be unique within its workload.
+        Name of this container. Must be unique within its workload.
     ports : [CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0PortsItems0], default is Undefined, optional
-         Ports exposed by this container.
+        Ports exposed by this container.
     readiessProbe : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbe, default is Undefined, optional
         readiess probe
     resources : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0Resources, default is Undefined, optional
@@ -109,14 +112,15 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ConfigItems0:
-    """ A ContainerConfigFile specifies a configuration file that should be written within a container.
+    """
+    A ContainerConfigFile specifies a configuration file that should be written within a container.
 
     Attributes
     ----------
     path : str, default is Undefined, required
-         Path within the container at which the configuration file should be written.
+        Path within the container at which the configuration file should be written.
     value : str, default is Undefined, required
-         Value that should be written to the configuration file.
+        Value that should be written to the configuration file.
     """
 
 
@@ -126,14 +130,15 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ConfigItems0:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0EnvItems0:
-    """ A ContainerEnvVar specifies an environment variable that should be set within a container.
+    """
+    A ContainerEnvVar specifies an environment variable that should be set within a container.
 
     Attributes
     ----------
     name : str, default is Undefined, required
-         Name of the environment variable. Must be composed of valid Unicode letter and number characters, as well as _ and -.
+        Name of the environment variable. Must be composed of valid Unicode letter and number characters, as well as _ and -.
     value : str, default is Undefined, required
-         Value of the environment variable.
+        Value of the environment variable.
     """
 
 
@@ -147,26 +152,27 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0EnvItems0:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbe:
-    """ A LivenessProbe assesses whether this container is alive. Containers that fail liveness probes will be restarted.
+    """
+    A LivenessProbe assesses whether this container is alive. Containers that fail liveness probes will be restarted.
 
     Attributes
     ----------
     exec : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeExec, default is Undefined, optional
         exec
     failureThreshold : int, default is Undefined, optional
-         FailureThreshold specifies how many consecutive probes must fail in order for the container to be considered healthy.
+        FailureThreshold specifies how many consecutive probes must fail in order for the container to be considered healthy.
     httpGet : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeHTTPGet, default is Undefined, optional
         http get
     initialDelaySeconds : int, default is Undefined, optional
-         InitialDelaySeconds after a container starts before the first probe.
+        InitialDelaySeconds after a container starts before the first probe.
     periodSeconds : int, default is Undefined, optional
-         PeriodSeconds between probes.
+        PeriodSeconds between probes.
     successThreshold : int, default is Undefined, optional
-         SuccessThreshold specifies how many consecutive probes must success in order for the container to be considered healthy.
+        SuccessThreshold specifies how many consecutive probes must success in order for the container to be considered healthy.
     tcpSocket : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeTCPSocket, default is Undefined, optional
         tcp socket
     timeoutSeconds : int, default is Undefined, optional
-         TimeoutSeconds after which the probe times out.
+        TimeoutSeconds after which the probe times out.
     """
 
 
@@ -188,12 +194,13 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbe:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeExec:
-    """ Exec probes a container's health by executing a command.
+    """
+    Exec probes a container's health by executing a command.
 
     Attributes
     ----------
     command : [str], default is Undefined, required
-         Command to be run by this probe.
+        Command to be run by this probe.
     """
 
 
@@ -201,16 +208,17 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeE
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeHTTPGet:
-    """ HTTPGet probes a container's health by sending an HTTP GET request.
+    """
+    HTTPGet probes a container's health by sending an HTTP GET request.
 
     Attributes
     ----------
     httpHeaders : [CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeHTTPGetHTTPHeadersItems0], default is Undefined, optional
-         HTTPHeaders to send with the GET request.
+        HTTPHeaders to send with the GET request.
     path : str, default is Undefined, required
-         Path to probe, e.g. '/healthz'.
+        Path to probe, e.g. '/healthz'.
     port : int, default is Undefined, required
-         Port to probe.
+        Port to probe.
     """
 
 
@@ -222,14 +230,15 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeH
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeHTTPGetHTTPHeadersItems0:
-    """ A HTTPHeader to be passed when probing a container.
+    """
+    A HTTPHeader to be passed when probing a container.
 
     Attributes
     ----------
     name : str, default is Undefined, required
-         Name of this HTTP header. Must be unique per probe.
+        Name of this HTTP header. Must be unique per probe.
     value : str, default is Undefined, required
-         Value of this HTTP header.
+        Value of this HTTP header.
     """
 
 
@@ -239,12 +248,13 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeH
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeTCPSocket:
-    """ TCPSocketProbe probes a container's health by connecting to a TCP socket.
+    """
+    TCPSocketProbe probes a container's health by connecting to a TCP socket.
 
     Attributes
     ----------
     port : int, default is Undefined, required
-         Port this probe should connect to.
+        Port this probe should connect to.
     """
 
 
@@ -252,16 +262,17 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeT
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0PortsItems0:
-    """ A ContainerPort specifies a port that is exposed by a container.
+    """
+    A ContainerPort specifies a port that is exposed by a container.
 
     Attributes
     ----------
     containerPort : int, default is Undefined, required
-         Port number. Must be unique within its container.
+        Port number. Must be unique within its container.
     name : str, default is Undefined, required
-         Name of this port. Must be unique within its container. Must be lowercase alphabetical characters.
+        Name of this port. Must be unique within its container. Must be lowercase alphabetical characters.
     $protocol : str, default is Undefined, optional
-         Protocol used by the server listening on this port.
+        Protocol used by the server listening on this port.
     """
 
 
@@ -277,26 +288,27 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0PortsItems0:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbe:
-    """ A ReadinessProbe assesses whether this container is ready to serve requests. Containers that fail readiness probes will be withdrawn from service.
+    """
+    A ReadinessProbe assesses whether this container is ready to serve requests. Containers that fail readiness probes will be withdrawn from service.
 
     Attributes
     ----------
     exec : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeExec, default is Undefined, optional
         exec
     failureThreshold : int, default is Undefined, optional
-         FailureThreshold specifies how many consecutive probes must fail in order for the container to be considered healthy.
+        FailureThreshold specifies how many consecutive probes must fail in order for the container to be considered healthy.
     httpGet : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeHTTPGet, default is Undefined, optional
         http get
     initialDelaySeconds : int, default is Undefined, optional
-         InitialDelaySeconds after a container starts before the first probe.
+        InitialDelaySeconds after a container starts before the first probe.
     periodSeconds : int, default is Undefined, optional
-         PeriodSeconds between probes.
+        PeriodSeconds between probes.
     successThreshold : int, default is Undefined, optional
-         SuccessThreshold specifies how many consecutive probes must success in order for the container to be considered healthy.
+        SuccessThreshold specifies how many consecutive probes must success in order for the container to be considered healthy.
     tcpSocket : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeTCPSocket, default is Undefined, optional
         tcp socket
     timeoutSeconds : int, default is Undefined, optional
-         TimeoutSeconds after which the probe times out.
+        TimeoutSeconds after which the probe times out.
     """
 
 
@@ -318,12 +330,13 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbe:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeExec:
-    """ Exec probes a container's health by executing a command.
+    """
+    Exec probes a container's health by executing a command.
 
     Attributes
     ----------
     command : [str], default is Undefined, required
-         Command to be run by this probe.
+        Command to be run by this probe.
     """
 
 
@@ -331,16 +344,17 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeE
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeHTTPGet:
-    """ HTTPGet probes a container's health by sending an HTTP GET request.
+    """
+    HTTPGet probes a container's health by sending an HTTP GET request.
 
     Attributes
     ----------
     httpHeaders : [CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeHTTPGetHTTPHeadersItems0], default is Undefined, optional
-         HTTPHeaders to send with the GET request.
+        HTTPHeaders to send with the GET request.
     path : str, default is Undefined, required
-         Path to probe, e.g. '/healthz'.
+        Path to probe, e.g. '/healthz'.
     port : int, default is Undefined, required
-         Port to probe.
+        Port to probe.
     """
 
 
@@ -352,14 +366,15 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeH
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeHTTPGetHTTPHeadersItems0:
-    """ A HTTPHeader to be passed when probing a container.
+    """
+    A HTTPHeader to be passed when probing a container.
 
     Attributes
     ----------
     name : str, default is Undefined, required
-         Name of this HTTP header. Must be unique per probe.
+        Name of this HTTP header. Must be unique per probe.
     value : str, default is Undefined, required
-         Value of this HTTP header.
+        Value of this HTTP header.
     """
 
 
@@ -369,12 +384,13 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeH
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeTCPSocket:
-    """ TCPSocketProbe probes a container's health by connecting to a TCP socket.
+    """
+    TCPSocketProbe probes a container's health by connecting to a TCP socket.
 
     Attributes
     ----------
     port : int, default is Undefined, required
-         Port this probe should connect to.
+        Port this probe should connect to.
     """
 
 
@@ -382,20 +398,21 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeT
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0Resources:
-    """ Resources required by this container
+    """
+    Resources required by this container
 
     Attributes
     ----------
     cpu : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesCPU, default is Undefined, required
         cpu
     extended : [CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesExtendedItems0], default is Undefined, optional
-         Extended resources required by this container.
+        Extended resources required by this container.
     gpu : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesGpu, default is Undefined, optional
         gpu
     memory : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesMemory, default is Undefined, required
         memory
     volumes : [CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesVolumesItems0], default is Undefined, optional
-         Volumes required by this container.
+        Volumes required by this container.
     """
 
 
@@ -411,12 +428,13 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0Resources:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesCPU:
-    """ CPU required by this container.
+    """
+    CPU required by this container.
 
     Attributes
     ----------
     required : str, default is Undefined, required
-         Required CPU count. 1.0 represents one CPU core.
+        Required CPU count. 1.0 represents one CPU core.
     """
 
 
@@ -424,14 +442,15 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesCPU:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesExtendedItems0:
-    """ ExtendedResource required by a container.
+    """
+    ExtendedResource required by a container.
 
     Attributes
     ----------
     name : str, default is Undefined, required
-         Name of the external resource. Resource names are specified in kind.group/version format, e.g. motionsensor.ext.example.com/v1.
+        Name of the external resource. Resource names are specified in kind.group/version format, e.g. motionsensor.ext.example.com/v1.
     required : int | str, default is Undefined, required
-         Required extended resource(s), e.g. 8 or "very-cool-widget"
+        Required extended resource(s), e.g. 8 or "very-cool-widget"
     """
 
 
@@ -441,12 +460,13 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesExten
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesGpu:
-    """ GPU required by this container.
+    """
+    GPU required by this container.
 
     Attributes
     ----------
     required : str, default is Undefined, required
-         Required GPU count.
+        Required GPU count.
     """
 
 
@@ -454,12 +474,13 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesGpu:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesMemory:
-    """ Memory required by this container.
+    """
+    Memory required by this container.
 
     Attributes
     ----------
     required : str, default is Undefined, required
-         Required memory.
+        Required memory.
     """
 
 
@@ -467,20 +488,21 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesMemor
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesVolumesItems0:
-    """ VolumeResource required by a container.
+    """
+    VolumeResource required by a container.
 
     Attributes
     ----------
     accessMode : str, default is Undefined, optional
-         AccessMode of this volume; RO (read only) or RW (read and write).
+        AccessMode of this volume; RO (read only) or RW (read and write).
     disk : CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesVolumesItems0Disk, default is Undefined, optional
         disk
     mountPath : str, default is Undefined, required
-         MouthPath at which this volume will be mounted within its container.
+        MouthPath at which this volume will be mounted within its container.
     name : str, default is Undefined, required
-         Name of this volume. Must be unique within its container.
+        Name of this volume. Must be unique within its container.
     sharingPolicy : str, default is Undefined, optional
-         SharingPolicy of this volume; Exclusive or Shared.
+        SharingPolicy of this volume; Exclusive or Shared.
     """
 
 
@@ -496,14 +518,15 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesVolum
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesVolumesItems0Disk:
-    """ Disk requirements of this volume.
+    """
+    Disk requirements of this volume.
 
     Attributes
     ----------
     ephemeral : bool, default is Undefined, optional
-         Ephemeral specifies whether an external disk needs to be mounted.
+        Ephemeral specifies whether an external disk needs to be mounted.
     required : str, default is Undefined, required
-         Required disk space.
+        Required disk space.
     """
 
 
@@ -513,14 +536,15 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesVolum
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadStatus:
-    """ A ContainerizedWorkloadStatus represents the observed state of a ContainerizedWorkload.
+    """
+    A ContainerizedWorkloadStatus represents the observed state of a ContainerizedWorkload.
 
     Attributes
     ----------
     conditions : [CoreOamDevV1alpha2ContainerizedWorkloadStatusConditionsItems0], default is Undefined, optional
-         Conditions of the resource.
+        Conditions of the resource.
     resources : [CoreOamDevV1alpha2ContainerizedWorkloadStatusResourcesItems0], default is Undefined, optional
-         Resources managed by this containerised workload.
+        Resources managed by this containerised workload.
     """
 
 
@@ -530,20 +554,21 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadStatus:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadStatusConditionsItems0:
-    """ A Condition that may apply to a resource.
+    """
+    A Condition that may apply to a resource.
 
     Attributes
     ----------
     lastTransitionTime : str, default is Undefined, required
-         LastTransitionTime is the last time this condition transitioned from one status to another.
+        LastTransitionTime is the last time this condition transitioned from one status to another.
     message : str, default is Undefined, optional
-         A Message containing details about this condition's last transition from one status to another, if any.
+        A Message containing details about this condition's last transition from one status to another, if any.
     reason : str, default is Undefined, required
-         A Reason for this condition's last transition from one status to another.
+        A Reason for this condition's last transition from one status to another.
     status : str, default is Undefined, required
-         Status of this condition; is it currently True, False, or Unknown?
+        Status of this condition; is it currently True, False, or Unknown?
     $type : str, default is Undefined, required
-         Type of this condition. At most one of each condition type may apply to a resource at any point in time.
+        Type of this condition. At most one of each condition type may apply to a resource at any point in time.
     """
 
 
@@ -559,18 +584,19 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadStatusConditionsItems0:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadStatusResourcesItems0:
-    """ A ResourceReference refers to an resource managed by an OAM resource.
+    """
+    A ResourceReference refers to an resource managed by an OAM resource.
 
     Attributes
     ----------
     apiVersion : str, default is Undefined, required
-         APIVersion of the referenced resource.
+        APIVersion of the referenced resource.
     kind : str, default is Undefined, required
-         Kind of the referenced resource.
+        Kind of the referenced resource.
     name : str, default is Undefined, required
-         Name of the referenced resource.
+        Name of the referenced resource.
     uid : str, default is Undefined, optional
-         UID of the referenced resource.
+        UID of the referenced resource.
     """
 
 

@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"fmt"
 	"testing"
 
 	"gopkg.in/yaml.v2"
@@ -93,7 +94,86 @@ func TestToKCLValue(t *testing.T) {
 		t.Run(testcase.name, func(t *testing.T) {
 			got := opts.ToKclValue(testcase.value)
 			if got != testcase.expect {
-				t.Fatalf("unexpected output, expect:\n%s\ngot:%s\n", testcase.expect, got)
+				t.Fatalf("unexpected output, expect:\n%s\ngot:\n%s\n", testcase.expect, got)
+			}
+		})
+	}
+}
+
+func TestPadDocument(t *testing.T) {
+	cases := []struct {
+		doc                  string
+		indented             string
+		displayedInDocstring string
+	}{
+		{
+			doc:      "one line doc",
+			indented: "        one line doc",
+			displayedInDocstring: `
+schema ABC:
+    """
+    schema doc
+
+    Attributes
+    ----------
+    attrName : type, default is defaultValue, optional/required
+        one line doc
+"""`,
+		},
+		{
+			doc:      "multi line doc:\n\n- line1\n\n-line2\n\nline3",
+			indented: "        multi line doc:\n\n        - line1\n\n        -line2\n\n        line3",
+			displayedInDocstring: `
+schema ABC:
+    """
+    schema doc
+
+    Attributes
+    ----------
+    attrName : type, default is defaultValue, optional/required
+        multi line doc:
+
+        - line1
+
+        -line2
+
+        line3
+"""`,
+		},
+		{
+			doc:      "multi line doc:\nline1\nline2\nline3",
+			indented: "        multi line doc:\n        line1\n        line2\n        line3",
+			displayedInDocstring: `
+schema ABC:
+    """
+    schema doc
+
+    Attributes
+    ----------
+    attrName : type, default is defaultValue, optional/required
+        multi line doc:
+        line1
+        line2
+        line3
+"""`,
+		},
+	}
+
+	for _, testcase := range cases {
+		t.Run(testcase.doc, func(t *testing.T) {
+			got := padDocument(testcase.doc, "        ")
+			displayed := fmt.Sprintf("%s%s%s", `
+schema ABC:
+    """
+    schema doc
+
+    Attributes
+    ----------
+    attrName : type, default is defaultValue, optional/required
+`, got, `
+"""`)
+			if got != testcase.indented || displayed != testcase.displayedInDocstring {
+				t.Fatalf("unexpected output, expect:\n%s\ngot:\n%s\n\nexpected display:\n%s\ngot display:\n%s\n", testcase.indented, got, testcase.displayedInDocstring, displayed)
 			}
 		})
 	}

@@ -1,5 +1,9 @@
 {{ define "docstring" }}
-  {{- template "introduction" . }}
+  {{- if .Description }}
+    {{- doc .Description "    " }}
+  {{- else }}
+    {{- "    " }}{{- humanize .Name }}
+  {{- end }}
   {{- if (or .Properties (nonBaseTypeProperties .AllOf)) }}
 
     Attributes
