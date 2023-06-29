@@ -488,9 +488,15 @@ func padSurround(entry, padWith string, i, ln int) string {
 	return strings.Join(res, ",")
 }
 
+// padDocument indent multi line document with given pad
 func padDocument(str string, pad string) string {
-	// indent multi line document with given pad
-	lines := strings.Split(str, "\n")
+	// get the OS name
+	// set the appropriate line separator
+	linebreak := "\n"
+	if strings.Contains(str, "\r\n") {
+		linebreak = "\r\n"
+	}
+	lines := strings.Split(str, linebreak)
 	paddingLines := make([]string, 0, len(lines))
 	for _, line := range lines {
 		paddingLine := line
@@ -500,7 +506,7 @@ func padDocument(str string, pad string) string {
 		paddingLines = append(paddingLines, paddingLine)
 	}
 	// no indenting before cascading empty lines
-	return strings.Join(paddingLines, "\n")
+	return strings.Join(paddingLines, linebreak)
 }
 
 func padComment(str string, pads ...string) string {
