@@ -197,7 +197,13 @@ func getImportAsName(imp map[string]importStmt, sch *GenSchema) string {
 			return asName
 		}
 	}
-	return "kusionMangled" + strings.ToTitle(asName)
+	mangledAsName := "kusionMangled" + strings.ToTitle(asName)
+	for _, v := range imp {
+		if v.AsName == asName {
+			log.Printf("[WARN] the import paths in module %s.%s are confict, please resolve it properly", sch.Pkg, sch.Module)
+		}
+	}
+	return mangledAsName
 }
 
 // findImports add import stmt from sch to opts if needed to the map of import stmts.
