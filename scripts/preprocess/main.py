@@ -50,7 +50,7 @@ class RenamePattern:
     def __init__(self, pattern: str):
         result = pattern.split("=")
         if len(result) != 2:
-            raise Exception(f"Invalid rename pattern: {pattern}")
+            raise PreProcessingException(f"Invalid rename pattern: {pattern}. The pattern should be in the <before_name>=<after_name> format.")
         self.from_value = result[0]
         self.to_value = result[1]
 
@@ -124,7 +124,7 @@ def main():
     output_path = Path(args.spec_path).resolve().parent.joinpath(f'processed-{Path(args.spec_path).name}')
     write_json(output_path, spec)
 
-    print(f"Completed preprocessing! The output file could be found at {output_path}")
+    print(f"Completed preprocessing! The output file could be found at {output_path}.")
     
 
 def add_kcl_type_extension(models, settings: PreProcessSettings):
@@ -140,7 +140,7 @@ def add_kcl_type_extension(models, settings: PreProcessSettings):
             "type": schema_name
         }
         if settings.debug:
-            print("add kcl type extension on model %s" % k)
+            print(f"Add kcl type extension on model {k}.")
 
 
 def assign_default_group_version_kind(models, settings: PreProcessSettings):
@@ -160,11 +160,18 @@ def assign_default_group_version_kind(models, settings: PreProcessSettings):
                 properties["kind"]["default"] = kind
                 properties["kind"]["readOnly"] = True
                 if settings.debug:
-                    print("assigning default value and set readonly to apiVersion and kind in model %s" % k)
+                    print(f"assigning default value and set readonly to apiVersion and kind in model {k}.")
                 if settings.omit_status and "status" in properties:
                     del properties["status"]
+                    if "required" in v and "status" in v["required"]:
+                        if len(v["required"]) == 1:
+                            del v["required"]
+                        else:
+                            v["required"].remove("status")
+                        if settings.debug:
+                            print(f"the status field to omit is declared as required in model {k}. Remove it from required list.")
                     if settings.debug:
-                        print("omit status field in model %s" % k)
+                        print(f"omit status field in model {k}.")
 
 
 def inline_primitive_models(spec, settings: PreProcessSettings):
@@ -174,7 +181,7 @@ def inline_primitive_models(spec, settings: PreProcessSettings):
     to_remove_models = []
     inline_model_map = {}
     for k, v in spec[oai_2_defs].items():
-        if "properties" not in v:
+        if _properties not in v:
             if "type" not in v:
                 v["type"] = "object"
             if settings.debug:
@@ -203,9 +210,7 @@ def find_replace_ref_recursive(root, ref_name, replace_value):
             for k, v in replace_value.items():
                 if k in root:
                     if k != "description":
-                        raise PreProcessingException(
-                            "Cannot inline model %s because of "
-                            "conflicting key %s." % (ref_name, k))
+                        raise PreProcessingException(f"Cannot inline model {ref_name} because of conflicting key {k}.")
                     continue
                 root[k] = v
         for k, v in root.items():
@@ -258,7 +263,7 @@ def remove_deprecated_models(spec):
     models = {}
     for k, v in spec['definitions'].items():
         if is_model_deprecated(v):
-            print("Removing deprecated model %s" % k)
+            print(f"Removing deprecated model {k}.")
         else:
             models[k] = v
     spec[oai_2_defs] = models
