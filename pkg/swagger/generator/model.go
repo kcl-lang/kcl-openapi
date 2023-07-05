@@ -180,10 +180,10 @@ func collectSortedImports(model GenSchema) []importStmt {
 	return sortedImports
 }
 
-// getImportAsName infers the <import as> name by the context of all the existing import paths and the current schema to be imported.
+// getImportAsName infers the <import as> name by the context of all the existing import paths and the current pkg to be imported.
 // the parent package name will be added as prefix to avoid import conflict
-func getImportAsName(imp map[string]importStmt, sch *GenSchema) string {
-	parts := strings.Split(sch.Pkg, ".")
+func getImportAsName(imp map[string]importStmt, pkg string, module string) string {
+	parts := strings.Split(pkg, ".")
 	asName := ""
 	for i := len(parts) - 1; i >= 0; i-- {
 		conflict := false
@@ -202,7 +202,7 @@ func getImportAsName(imp map[string]importStmt, sch *GenSchema) string {
 	mangledAsName := "kusionMangled" + strings.ToTitle(asName)
 	for _, v := range imp {
 		if v.AsName == asName {
-			log.Printf("[WARN] the import paths in module %s.%s are confict, please resolve it properly", sch.Pkg, sch.Module)
+			log.Printf("[WARN] the import paths in module %s.%s are confict, please resolve it properly", pkg, module)
 		}
 	}
 	return mangledAsName
@@ -239,11 +239,25 @@ func collectImports(sch *GenSchema, toPkg string, imp map[string]importStmt) {
 		// or the model to import has empty pkg(that means the model is a basic type)
 		return
 	}
+	rootPkgName := func(pkg string) string {
+		firstDot := strings.Index(pkg, ".")
+		if firstDot == -1 {
+			return pkg
+		} else {
+			return pkg[:strings.Index(pkg, ".")]
+		}
+	}
+	// the innerPkg is the full package path within the package root, which means without the root package name as prefix
+	innerPkg := sch.Pkg
+	if rootPkgName(sch.Pkg) == rootPkgName(toPkg) {
+		// the import pkg and the toPkg reside in the same package root
+		innerPkg = sch.Pkg[strings.Index(sch.Pkg, ".")+1:]
+	}
 	if _, ok := imp[sch.Pkg]; !ok {
 		// the package path is not imported, need to import the pkg
-		asName := getImportAsName(imp, sch)
+		asName := getImportAsName(imp, innerPkg, sch.Module)
 		imp[sch.Pkg] = importStmt{
-			ImportPath: sch.Pkg,
+			ImportPath: innerPkg, // remove the root package name
 			AsName:     asName,
 			// if the package alias is conflict with other imports, use the `import as` syntax to resolve conflict.
 			MustAsName: asName != sch.Pkg[strings.LastIndex(sch.Pkg, ".")+1:],
@@ -519,7 +533,7 @@ func (sg *schemaGenContext) buildProperties() error {
 
 		vv := v
 		if tpe.IsComplexObject && tpe.IsAnonymous && len(v.Properties) > 0 {
-			// this is an anonymous complex construct: build a new new type for it
+			// this is an anonymous complex construct: build a new type for it
 			pg := sg.makeNewSchema(sg.Name+swag.ToGoName(k), v)
 			pg.IsTuple = sg.IsTuple
 			if sg.Path == "" {
