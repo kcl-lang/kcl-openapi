@@ -180,6 +180,8 @@ func collectSortedImports(model GenSchema) []importStmt {
 	return sortedImports
 }
 
+// getImportAsName infers the <import as> name by the context of all the existing import paths and the current schema to be imported.
+// the parent package name will be added as prefix to avoid import conflict
 func getImportAsName(imp map[string]importStmt, sch *GenSchema) string {
 	parts := strings.Split(sch.Pkg, ".")
 	asName := ""
@@ -206,9 +208,7 @@ func getImportAsName(imp map[string]importStmt, sch *GenSchema) string {
 	return mangledAsName
 }
 
-// findImports add import stmt from sch to opts if needed to the map of import stmts.
-// The sch param is the schema that might need to be imported to other file.
-// The opts param is the file which might need to import other packages to it
+// collectImports collect import paths from the sch to the toPkg, the result will be collected to the importStmt map.
 func collectImports(sch *GenSchema, toPkg string, imp map[string]importStmt) {
 	if sch.Items != nil {
 		collectImports(sch.Items, toPkg, imp)
