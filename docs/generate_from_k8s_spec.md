@@ -4,17 +4,32 @@ This guide shows how the `k8s` packages are generated. Alternatively, you could 
 
 If you want to manually generate them, please continue the guide.
 
+Here's a one-click command to generate from kubernetes 1.27 API, and the generated package will reside in the `models/k8s` directory:
+
+```shell
+version=1.27
+spec_path=swagger.json
+script_path=main.py
+wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-${version}/api/openapi-spec/swagger.json -O swagger.json
+wget https://raw.githubusercontent.com/kcl-lang/kcl-openapi/main/scripts/preprocess/main.py -O main.py
+python3 ${script_path} ${spec_path} --omit-status --rename=io.k8s=k8s
+kcl-openapi generate model -f processed-${spec_path}
+```
+
+For step-by-step generation, please follow the steps below:
+
 ## 1. Download the OpenAPI Spec
 
-Download the Kubernetes OpenAPI Spec from Github. In this guide, we'll generate from the [Kubernetes v1.27 spec](https://github.com/kubernetes/kubernetes/blob/release-1.27/api/openapi-spec/swagger.json)
+Download the Kubernetes OpenAPI Spec from Github. In this guide, we'll generate from the [Kubernetes v1.27 spec](https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.27/api/openapi-spec/swagger.json)
+
 
 ## 2. Pre-process the Spec
 
-Download the pre-process script from [main.py](https://github.com/kcl-lang/kcl-openapi/blob/scripts/preprocess/main.py), then run:
+Download the pre-process script from [main.py](https://raw.githubusercontent.com/kcl-lang/kcl-openapi/main/scripts/preprocess/main.py), then run:
 
 ```shell
-export spec_path="<path to the Kubernetes openAPI Spec>"
-export script_path="path to main.py"
+spec_path="<path to the Kubernetes openAPI Spec>"
+script_path="path to main.py"
 python3 ${script_path} ${spec_path} --omit-status --rename=io.k8s=k8s
 ```
 ## 3. Generate
