@@ -1,6 +1,6 @@
 # Generate KCL Packages from Kubernetes OpenAPI Specs
 
-This guide shows how the `kusion_kubernetes` packages are generated. Alternatively, you could skip this guide and directly use the pre-generated Kubernetes packages which are exactly the same as the outcome of this guide. Please refer the [kpm quick start guide](https://github.com/kcl-lang/kpm#quick-start) for how to pull and use the package.
+This guide shows how the `k8s` packages are generated. Alternatively, you could skip this guide and directly use the pre-generated Kubernetes packages which are exactly the same as the outcome of this guide. Please refer the [kpm quick start guide](https://github.com/kcl-lang/kpm#quick-start) for how to pull and use the package.
 
 If you want to manually generate them, please continue the guide.
 
@@ -15,7 +15,7 @@ Download the pre-process script from [here](../scripts/preprocess/main.py), then
 ```shell
 export spec_path="<path to the Kubernetes openAPI Spec>"
 export script_path="path to main.py"
-python3 ${script_path} ${spec_path} --omit-status --rename=io.k8s=kusion_kubernetes
+python3 ${script_path} ${spec_path} --omit-status --rename=io.k8s=k8s
 ```
 ## 3. Generate
 
@@ -24,7 +24,7 @@ processed_spec_path=$(dirname $spec_path)/processed-$(basename $spec_path)
 kcl-openapi generate model -f ${processed_spec_path}
 ```
 
-The generated package `kusion_kubernetes` could be fould at `<your work directory>/models`
+The generated package `k8s` could be fould at `<your work directory>/models`
 
 ## 4. Use KPM to Share the Packgae
 

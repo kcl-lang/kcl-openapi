@@ -26,7 +26,7 @@ This script pre-processes the k8s swagger spec file in following steps to make i
 - add the x-kcl-type extension to all models
 
 Usage:
-```python3 main.py <spec path> --debug --omit-status --rename=io.k8s=kusion_kubernetes```
+```python3 main.py <spec path> --debug --omit-status --rename=io.k8s=k8s```
 
 for now the script supports kubernetes swagger 2.0 spec only.
 """
