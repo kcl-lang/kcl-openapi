@@ -10,7 +10,7 @@ Download the Kubernetes OpenAPI Spec from Github. In this guide, we'll generate 
 
 ## 2. Pre-process the Spec
 
-Download the pre-process script from [here](../scripts/preprocess/main.py), then run:
+Download the pre-process script from [main.py](https://github.com/kcl-lang/kcl-openapi/blob/scripts/preprocess/main.py), then run:
 
 ```shell
 export spec_path="<path to the Kubernetes openAPI Spec>"
