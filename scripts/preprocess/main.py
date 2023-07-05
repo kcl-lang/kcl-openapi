@@ -20,11 +20,13 @@ This script pre-processes the k8s swagger spec file in following steps to make i
 - set the unused `paths` field in the spec to empty
 - inline the primitive models
 - remove the deprecated models
-- set the readonly value of the apiVersion and kind fields
+- convert dash to underline in all model name
+- rename model with user defined prefix
+- set the readonly value of the apiVersion and kind fields,  and omit status field
 - add the x-kcl-type extension to all models
 
 Usage:
-```python3 main.py <spec path>```
+```python3 main.py <spec path> --debug --omit-status --rename=io.k8s=kusion_kubernetes```
 
 for now the script supports kubernetes swagger 2.0 spec only.
 """
@@ -33,12 +35,38 @@ import json
 import re
 from collections import OrderedDict
 from pathlib import Path
+from typing import Optional
+
 
 oai_2_defs = 'definitions'
 _gvk_extension = "x-kubernetes-group-version-kind"
 _kcl_type_extension = "x-kcl-type"
 _properties = "properties"
-_debug_mode = False
+
+class RenamePattern:
+    from_value: str = ""
+    to_value: str = ""
+
+    def __init__(self, pattern: str):
+        result = pattern.split("=")
+        if len(result) != 2:
+            raise Exception(f"Invalid rename pattern: {pattern}")
+        self.from_value = result[0]
+        self.to_value = result[1]
+
+
+class PreProcessSettings:
+    spec_path: str = ""
+    debug: bool = False
+    prefix_rename: Optional[RenamePattern]
+    omit_status: bool = False
+
+    def __init__(self, spec_path: str, debug: bool = False, prefix_rename_pattern: Optional[RenamePattern] = None, omit_status: bool = False):
+        self.spec_path = spec_path
+        self.debug = debug
+        self.prefix_rename = prefix_rename_pattern
+        self.omit_status = omit_status
+
 
 def main():
     arg_parser = argparse.ArgumentParser()
@@ -47,13 +75,25 @@ def main():
         help='the path to the kubernetes swagger spec file'
     )
     arg_parser.add_argument(
-        'debug',
+        '--debug',
+        action='store_true',
         default=False,
-        type=bool,
         help='debug mode'
     )
+    arg_parser.add_argument(
+        '--rename',
+        action='store',
+        help='the package prefix rename mode. Pass in the option value in the <before_name>=<after_name> pattern'
+    )
+    arg_parser.add_argument(
+        '--omit-status',
+        action='store_true',
+        default=False,
+        help='omit the status field in the generated API models'
+    )
     args = arg_parser.parse_args()
-    _debug_mode = args.debug
+    
+    settings = PreProcessSettings(spec_path=args.spec_path, debug=args.debug, prefix_rename_pattern=RenamePattern(args.rename) if args.rename else None, omit_status=args.omit_status)
 
     print("0. load the spec file to json")
     spec = read_json(args.spec_path)
@@ -62,26 +102,32 @@ def main():
     spec['paths'] = {}
 
     print("2. inline the primitive models")
-    inline_primitive_models(spec)
+    inline_primitive_models(spec, settings)
 
     print("3. remove the deprecated models")
     remove_deprecated_models(spec)
 
-    print("4. set the readonly value of the apiVersion and kind fields")
+    print("4. convert dash to underline in all model name")
+    convert_special_character(spec, settings)
+
+    print("5. convert the package prefix by the rename pattern")
+    convert_package_prefix(spec, settings)
+
+    print("6. set the readonly value of the apiVersion and kind fields, and omit status field")
     models = spec[oai_2_defs]
-    assign_default_group_version_kind(models)
+    assign_default_group_version_kind(models, settings)
 
-    print("5. add the x-kcl-type extension to all models")
-    add_kcl_type_extension(models)
+    print("7. add the x-kcl-type extension to all models")
+    add_kcl_type_extension(models, settings)
 
-    print("6. save the processed spec to file. If the file already exists, it will be overwritten")
+    print("8. save the processed spec to file. If the file already exists, it will be overwritten")
     output_path = Path(args.spec_path).resolve().parent.joinpath(f'processed-{Path(args.spec_path).name}')
     write_json(output_path, spec)
 
     print(f"Completed preprocessing! The output file could be found at {output_path}")
     
 
-def add_kcl_type_extension(models):
+def add_kcl_type_extension(models, settings: PreProcessSettings):
     for k, v in models.items():
         schema_name = model_name_to_schema_name(k)
         file_name = schema_name_to_file_name(schema_name)
@@ -93,11 +139,11 @@ def add_kcl_type_extension(models):
             },
             "type": schema_name
         }
-        if _debug_mode:
+        if settings.debug:
             print("add kcl type extension on model %s" % k)
 
 
-def assign_default_group_version_kind(models):
+def assign_default_group_version_kind(models, settings: PreProcessSettings):
     for k, v in models.items():
         if _gvk_extension in v:
             gvk_list = v[_gvk_extension]
@@ -113,11 +159,15 @@ def assign_default_group_version_kind(models):
                 properties["apiVersion"]["readOnly"] = True
                 properties["kind"]["default"] = kind
                 properties["kind"]["readOnly"] = True
-                if _debug_mode:
+                if settings.debug:
                     print("assigning default value and set readonly to apiVersion and kind in model %s" % k)
+                if settings.omit_status and "status" in properties:
+                    del properties["status"]
+                    if settings.debug:
+                        print("omit status field in model %s" % k)
 
 
-def inline_primitive_models(spec):
+def inline_primitive_models(spec, settings: PreProcessSettings):
     """
     inline the primitive models: a model with no properties is a primitive model
     """
@@ -127,7 +177,7 @@ def inline_primitive_models(spec):
         if "properties" not in v:
             if "type" not in v:
                 v["type"] = "object"
-            if _debug_mode:
+            if settings.debug:
                 print(f'Making model `{k}` inline as {v["type"]}...')
             find_replace_ref_recursive(spec, f"#/{oai_2_defs}/" + k, v)
             to_remove_models.append(k)
@@ -211,15 +261,65 @@ def remove_deprecated_models(spec):
             print("Removing deprecated model %s" % k)
         else:
             models[k] = v
-    spec['definitions'] = models
+    spec[oai_2_defs] = models
 
+def rename_model(models, old_name: str, new_name: str, settings: PreProcessSettings):
+    if new_name in models:
+        raise PreProcessingException(f"Cannot rename model {old_name}. new name {new_name} exists.")
+    if settings.debug:
+        print(f"rename model {old_name} to {new_name}")
+    find_rename_ref_recursive(models, f"#/{oai_2_defs}/{old_name}", f"#/{oai_2_defs}/{new_name}")
+    models[new_name] = models[old_name]
+    del models[old_name]
+
+
+def find_rename_ref_recursive(root, old, new):
+    if isinstance(root, list):
+        for r in root:
+            find_rename_ref_recursive(r, old, new)
+    if isinstance(root, dict):
+        if "$ref" in root:
+            if root["$ref"] == old:
+                root["$ref"] = new
+        for k, v in root.items():
+            find_rename_ref_recursive(v, old, new)
+
+
+def convert_special_character(spec, settings: PreProcessSettings):
+    """
+    convert special characters in model names, such as dash to underline
+    """
+    models = spec[oai_2_defs]
+    rename_mapping = {}
+    for k, v in models.items():
+        if "-" in k:
+            new_k = k.replace("-", "_")
+            rename_mapping[k] = new_k
+    for old_name, new_name in rename_mapping.items():
+        rename_model(models, old_name, new_name, settings)
+    spec[oai_2_defs] = models
+
+def convert_package_prefix(spec, settings: PreProcessSettings):
+    """
+    convert the package prefix by the given rename pattern
+    """
+    if settings.prefix_rename is None:
+        return
+    models = spec[oai_2_defs]
+    rename_mapping = {}
+    for k, v in models.items():
+        if k.startswith(settings.prefix_rename.from_value):
+            new_k = k.replace(settings.prefix_rename.from_value, settings.prefix_rename.to_value)
+            rename_mapping[k] = new_k
+    for old_name, new_name in rename_mapping.items():
+        rename_model(models, old_name, new_name, settings)
+    spec[oai_2_defs] = models
 
 def read_json(filename):
     with open(filename, 'r') as content:
         data = json.load(content, object_pairs_hook=OrderedDict)
         content.close()
         return data
-
 
 def write_json(filename, json_object):
     with open(filename, 'w') as out:
@@ -228,7 +328,6 @@ def write_json(filename, json_object):
 
 class PreProcessingException(Exception):
     pass
-
 
 if __name__ == '__main__':
     main()
