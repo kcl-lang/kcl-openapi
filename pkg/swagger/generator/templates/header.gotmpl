@@ -15,8 +15,8 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 """
 
 {{- if .Imports }}
-{{- range $imp := .Imports }}
-import {{ $imp }}
+{{- range .Imports }}
+import {{ .ImportPath }}{{ if .MustAsName }} as {{ .AsName }}{{ end }}
 {{- end }}
 {{- end }}
 {{ "\n" -}}

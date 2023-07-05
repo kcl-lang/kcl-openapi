@@ -146,12 +146,6 @@ func makeGenDefinitionHierarchy(name, pkg, container string, schema spec.Schema,
 		}
 	}
 
-	imports := findImports(&pg.GenSchema, &importOpts{
-		pkg:  pg.GenSchema.Pkg,
-		name: pg.GenSchema.Name,
-	})
-	// todo: check import pkgs conflict
-
 	return &GenDefinition{
 		GenCommon: GenCommon{
 			Copyright:        opts.Copyright,
@@ -161,73 +155,102 @@ func makeGenDefinitionHierarchy(name, pkg, container string, schema spec.Schema,
 		GenSchema:    pg.GenSchema,
 		DependsOn:    pg.Dependencies,
 		ExtraSchemas: gatherExtraSchemas(pg.ExtraSchemas),
-		Imports:      imports,
+		Imports:      collectSortedImports(pg.GenSchema),
 	}, nil
 }
 
-type importOpts struct {
-	pkg  string
-	name string
+type importStmt struct {
+	ImportPath string
+	AsName     string
+	MustAsName bool
 }
 
-func findImports(sch *GenSchema, opts *importOpts) map[string]string {
-	imp := map[string]string{}
-	if sch.Name != opts.name {
-		if sch.Pkg != opts.pkg {
-			// not in the same pkg, import pkg
-			if sch.Pkg != "" && sch.Module != "" {
-				imp[sch.Module] = sch.Pkg
+func collectSortedImports(model GenSchema) []importStmt {
+	importMap := map[string]importStmt{}
+	collectImports(&model, model.Pkg, importMap)
+	sortedPkgPaths := make([]string, 0, len(importMap))
+	sortedImports := make([]importStmt, 0, len(importMap))
+	for k := range importMap {
+		sortedPkgPaths = append(sortedPkgPaths, k)
+	}
+	sort.Strings(sortedPkgPaths)
+	for _, k := range sortedPkgPaths {
+		sortedImports = append(sortedImports, importMap[k])
+	}
+	return sortedImports
+}
+
+// getImportAsName infers the <import as> name by the context of all the existing import paths and the current schema to be imported.
+// the parent package name will be added as prefix to avoid import conflict
+func getImportAsName(imp map[string]importStmt, sch *GenSchema) string {
+	parts := strings.Split(sch.Pkg, ".")
+	asName := ""
+	for i := len(parts) - 1; i >= 0; i-- {
+		conflict := false
+		// when conflict with other import as name, the `import as` name will be "{parentPkgName}strings.Title({PkgAlias})"
+		asName = parts[i] + strings.ToTitle(asName)
+		for _, v := range imp {
+			if v.AsName == asName {
+				conflict = true
+				break
 			}
-			// on cross pkg import, add pkg alias to type
-			if sch.PkgAlias != "" {
-				sch.KclType = sch.PkgAlias + "." + sch.KclType
-			}
+		}
+		if !conflict {
+			return asName
 		}
 	}
-	if sch.Items != nil {
-		sub := findImports(sch.Items, opts)
-		for k, v := range sub {
-			imp[k] = v
+	mangledAsName := "kusionMangled" + strings.ToTitle(asName)
+	for _, v := range imp {
+		if v.AsName == asName {
+			log.Printf("[WARN] the import paths in module %s.%s are confict, please resolve it properly", sch.Pkg, sch.Module)
 		}
+	}
+	return mangledAsName
+}
+
+// collectImports collect import paths from the sch to the toPkg, the result will be collected to the importStmt map.
+func collectImports(sch *GenSchema, toPkg string, imp map[string]importStmt) {
+	if sch.Items != nil {
+		collectImports(sch.Items, toPkg, imp)
 		sch.KclType = "[" + sch.Items.KclType + "]"
 	}
 	if sch.AdditionalItems != nil {
-		sub := findImports(sch.AdditionalItems, opts)
-		for k, v := range sub {
-			imp[k] = v
-		}
+		collectImports(sch.AdditionalItems, toPkg, imp)
 	}
 	if sch.Object != nil {
-		sub := findImports(sch.Object, opts)
-
-		for k, v := range sub {
-			imp[k] = v
-		}
+		collectImports(sch.Object, toPkg, imp)
 	}
 	if sch.Properties != nil {
 		for idx := range sch.Properties {
-			sub := findImports(&sch.Properties[idx], opts)
-			for k, v := range sub {
-				imp[k] = v
-			}
+			collectImports(&sch.Properties[idx], toPkg, imp)
 		}
 	}
 	if sch.AdditionalProperties != nil {
-		sub := findImports(sch.AdditionalProperties, opts)
-		for k, v := range sub {
-			imp[k] = v
-		}
+		collectImports(sch.AdditionalProperties, toPkg, imp)
 		sch.KclType = "{str:" + sch.AdditionalProperties.KclType + "}"
 	}
 	if sch.AllOf != nil {
 		for idx := range sch.AllOf {
-			sub := findImports(&sch.AllOf[idx], opts)
-			for k, v := range sub {
-				imp[k] = v
-			}
+			collectImports(&sch.AllOf[idx], toPkg, imp)
 		}
 	}
-	return imp
+	if sch.Pkg == toPkg || sch.Pkg == "" {
+		// the model to import and to import to belong to the same package,
+		// or the model to import has empty pkg(that means the model is a basic type)
+		return
+	}
+	if _, ok := imp[sch.Pkg]; !ok {
+		// the package path is not imported, need to import the pkg
+		asName := getImportAsName(imp, sch)
+		imp[sch.Pkg] = importStmt{
+			ImportPath: sch.Pkg,
+			AsName:     asName,
+			// if the package alias is conflict with other imports, use the `import as` syntax to resolve conflict.
+			MustAsName: asName != sch.Pkg[strings.LastIndex(sch.Pkg, ".")+1:],
+		}
+	}
+	// update the KclType with the import as name prefix
+	sch.KclType = imp[sch.Pkg].AsName + "." + sch.KclType
 }
 
 type schemaGenContext struct {
