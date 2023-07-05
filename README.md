@@ -42,9 +42,13 @@ tool will extract the defined models from it and generate the corresponding KCL 
 
 The command is as follows:
 
+
 ```shell
 kcl-openapi generate model -f ${your_open_api_spec} -t ${the_kcl_files_output_dir}
 ```
+
+> **Note**: The Kubernetes API models among all versions are pre-generated, you can directly use it. Please refer the [kpm quick start guide](https://github.com/kcl-lang/kpm#quick-start) for how to pull and use the package.
+Alternatively, if you need to generate them yourself, please refer [Generate KCL Packages from Kubernetes OpenAPI Specs](./docs/generate_from_k8s_spec.md).
 
 ### Translate Kubernetes CRD to KCL
 
