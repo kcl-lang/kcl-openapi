@@ -199,7 +199,7 @@ func getImportAsName(imp map[string]importStmt, pkg string, module string) strin
 			return asName
 		}
 	}
-	mangledAsName := "kusionMangled" + strings.ToTitle(asName)
+	mangledAsName := "kclMangled" + strings.ToTitle(asName)
 	for _, v := range imp {
 		if v.AsName == asName {
 			log.Printf("[WARN] the import paths in module %s.%s are confict, please resolve it properly", pkg, module)

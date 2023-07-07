@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"kusionstack.io/kcl-openapi/pkg/utils"
+	"kcl-lang.io/kcl-openapi/pkg/utils"
 )
 
 func getProjectRoot(t *testing.T) string {

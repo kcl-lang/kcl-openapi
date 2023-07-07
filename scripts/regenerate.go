@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"kusionstack.io/kcl-openapi/pkg/utils"
+	"kcl-lang.io/kcl-openapi/pkg/utils"
 )
 
 func main() {

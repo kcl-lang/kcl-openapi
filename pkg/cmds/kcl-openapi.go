@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	crdGen "kusionstack.io/kcl-openapi/pkg/kube_resource/generator"
-	"kusionstack.io/kcl-openapi/pkg/swagger/generator"
+	crdGen "kcl-lang.io/kcl-openapi/pkg/kube_resource/generator"
+	"kcl-lang.io/kcl-openapi/pkg/swagger/generator"
 
 	"github.com/go-openapi/loads"
 	"github.com/go-openapi/loads/fmts"

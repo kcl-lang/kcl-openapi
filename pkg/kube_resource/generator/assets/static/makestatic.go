@@ -14,7 +14,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"kusionstack.io/kcl-openapi/pkg/kube_resource/generator/assets/static"
+	"kcl-lang.io/kcl-openapi/pkg/kube_resource/generator/assets/static"
 )
 
 func main() {
