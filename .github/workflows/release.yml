@@ -58,5 +58,5 @@ jobs:
           version: latest
           args: release --rm-dist
         env:
-          GITHUB_TOKEN: ${{ secrets.KUSIONSTACK_BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.KCL_LANG_BOT_TOKEN }}
           RELEASE_VERSION: ${{ github.ref }}
