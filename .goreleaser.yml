@@ -44,7 +44,7 @@ changelog:
       - '^test:'
 release:
   github:
-    owner: KusionStack
+    owner: kcl-lang
     name: kcl-openapi
   draft: false
   footer: |
