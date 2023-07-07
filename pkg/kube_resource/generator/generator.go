@@ -33,12 +33,12 @@ import (
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/kube-openapi/pkg/validation/spec"
 
-	"kusionstack.io/kcl-openapi/pkg/kube_resource/generator/assets/static"
+	"kcl-lang.io/kcl-openapi/pkg/kube_resource/generator/assets/static"
 )
 
 const (
 	k8sSpecFile         = "api_spec/k8s/k8s.json"
-	objectMetaSchemaRef = "k8s.json#/definitions/kusion_kubernetes.apimachinery.apis.ObjectMeta"
+	objectMetaSchemaRef = "k8s.json#/definitions/k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
 )
 
 var (

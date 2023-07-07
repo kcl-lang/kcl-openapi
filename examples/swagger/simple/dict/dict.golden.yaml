@@ -10,6 +10,6 @@ definitions:
           type: integer
 swagger: "2.0"
 info:
-  title: Kusion
+  title: kcl
   version: v0.0.2
 paths: {}

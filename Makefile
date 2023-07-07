@@ -10,7 +10,7 @@ clean:
 	rm -rf test_data/tmp_*
 
 check-fmt:
-	test -z $$(goimports -l -w -e -local=kusionstack.io $(GO_FILES))
+	test -z $$(goimports -l -w -e -local=kcl-lang.io $(GO_FILES))
 
 regenerate:
 	go run scripts/regenerate.go

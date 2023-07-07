@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	crdGen "kusionstack.io/kcl-openapi/pkg/kube_resource/generator"
-	"kusionstack.io/kcl-openapi/pkg/utils"
+	crdGen "kcl-lang.io/kcl-openapi/pkg/kube_resource/generator"
+	"kcl-lang.io/kcl-openapi/pkg/utils"
 )
 
 func getProjectRoot(t *testing.T) string {

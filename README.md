@@ -1,8 +1,8 @@
 # KCL OpenAPI
 
-[![GoDoc](https://godoc.org/github.com/KusionStack/kcl-openapi?status.svg)](https://pkg.go.dev/kusionstack.io/kcl-openapi)
-[![license](https://img.shields.io/github/license/KusionStack/kcl-openapi.svg)](https://github.com/KusionStack/kcl-openapi/blob/master/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/github/KusionStack/kcl-openapi/badge.svg)](https://coveralls.io/github/KusionStack/kcl-openapi)
+[![GoDoc](https://godoc.org/github.com/kcl-lang/kcl-openapi?status.svg)](https://pkg.go.dev/kcl-lang.io/kcl-openapi)
+[![license](https://img.shields.io/github/license/kcl-lang/kcl-openapi.svg)](https://github.com/kcl-lang/kcl-openapi/blob/master/LICENSE)
+[![Coverage Status](https://coveralls.io/repos/github/kcl-lang/kcl-openapi/badge.svg)](https://coveralls.io/github/kcl-lang/kcl-openapi)
 
 The work on this project is mainly based on [go-swagger](https://github.com/go-swagger/go-swagger), and this project just adds some
 KCL-specific templates and language features on it. We are grateful and sincerely respectful for the outstanding work
@@ -28,7 +28,7 @@ Main use cases:
 + Or we can only install the tool with go install:
 
   ```shell
-  go install kusionstack.io/kcl-openapi@latest
+  go install kcl-lang.io/kcl-openapi@latest
   ```
 
 ## Features
@@ -65,12 +65,12 @@ kcl-openapi generate model --crd -f ${your_CRD.yaml} -t ${the_kcl_files_output_d
 
 ## KCL OpenAPI Spec
 
-The [KCL OpenAPI Spec](https://kusionstack.io/docs/reference/cli/openapi/spec) defines a complete specification of how OpenAPI objects are
+The [KCL OpenAPI Spec](https://kcl-lang.io/docs/reference/cli/openapi/spec) defines a complete specification of how OpenAPI objects are
 mapping to KCL language elements.
 
 ## Ask for help
 
-If the tool isn't working as you expect, please reach out to us by filing an [issue](https://github.com/KusionStack/kcl-openapi/issues).
+If the tool isn't working as you expect, please reach out to us by filing an [issue](https://github.com/kcl-lang/kcl-openapi/issues).
 
 ## License
 
