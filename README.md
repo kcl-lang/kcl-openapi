@@ -20,15 +20,34 @@ Main use cases:
 
 ### Install
 
-+ Since kcl openapi tool is packaged with kusion distribution, and we highly recommend you
-  to [install the Kusion tools package](https://kusionstack.io/docs/user_docs/getting-started/install) which contains the KCL language
-  support
-  and other tools.
+The kcl-openapi tool can be installed in both ways: 
 
-+ Or we can only install the tool with go install:
+- [go install](#1-go-install)
+- [curl|sh install (MacOS & Linux)](#2-curlsh-install-macos--linux)
+- [download from release](#3-dowload-from-release)
+
+## 1 go install
 
   ```shell
   go install kcl-lang.io/kcl-openapi@latest
+  ```
+
+## 2 Curl|sh install (MacOS & Linux)
+
+If you don't have go, you can install the CLI with this one-liner:
+
+  ```shell
+  curl -fsSL https://kcl-lang.io/script/install-kcl-openapi.sh | /bin/bash
+  ```
+
+## 3 Dowload from release
+
+  ```shell
+  # 1. download the released binary from:
+  # https://github.com/kcl-lang/kcl-openapi/releases
+
+  # 2. Unzip the package and add the binary location to PATH
+  export PATH="<Your directory to store KCLOpenapi binary>:$PATH"
   ```
 
 ## Features
@@ -42,13 +61,12 @@ tool will extract the defined models from it and generate the corresponding KCL 
 
 The command is as follows:
 
+  ```shell
+  kcl-openapi generate model -f ${your_open_api_spec} -t ${the_kcl_files_output_dir}
+  ```
 
-```shell
-kcl-openapi generate model -f ${your_open_api_spec} -t ${the_kcl_files_output_dir}
-```
-
-> **Note**: The Kubernetes API models among all versions are pre-generated, you can directly use it. Please refer the [kpm quick start guide](https://github.com/kcl-lang/kpm#quick-start) for how to pull and use the package.
-Alternatively, if you need to generate them yourself, please refer [Generate KCL Packages from Kubernetes OpenAPI Specs](./docs/generate_from_k8s_spec.md).
+> **Note**: The [Kubernetes KCL models](https://github.com/orgs/KusionStack/packages/container/package/k8s) among all versions are pre-generated, you get it by executing `kpm add k8s:<version>` under your project. For detailed information about kpm usage, please refer to [kpm quick start guide](https://github.com/kcl-lang/kpm#quick-start).
+Alternatively, if you may want to generate them yourself, please refer [Generate KCL Packages from Kubernetes OpenAPI Specs](./docs/generate_from_k8s_spec.md).
 
 ### Translate Kubernetes CRD to KCL
 
@@ -59,9 +77,9 @@ OpenAPI tool will extract the structural schema and generate the corresponding K
 
 The command is as follows:
 
-```shell
-kcl-openapi generate model --crd -f ${your_CRD.yaml} -t ${the_kcl_files_output_dir} --skip-validation
-```
+  ```shell
+  kcl-openapi generate model --crd -f ${your_CRD.yaml} -t ${the_kcl_files_output_dir} --skip-validation
+  ```
 
 ## KCL OpenAPI Spec
 
