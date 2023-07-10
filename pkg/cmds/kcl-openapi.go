@@ -13,6 +13,8 @@ import (
 	"github.com/jessevdk/go-flags"
 )
 
+const version = "0.5.0"
+
 func init() {
 	loads.AddLoader(fmts.YAMLMatcher, fmts.YAMLDoc)
 }
@@ -21,6 +23,7 @@ var opts struct {
 	// General options applicable to all commands
 	Quiet   func()       `long:"quiet" short:"q" description:"silence logs"`
 	LogFile func(string) `long:"log-output" description:"redirect logs to file" value-name:"LOG-FILE"`
+	Version func()       `long:"version" short:"v" description:"print the version of kcl-openapi"`
 }
 
 // Generate command to group all generator commands together
@@ -58,7 +61,10 @@ func Main() {
 			cmd.LongDescription = cmd.ShortDescription
 		}
 	}
-
+	opts.Version = func() {
+		println("kcl-openapi", version)
+		os.Exit(0)
+	}
 	opts.Quiet = func() {
 		log.SetOutput(ioutil.Discard)
 	}
