@@ -49,14 +49,14 @@ release:
   draft: false
   footer: |
     ## Docker Images
-    * `kusionstack/kcl-openapi:{{ .Env.RELEASE_VERSION }}`
+    * `kcllang/kcl-openapi:{{ .Env.RELEASE_VERSION }}`
 dockers:
   - use: buildx
     goos: linux
     goarch: amd64
     dockerfile: Dockerfile
     image_templates:
-      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
+      - kcllang/{{ .ProjectName }}:{{ .Tag }}-amd64
     build_flag_templates:
       - "--target=goreleaser"
       - "--pull"
@@ -69,10 +69,10 @@ dockers:
 
 docker_manifests:
   - use: docker
-    name_template: kusionstack/{{ .ProjectName }}:{{ .Tag }}
+    name_template: kcllang/{{ .ProjectName }}:{{ .Tag }}
     image_templates:
-      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
+      - kcllang/{{ .ProjectName }}:{{ .Tag }}-amd64
   - use: docker
-    name_template:  kusionstack/{{ .ProjectName }}:latest
+    name_template:  kcllang/{{ .ProjectName }}:latest
     image_templates:
-      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
+      - kcllang/{{ .ProjectName }}:{{ .Tag }}-amd64
