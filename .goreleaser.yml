@@ -49,7 +49,7 @@ release:
   draft: false
   footer: |
     ## Docker Images
-    * `kcllang/kcl-openapi:{{ .Env.RELEASE_VERSION }}`
+    * `kcllang/kcl-openapi:{{ .Tag }}`
 dockers:
   - use: buildx
     goos: linux
@@ -66,7 +66,6 @@ dockers:
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source={{.GitURL}}"
       - "--platform=linux/amd64"
-
 docker_manifests:
   - use: docker
     name_template: kcllang/{{ .ProjectName }}:{{ .Tag }}
