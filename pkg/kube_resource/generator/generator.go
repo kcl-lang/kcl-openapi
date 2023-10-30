@@ -122,29 +122,60 @@ func crdObj2CrdInternal(crdObj runtime.Object) (*apiextensions.CustomResourceDef
 	default:
 		return nil, errors.New(fmt.Sprintf("unknown crd object type %v", crdObj.GetObjectKind()))
 	}
-	if crd.Spec.Validation == nil || crd.Spec.Validation.OpenAPIV3Schema == nil {
-		return nil, errors.New("no openapi schema found in the crd file. Please check following fields: spec.Validation.OpenAPIV3Schema, spec.Versions.0.Schema")
+
+	if !CRDContainsValidation(crd) {
+		return nil, errors.New("no openapi schema found in the crd file. Please check following fields: \nspec.Versions.<n>.Schema, spec.Versions.<n>.Schema.OpenAPIV3Schema, spec.Validation.OpenAPIV3Schema, spec.Versions.0.Schema")
 	}
 	return crd, nil
 }
 
-func buildSwagger(crd *apiextensions.CustomResourceDefinition) (*spec.Swagger, error) {
-	var schema spec.Schema
-	err := validation.ConvertJSONSchemaProps(crd.Spec.Validation.OpenAPIV3Schema, &schema)
-	if err != nil {
-		return nil, err
+func CRDContainsValidation(crd *apiextensions.CustomResourceDefinition) bool {
+	if crd.Spec.Validation != nil && crd.Spec.Validation.OpenAPIV3Schema != nil {
+		return true
 	}
-	group, kind, version := kvg(crd)
-	setKubeNative(&schema, group, version, kind)
+	for _, version := range crd.Spec.Versions {
+		if version.Schema != nil && version.Schema.OpenAPIV3Schema != nil {
+			return true
+		}
+	}
+	return false
+}
+
+func buildSwagger(crd *apiextensions.CustomResourceDefinition) (*spec.Swagger, error) {
+	var schemas spec.Definitions = map[string]spec.Schema{}
+	group, kind := crd.Spec.Group, crd.Spec.Names.Kind
+	if crd.Spec.Validation != nil && crd.Spec.Validation.OpenAPIV3Schema != nil {
+		var schema spec.Schema
+		err := validation.ConvertJSONSchemaProps(crd.Spec.Validation.OpenAPIV3Schema, &schema)
+		if err != nil {
+			return nil, err
+		}
+		version := crd.Spec.Version
+		setKubeNative(&schema, group, version, kind)
+		name := fmt.Sprintf("%s.%s.%s", group, version, kind)
+		schemas[name] = schema
+	} else if len(crd.Spec.Versions) > 0 {
+		for _, version := range crd.Spec.Versions {
+			if version.Schema != nil && version.Schema.OpenAPIV3Schema != nil {
+				var schema spec.Schema
+				err := validation.ConvertJSONSchemaProps(version.Schema.OpenAPIV3Schema, &schema)
+				if err != nil {
+					return nil, err
+				}
+				version := version.Name
+				setKubeNative(&schema, group, version, kind)
+				name := fmt.Sprintf("%s.%s.%s", group, version, kind)
+				schemas[name] = schema
+			}
+		}
+	}
+
 	// todo: set extensions, include kcl-type and user-defined extensions
-	name := fmt.Sprintf("%s.%s.%s", group, version, kind)
 	return &spec.Swagger{
 		SwaggerProps: spec.SwaggerProps{
-			Swagger: "2.0", // todo: support swagger 3.0
-			Definitions: spec.Definitions{
-				name: schema,
-			},
-			Paths: &spec.Paths{},
+			Swagger:     "2.0", // todo: support swagger 3.0
+			Definitions: schemas,
+			Paths:       &spec.Paths{},
 			Info: &spec.Info{
 				InfoProps: spec.InfoProps{
 					Title:   "Kubernetes CRD Swagger",
@@ -172,19 +203,4 @@ func setKubeNative(schema *spec.Schema, group string, version string, kind strin
 	schema.SetProperty("metadata", *spec.RefSchema(objectMetaSchemaRef).
 		WithDescription(swaggerPartialObjectMetadataDescriptions["metadata"]))
 	// todo: update more k8s refs to kcl format
-}
-
-func kvg(crd *apiextensions.CustomResourceDefinition) (string, string, string) {
-	group := crd.Spec.Group
-	kind := crd.Spec.Names.Kind
-	var version string
-	if crd.Spec.Version == "" {
-		if len(crd.Spec.Versions) != 0 {
-			// todo: fix hack: use last version
-			version = crd.Spec.Versions[len(crd.Spec.Versions)-1].Name
-		}
-	} else {
-		version = crd.Spec.Version
-	}
-	return group, kind, version
 }
