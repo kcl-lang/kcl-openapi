@@ -13,20 +13,114 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+      - name: Install GH CLI # Selfhosted runners do not come with the GH CLI out of the box. This action is an easy-to-use way to install it.
+        uses: dev-hanz-ops/install-gh-cli-action@v0.1.0
+        with:
+          gh-cli-version: 2.14.2
       - name: Set up Go 1.18
         uses: actions/setup-go@v2
         with:
           go-version: 1.18
-      - name: build-kcl-openapi
-        run: go build
-      - name: sync k8s models
+      - name: install kcl-openapi
+        run: go install kcl-lang.io/kcl-openapi@latest
+      - name: install-kpm
+        run: go install kcl-lang.io/kpm@latest
+      - name: install kcl cli
+        run: go install kcl-lang.io/cli/cmd/kcl@latest
+      - name: download and generate k8s models
         run: |
           tags=("1.28" "1.29" "1.30" "1.31" "1.32" "1.33")
+          models_dir=models
+          pkg_name="k8s"
           for tag in "${tags[@]}"
           do
             spec_path=swagger.json
+            # clean up files and models
             rm -f ${spec_path}
+            rm -rf ${models_dir}
+            
+            # 1. download k8s swagger spec from github
             wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-${tag}/api/openapi-spec/swagger.json -O ${spec_path}
-            python ./scripts/preprocess/main.py ${spec_path} --omit-status --rename=io.k8s=k8s
-            ./kcl-openapi generate model -f processed-${spec_path}
+            if [ -s "${spec_path}" ]; then
+              ## download spec successfully
+
+              # 2. preprocess the spec
+              python ./scripts/preprocess/main.py ${spec_path} --omit-status --rename=io.k8s=k8s
+              
+              # 3. generate kcl models from the spec
+              kcl-openapi generate model -f processed-${spec_path}
+              # init the package using kpm
+              cd ${models_dir}
+              kpm init ${pkg_name}
+              metadata="[package]
+              name = \"${pkg_name}\"
+              edition = \"${tag}\"
+              version = \"${tag}\"
+              "
+              echo "${metadata}" > ${pkg_name}/kcl.mod
+              rm ${pkg_name}/main.k
+              cd ..
+              cp -r models ${models_dir}-${tag}
+              rm -rf models
+            fi
           done
+      - name: commit and push
+        run: |
+          pkg_name="k8s"
+          tags=("1.28" "1.29" "1.30" "1.31" "1.32" "1.33")
+
+          # 1. clone the modules repo and set up git config
+          NAMESPACE="kcl-lang"
+          REPOSITORY="modules"
+          USERNAME="kusion-docs"
+          FOLDER="$REPOSITORY"
+          models_dir=models
+
+          ## 1.1 clone the modules repo
+          git clone --depth=1 --branch=main https://kusion-docs:${{ secrets.kusion-docs-pat }}@github.com/$NAMESPACE/$REPOSITORY $FOLDER
+          
+          ## 1.2 set up git config
+          cd $FOLDER
+          git config user.email "kusiondocs@gmail.com"
+          git config user.name "kusion-docs"
+          
+          # 2. cp, commit and create PR on the generated package to the modules repo
+          for tag in "${tags[@]}"
+          do
+            ## 2.1 clean the old content
+            rm -rf $pkg_name
+            if [ -d "../${models_dir}-${tag}" ]; then
+              ## create the branch
+              BRANCH_NAME="sync-models-${pkg_name}-${tag}"
+              git checkout -b ${BRANCH_NAME}
+              # package exists, then cp the package to modules repo, and generate docs for it
+              
+              ## 2.2 copy the package
+              cp -rf ../${models_dir}-${tag}/ $pkg_name/
+              
+              ## 2.3 generate doc
+              kcl doc generate --format md --file-path $pkg_name/
+              mv $pkg_name/docs/$pkg_name.md $pkg_name/README.md
+              rm -rf $pkg_name/docs
+              
+              ## 2.4 commit and push
+              git add .
+              git commit -m "sync model: ${pkg_name} ${tag}"
+              echo "push the branch to remote repo: ${NAMESPACE}/${REPOSITORY}"
+              git push https://github.com/${NAMESPACE}/${REPOSITORY}.git  $BRANCH_NAME
+
+              ## 2.5 create PR
+              # Store the PAT in a file that can be accessed by the GitHub CLI.
+              echo "${{ secrets.kusion_docs_pat }}" > token.txt
+              # Authorize GitHub CLI for the current repository and create a pull-request containing the updates.
+              gh auth login --with-token < token.txt
+              gh pr create \
+              --body "sync model: ${pkg_name} ${tag}" \
+              --title "chore: sync model ${pkg_name} ${tag}" \
+              --base "main" \
+              --head "$USERNAME:$BRANCH_NAME" \
+              --repo $NAMESPACE/$REPOSITORY
+            fi
+          done
+          
+
