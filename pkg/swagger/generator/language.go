@@ -175,6 +175,11 @@ func (l *LanguageOpts) FormatContent(name string, content []byte) ([]byte, error
 	return content, nil
 }
 
+// NonEmptyValue checks if a value is non-empty
+func (l *LanguageOpts) NonEmptyValue(data interface{}) bool {
+	return data != nil
+}
+
 // baseImport figures out the base path to generate import statements
 func (l *LanguageOpts) baseImport(tgt string) string {
 	if l.BaseImportFunc != nil {

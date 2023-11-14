@@ -15,7 +15,7 @@ schema Dog (Animal, Pet):
     """
 
 
-    packSize: int
+    packSize: int = 0
 
 
     check:

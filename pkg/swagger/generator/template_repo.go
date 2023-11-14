@@ -142,6 +142,7 @@ func DefaultFuncMap(lang *LanguageOpts) template.FuncMap {
 		},
 		"toKCLValue":    lang.ToKclValue,
 		"escapeKeyword": lang.MangleModelName,
+		"nonEmptyValue": lang.NonEmptyValue,
 	}
 }
 

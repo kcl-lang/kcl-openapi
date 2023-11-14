@@ -8,7 +8,7 @@ schema {{ shortType .KclType }} {{- if gt (len (baseTypes .AllOf)) 0 }} ({{ rang
 
 {{- range nonBaseTypes .AllOf }}
 {{- range .Properties }}
-    {{ .EscapedName }}: {{ if .ReadOnly }}{{ if .Default }}{{ toKCLValue .Default }}{{ else }}{{ .KclType }}{{ end }}{{ else }}{{ .KclType }}{{ end }}{{ if .Default }} = {{ toKCLValue .Default }}{{ end }}
+    {{ .EscapedName }}{{ if not .Required }}?{{ end }}: {{ if .Enum }}{{ range $i, $e := .Enum }}{{ if $i }} | {{ end }}{{ toKCLValue $e }}{{ end }}{{ else }}{{ if .ReadOnly }}{{ if nonEmptyValue .Default }}{{ toKCLValue .Default }}{{ else }}{{ .KclType }}{{ end }}{{ else }}{{ .KclType }}{{ end }}{{- end }}{{ if nonEmptyValue .Default }} = {{ toKCLValue .Default }}{{ end }}
 {{- "\n" -}}
 {{- end }}
 {{- "\n" -}}
@@ -17,7 +17,7 @@ schema {{ shortType .KclType }} {{- if gt (len (baseTypes .AllOf)) 0 }} ({{ rang
 
 {{- if .Properties }}
 {{- range .Properties }}
-    {{ .EscapedName }}{{ if not .Required }}?{{ end }}: {{ if .Enum }}{{ range $i, $e := .Enum }}{{ if $i }} | {{ end }}{{ toKCLValue $e }}{{ end }}{{ else }}{{ if .ReadOnly }}{{ if .Default }}{{ toKCLValue .Default }}{{ else }}{{ .KclType }}{{ end }}{{ else }}{{ .KclType }}{{ end }}{{- end }}{{ if .Default }} = {{ toKCLValue .Default }}{{ end }}
+    {{ .EscapedName }}{{ if not .Required }}?{{ end }}: {{ if .Enum }}{{ range $i, $e := .Enum }}{{ if $i }} | {{ end }}{{ toKCLValue $e }}{{ end }}{{ else }}{{ if .ReadOnly }}{{ if nonEmptyValue .Default }}{{ toKCLValue .Default }}{{ else }}{{ .KclType }}{{ end }}{{ else }}{{ .KclType }}{{ end }}{{- end }}{{ if nonEmptyValue .Default }} = {{ toKCLValue .Default }}{{ end }}
 {{- "\n" -}}
 {{- end -}}
 {{- if .HasAdditionalProperties }}
