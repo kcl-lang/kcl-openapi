@@ -155,7 +155,7 @@ func makeGenDefinitionHierarchy(name, pkg, container string, schema spec.Schema,
 		GenSchema:    pg.GenSchema,
 		DependsOn:    pg.Dependencies,
 		ExtraSchemas: gatherExtraSchemas(pg.ExtraSchemas),
-		Imports:      collectSortedImports(pg.GenSchema),
+		Imports:      pg.collectSortedImports(),
 	}, nil
 }
 
@@ -163,21 +163,57 @@ type importStmt struct {
 	ImportPath string
 	AsName     string
 	MustAsName bool
+	IsBuiltIn  bool
 }
 
-func collectSortedImports(model GenSchema) []importStmt {
-	importMap := map[string]importStmt{}
-	collectImports(&model, model.Pkg, importMap)
-	sortedPkgPaths := make([]string, 0, len(importMap))
-	sortedImports := make([]importStmt, 0, len(importMap))
-	for k := range importMap {
+func (sg *schemaGenContext) collectSortedImports() []importStmt {
+	// collect built-in imports
+	builtInImps := sg.GenSchema.getBuiltInImports()
+	for _, schema := range sg.ExtraSchemas {
+		imps := schema.getBuiltInImports()
+		for pkg, imp := range imps {
+			builtInImps[pkg] = imp
+		}
+	}
+
+	// collect pkg imports
+	pkgImps := map[string]importStmt{}
+	collectImports(&sg.GenSchema, sg.GenSchema.Pkg, pkgImps)
+
+	// sort imports with rules:
+	// 1. built-in imports always appears before pkg imports
+	// 2. the import paths are sorted in lexicographical order
+	sortedImports := sortImports(builtInImps)
+	for _, imp := range sortImports(pkgImps) {
+		sortedImports = append(sortedImports, imp)
+	}
+	return sortedImports
+}
+
+func sortImports(imports map[string]importStmt) []importStmt {
+	sortedPkgPaths := make([]string, 0, len(imports))
+	sortedImports := make([]importStmt, 0, len(imports))
+	for k := range imports {
 		sortedPkgPaths = append(sortedPkgPaths, k)
 	}
 	sort.Strings(sortedPkgPaths)
 	for _, k := range sortedPkgPaths {
-		sortedImports = append(sortedImports, importMap[k])
+		sortedImports = append(sortedImports, imports[k])
 	}
 	return sortedImports
+}
+
+func (schema *GenSchema) getBuiltInImports() map[string]importStmt {
+	imp := map[string]importStmt{}
+	for _, property := range schema.Properties {
+		if len(property.Pattern) != 0 {
+			imp["regex"] = importStmt{
+				ImportPath: "regex",
+				IsBuiltIn:  true,
+			}
+		}
+	}
+	return imp
 }
 
 // getImportAsName infers the <import as> name by the context of all the existing import paths and the current pkg to be imported.
