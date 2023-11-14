@@ -19,6 +19,12 @@
     {{- if .UniqueItems }}
         isunique({{ .EscapedName }})
     {{- end }}
+    {{- if .MinItems }}
+        len({{ .EscapedName }}) >= {{ .MinItems }}
+    {{- end }}
+    {{- if .MaxItems }}
+        len({{ .EscapedName }}) <= {{ .MaxItems }}
+    {{- end }}
 {{- end -}}
 {{- end -}}
 {{- end -}}

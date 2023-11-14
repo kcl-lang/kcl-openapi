@@ -497,8 +497,9 @@ func mergeValidation(other *schemaGenContext) bool {
 }
 
 func (sg *schemaGenContext) MergeResult(other *schemaGenContext, liftsRequired bool) {
-	sg.GenSchema.HasValidations = sg.GenSchema.HasValidations || mergeValidation(other)
-
+	if liftsRequired {
+		sg.GenSchema.HasValidations = sg.GenSchema.HasValidations || mergeValidation(other)
+	}
 	if liftsRequired && other.GenSchema.AdditionalProperties != nil && other.GenSchema.AdditionalProperties.Required {
 		sg.GenSchema.Required = true
 	}
@@ -609,7 +610,7 @@ func (sg *schemaGenContext) buildProperties() error {
 		if emprop.GenSchema.IsBaseType {
 			sg.GenSchema.HasBaseType = true
 		}
-		sg.MergeResult(emprop, false)
+		sg.MergeResult(emprop, true)
 		emprop.GenSchema.Extensions = emprop.Schema.Extensions
 		sg.GenSchema.Properties = append(sg.GenSchema.Properties, emprop.GenSchema)
 	}
