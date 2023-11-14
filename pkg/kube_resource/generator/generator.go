@@ -150,7 +150,12 @@ func buildSwagger(crd *apiextensions.CustomResourceDefinition) (*spec.Swagger, e
 		if err != nil {
 			return nil, err
 		}
-		version := crd.Spec.Version
+		var version string
+		if len(crd.Spec.Versions) >= 0 {
+			version = crd.Spec.Versions[0].Name
+		} else {
+			version = crd.Spec.Version
+		}
 		setKubeNative(&schema, group, version, kind)
 		name := fmt.Sprintf("%s.%s.%s", group, version, kind)
 		schemas[name] = schema
