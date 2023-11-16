@@ -14,7 +14,7 @@
         len({{ .EscapedName }}) >= {{.MinLength}}
     {{- end }}
     {{- if .Pattern }}
-        matchPattern({{ .EscapedName }}, {{.Pattern}})
+        regex.match({{ .EscapedName }}, r"({{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
     {{- end }}
     {{- if .UniqueItems }}
         isunique({{ .EscapedName }})
