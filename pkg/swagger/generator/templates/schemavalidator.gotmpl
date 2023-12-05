@@ -1,6 +1,6 @@
 {{- define "schemavalidator" -}}
 {{- range . -}}
-{{- if or .Required .Maximum .Minimum .MaxLength .MinLength .Pattern .UniqueItems .Enum }}
+{{- if or .Maximum .Minimum .MaxLength .MinLength .Pattern .UniqueItems .MinItems .MaxItems .MultipleOf }}
     {{- if .Maximum }}
         {{ if .ExclusiveMaximum }}{{ .EscapedName }} < {{.Maximum}}{{- else }}{{ .EscapedName }} <= {{.Maximum}}{{ end }}
     {{- end }}
@@ -14,7 +14,7 @@
         len({{ .EscapedName }}) >= {{.MinLength}}
     {{- end }}
     {{- if .Pattern }}
-        regex.match({{ .EscapedName }}, r"({{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
+        regex.match(str({{ .EscapedName }}), r"{{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
     {{- end }}
     {{- if .UniqueItems }}
         isunique({{ .EscapedName }})
@@ -24,6 +24,9 @@
     {{- end }}
     {{- if .MaxItems }}
         len({{ .EscapedName }}) <= {{ .MaxItems }}
+    {{- end }}
+    {{- if .MultipleOf }}
+        multiplyof(int({{ .EscapedName }}), int({{ .MultipleOf }}))
     {{- end }}
 {{- end -}}
 {{- end -}}
