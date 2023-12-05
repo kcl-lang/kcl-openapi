@@ -8,15 +8,6 @@ import (
 	"k8s.io/client-go/kubernetes/scheme"
 )
 
-func TestGenerate(t *testing.T) {
-	swagger, err := generate(workload)
-	if err != nil {
-		t.Fatalf("error: %v", err)
-	}
-	data, err := json.MarshalIndent(swagger, "", "  ")
-	fmt.Println(string(data))
-}
-
 const (
 	workload = `
 ---
@@ -527,10 +518,7 @@ status:
   conditions: []
   storedVersions: []
 `
-)
-
-func TestCrdObj2CrdInternal(t *testing.T) {
-	v1Crd := `
+	v1Crd = `
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -564,7 +552,7 @@ spec:
     shortNames:
       - ct
 `
-	v1beta1Crd := `
+	v1beta1Crd = `
 ---
 # Deprecated in v1.16 in favor of apiextensions.k8s.io/v1
 apiVersion: apiextensions.k8s.io/v1beta1
@@ -609,6 +597,9 @@ spec:
       - ct
   preserveUnknownFields: false
 `
+)
+
+func TestCrdObj2CrdInternal(t *testing.T) {
 	crds := []string{v1Crd, v1beta1Crd}
 	for _, crdYaml := range crds {
 		crdObj, _, _ := scheme.Codecs.UniversalDeserializer().
@@ -617,5 +608,25 @@ spec:
 		if err != nil || crd.Spec.Validation.OpenAPIV3Schema == nil {
 			t.Errorf("crd version convert failed. err: %s", err)
 		}
+	}
+}
+
+func TestGenerate(t *testing.T) {
+	swagger, err := generate(workload)
+	if err != nil {
+		t.Fatalf("error: %v", err)
+	}
+	data, err := json.MarshalIndent(swagger, "", "  ")
+	if err != nil {
+		t.Errorf("generate failed. err: %s", err)
+	}
+	fmt.Println(string(data))
+}
+
+func TestSeparateSubDocuments(t *testing.T) {
+	crds := v1Crd + v1beta1Crd
+	files := separateSubDocuments([]byte(crds))
+	if len(files) != 3 {
+		t.Errorf("separateSubDocuments failed. expected 3, got %d", len(files))
 	}
 }
