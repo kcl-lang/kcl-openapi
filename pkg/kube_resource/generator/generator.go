@@ -15,10 +15,10 @@
 package generator
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -57,7 +57,7 @@ func GetSpec(opts *GenOpts) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("could not locate spec: %s, err: %s", opts.Spec, err)
 	}
-	crdContent, err := ioutil.ReadFile(path)
+	crdContent, err := os.ReadFile(path)
 	if err != nil {
 		return "", fmt.Errorf("could not load spec: %s, err: %s", opts.Spec, err)
 	}
@@ -72,9 +72,12 @@ func GetSpec(opts *GenOpts) (string, error) {
 		return "", fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
 	}
 	tmpSpecDir := os.TempDir()
-	tmpFile, err := ioutil.TempFile(tmpSpecDir, "kcl-swagger-")
+	tmpFile, err := os.CreateTemp(tmpSpecDir, "kcl-swagger-")
+	if err != nil {
+		return "", fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
+	}
 	// copy k8s.json to tmpDir
-	if err := ioutil.WriteFile(filepath.Join(tmpSpecDir, "k8s.json"), []byte(k8sFile), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(tmpSpecDir, "k8s.json"), []byte(k8sFile), 0644); err != nil {
 		return "", fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
 	}
 	if _, err := tmpFile.Write(swaggerContent); err != nil {
@@ -82,6 +85,62 @@ func GetSpec(opts *GenOpts) (string, error) {
 	}
 	// return the tmp openapi spec file path
 	return tmpFile.Name(), nil
+}
+
+// GetSpecs retrieves specifications from the given GenOpts and returns a list of temporary file paths for the generated OpenAPI specs.
+// It returns an error if there is any issue in fetching and generating the specs.
+// Parameters:
+// - opts: a GenOpts struct that contains the options and parameters required for generating the specs
+// Returns:
+// - []string: a list of temporary file paths for the generated OpenAPI specs
+// - error: an error message if any error occurs.
+func GetSpecs(opts *GenOpts) ([]string, error) {
+	var result []string
+	// read crd content from file
+	path, err := filepath.Abs(opts.Spec)
+	if err != nil {
+		return result, fmt.Errorf("could not locate spec: %s, err: %s", opts.Spec, err)
+	}
+	crdContent, err := os.ReadFile(path)
+	if err != nil {
+		return result, fmt.Errorf("could not load spec: %s, err: %s", opts.Spec, err)
+	}
+	contents := separateSubDocuments(crdContent)
+	for _, content := range contents {
+		// generate openapi spec from crd
+		swagger, err := generate(string(content))
+		if err != nil {
+			return result, fmt.Errorf("could not generate swagger spec: %s, err: %s", opts.Spec, err)
+		}
+		// write openapi spec to tmp file, along with the referenced k8s.json
+		swaggerContent, err := json.MarshalIndent(swagger, "", "")
+		if err != nil {
+			return result, fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
+		}
+		tmpSpecDir := os.TempDir()
+		tmpFile, err := os.CreateTemp(tmpSpecDir, "kcl-swagger-")
+		if err != nil {
+			return result, fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
+		}
+		// copy k8s.json to tmpDir
+		if err := os.WriteFile(filepath.Join(tmpSpecDir, "k8s.json"), []byte(k8sFile), 0644); err != nil {
+			return result, fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
+		}
+		if _, err := tmpFile.Write(swaggerContent); err != nil {
+			return result, fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
+		}
+		// Append the tmp openapi spec file path
+		result = append(result, tmpFile.Name())
+	}
+	return result, nil
+}
+
+func separateSubDocuments(data []byte) [][]byte {
+	lineBreak := "\n"
+	if bytes.Contains(data, []byte("\r\n---\r\n")) {
+		lineBreak = "\r\n"
+	}
+	return bytes.Split(data, []byte(lineBreak+"---"+lineBreak))
 }
 
 // generate swagger model based on crd
