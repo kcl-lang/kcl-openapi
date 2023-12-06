@@ -149,7 +149,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0EnvItems0:
 
 
     check:
-        regex.match(name, r"(^[-_a-zA-Z0-9]+$")
+        regex.match(str(name), r"^[-_a-zA-Z0-9]+$")
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbe:
@@ -285,7 +285,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0PortsItems0:
 
 
     check:
-        regex.match(name, r"(^[a-z]+$")
+        regex.match(str(name), r"^[a-z]+$")
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbe:
