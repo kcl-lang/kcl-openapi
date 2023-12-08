@@ -2,6 +2,9 @@ GO_FILES:=$$(find ./ -type f -name '*.go' -not -path ".//vendor/*")
 COVER_FILE    ?= coverage.out
 SOURCE_PATHS  ?= ./pkg/...
 
+test:
+	go test ./...
+
 cover:  ## Generates coverage report
 	go test -gcflags=all=-l -timeout=10m `go list $(SOURCE_PATHS)` -coverprofile $(COVER_FILE) ${TEST_FLAGS}
 
@@ -11,6 +14,7 @@ clean:
 
 check-fmt:
 	test -z $$(goimports -l -w -e -local=kcl-lang.io $(GO_FILES))
+	gofmt -l -w .
 
 regenerate: ## regenerate all the golden files
 	go run scripts/regenerate.go
