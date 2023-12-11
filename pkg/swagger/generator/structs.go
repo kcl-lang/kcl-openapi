@@ -158,6 +158,10 @@ type sharedValidations struct {
 
 	ItemPattern                 string
 	AdditionalPropertiesPattern string
+
+	AllOf []sharedValidations
+	AnyOf []sharedValidations
+	OneOf []sharedValidations
 }
 
 // pruneEnums omit nil from enum values
