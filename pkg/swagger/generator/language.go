@@ -135,6 +135,14 @@ func (l *LanguageOpts) ToKclValue(data interface{}) string {
 	}
 	value := reflect.ValueOf(data)
 	switch value.Kind() {
+	case reflect.Map:
+		var mapContents []string
+		iter := value.MapRange()
+		for iter.Next() {
+			mapContents = append(mapContents, fmt.Sprintf("%s: %s", l.ToKclValue(iter.Key()), l.ToKclValue(iter.Value())))
+		}
+		content := strings.Join(mapContents, ", ")
+		return fmt.Sprintf("{%s}", content)
 	case reflect.Slice:
 		// if is a MapSlice
 		if dataSlice, ok := data.(yaml.MapSlice); ok {
