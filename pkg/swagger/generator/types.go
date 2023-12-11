@@ -274,6 +274,10 @@ func (t *typeResolver) resolveArray(schema *spec.Schema, isAnonymous, isRequired
 		err = er
 		return
 	}
+	// walk around: [int | str] has no validations
+	if rt.KclType == typeMapping[intOrStr] {
+		schema.Items.Schema.Pattern = ""
+	}
 	result.KclType = "[" + rt.KclType + "]"
 	result.ElemType = &rt
 	result.SwaggerType = array

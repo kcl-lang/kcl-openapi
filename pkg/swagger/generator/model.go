@@ -517,7 +517,7 @@ func (sg *schemaGenContext) schemaValidations() sharedValidations {
 }
 
 func mergeValidation(other *schemaGenContext) bool {
-	// NOTE: NeesRequired and NeedsValidation are deprecated
+	// NOTE: NeedsRequired and NeedsValidation are deprecated
 	if other.GenSchema.AdditionalProperties != nil && other.GenSchema.AdditionalProperties.HasValidations {
 		return true
 	}
@@ -569,6 +569,7 @@ func (sg *schemaGenContext) buildProperties() error {
 		}
 
 		vv := v
+
 		if tpe.IsComplexObject && tpe.IsAnonymous && len(v.Properties) > 0 {
 			// this is an anonymous complex construct: build a new type for it
 			pg := sg.makeNewSchema(sg.Name+swag.ToGoName(k), v)
