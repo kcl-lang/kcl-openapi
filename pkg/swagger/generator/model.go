@@ -487,10 +487,20 @@ func hasSliceValidations(model *spec.Schema) (hasSliceValidations bool) {
 	return
 }
 
+func hasItemAllPatternValidation(model *spec.Schema) (hasItemAllPatternValidation bool) {
+	if model.Items != nil && model.Items.Schema != nil && model.Items.Schema.Pattern != "" {
+		hasItemAllPatternValidation = true
+	}
+	if model.AdditionalProperties != nil && model.AdditionalProperties.Schema != nil && model.AdditionalProperties.Schema.Pattern != "" {
+		hasItemAllPatternValidation = true
+	}
+	return
+}
+
 func hasValidations(model *spec.Schema) (hasValidation bool) {
 	hasNumberValidation := model.Maximum != nil || model.Minimum != nil || model.MultipleOf != nil
 	hasStringValidation := model.MaxLength != nil || model.MinLength != nil || model.Pattern != ""
-	hasValidation = hasNumberValidation || hasStringValidation || hasSliceValidations(model)
+	hasValidation = hasNumberValidation || hasStringValidation || hasSliceValidations(model) || hasItemAllPatternValidation(model)
 	return
 }
 
