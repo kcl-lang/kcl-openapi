@@ -465,6 +465,18 @@ func (sg *schemaGenContext) NewCompositionBranch(schema spec.Schema, index int) 
 	return pg
 }
 
+func (sg *schemaGenContext) NewBranch(schema spec.Schema) *schemaGenContext {
+	debugLog("new branch %s (parent: %s)", sg.Name, sg.Container)
+	pg := sg.shallowClone()
+	pg.Schema = schema
+	pg.Name = ""
+	if sg.Name != sg.TypeResolver.ModelName {
+		pg.Name = sg.Name + pg.Name
+	}
+	debugLog("made new branch %s (parent: %s)", pg.Name, pg.Container)
+	return pg
+}
+
 func (sg *schemaGenContext) NewAdditionalProperty(schema spec.Schema) *schemaGenContext {
 	debugLog("new additional property %s (expr: %s)", sg.Name, sg.ValueExpr)
 	pg := sg.shallowClone()
@@ -722,7 +734,13 @@ func (sg *schemaGenContext) buildAllOf() error {
 			continue
 		}
 
-		comprop := sg.NewCompositionBranch(sch, i)
+		var comprop *schemaGenContext
+		// primitive type or int-or-str type
+		if (tpe.IsAnonymous || tpe.IsPrimitive) && tpe.IsMap && sch.Ref.String() == "" && !tpe.IsComplexObject {
+			comprop = sg.NewBranch(sch)
+		} else {
+			comprop = sg.NewCompositionBranch(sch, i)
+		}
 		if err := comprop.makeGenSchema(); err != nil {
 			return err
 		}
