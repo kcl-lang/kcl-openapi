@@ -623,10 +623,10 @@ func TestGenerate(t *testing.T) {
 	fmt.Println(string(data))
 }
 
-func TestSeparateSubDocuments(t *testing.T) {
+func TestSplitDocuments(t *testing.T) {
 	crds := v1Crd + v1beta1Crd
-	files := separateSubDocuments([]byte(crds))
+	files, _ := splitDocuments(crds)
 	if len(files) != 3 {
-		t.Errorf("separateSubDocuments failed. expected 3, got %d", len(files))
+		t.Errorf("splitDocuments failed. expected 3, got %d", len(files))
 	}
 }
