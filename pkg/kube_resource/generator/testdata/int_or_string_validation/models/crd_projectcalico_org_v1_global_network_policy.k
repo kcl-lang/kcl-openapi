@@ -15,6 +15,8 @@ schema GlobalNetworkPolicy:
         action
     apiVersion : str, default is "crd.projectcalico.org/v1", required
         APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+    capacity : {str:int | str}, default is Undefined, optional
+        A description of the virtual volume's resources and capacity
     kind : str, default is "GlobalNetworkPolicy", required
         Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     destination : CrdProjectcalicoOrgV1GlobalNetworkPolicyDestination, default is Undefined, optional
@@ -28,11 +30,17 @@ schema GlobalNetworkPolicy:
 
     apiVersion: "crd.projectcalico.org/v1" = "crd.projectcalico.org/v1"
 
+    capacity?: {str:int | str}
+
     kind: "GlobalNetworkPolicy" = "GlobalNetworkPolicy"
 
     destination?: CrdProjectcalicoOrgV1GlobalNetworkPolicyDestination
 
     metadata?: v1.ObjectMeta
+
+
+    check:
+        all _, n in capacity { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if capacity
 
 
 schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestination:
@@ -87,6 +95,11 @@ schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestination:
     serviceAccounts?: CrdProjectcalicoOrgV1GlobalNetworkPolicyDestinationServiceAccounts
 
     services?: CrdProjectcalicoOrgV1GlobalNetworkPolicyDestinationServices
+
+
+    check:
+        all n in notPorts { regex.match(str(n), r"^.*") } if notPorts
+        all n in ports { regex.match(str(n), r"^.*") } if ports
 
 
 schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestinationServiceAccounts:
