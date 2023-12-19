@@ -1,0 +1,26 @@
+{{- define "schemaexpr" -}}{{- if .Maximum }}{{ if .ExclusiveMaximum }}{{ .EscapedName }} < {{.Maximum}}{{- else }}{{ .EscapedName }} <= {{.Maximum}}{{ end }}
+{{- end }}
+{{- if .Minimum }}{{ if .ExclusiveMinimum }}{{ .EscapedName }} > {{.Minimum}}{{- else }}{{ .EscapedName }} >= {{.Minimum}}{{ end }}
+{{- end }}
+{{- if .MaxLength }}len({{ .EscapedName }}) <= {{.MaxLength}}
+{{- end }}
+{{- if .MinLength }}len({{ .EscapedName }}) >= {{.MinLength}}
+{{- end }}
+{{- if .Pattern }}regex.match(str({{ .EscapedName }}), r"{{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
+{{- end }}
+{{- if .UniqueItems }}isunique({{ .EscapedName }})
+{{- end }}
+{{- if .MinItems }}len({{ .EscapedName }}) >= {{ .MinItems }}
+{{- end }}
+{{- if .MaxItems }}len({{ .EscapedName }}) <= {{ .MaxItems }}
+{{- end }}
+{{- if .MultipleOf }}multiplyof(int({{ .EscapedName }}), int({{ .MultipleOf }}))
+{{- end }}
+{{- if and .Items .Items.HasValidations }}all n in {{ .EscapedName }} { {{- template "schemaexpr" .Items }} }{{ if not .Required }} if {{ .EscapedName }}{{ end }}
+{{- end }}
+{{- if and .AdditionalProperties .AdditionalProperties.HasValidations }}all _, n in {{ .EscapedName }} { {{- template "schemaexpr" .AdditionalProperties }} }{{ if not .Required }} if {{ .EscapedName }}{{ end }}
+{{- end }}
+{{- range .AllOf }}
+{{- template "schemaexpr" . }}
+{{- end }}
+{{- end -}}
