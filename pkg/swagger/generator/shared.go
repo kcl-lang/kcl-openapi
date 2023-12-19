@@ -377,21 +377,6 @@ func sharedValidationsFromSchema(v spec.Schema, sg schemaGenContext) (sh sharedV
 		MultipleOf:       v.MultipleOf,
 		Enum:             v.Enum,
 	}
-	if v.Items != nil && v.Items.Schema != nil && v.Items.Schema.Pattern != "" {
-		sh.ItemPattern = v.Items.Schema.Pattern
-	}
-	if v.AdditionalProperties != nil && v.AdditionalProperties.Schema != nil && v.AdditionalProperties.Schema.Pattern != "" {
-		sh.AdditionalPropertiesPattern = v.AdditionalProperties.Schema.Pattern
-	}
-	for _, s := range v.AllOf {
-		sh.AllOf = append(sh.AllOf, sharedValidationsFromSchema(s, sg))
-	}
-	for _, s := range v.AnyOf {
-		sh.AnyOf = append(sh.AnyOf, sharedValidationsFromSchema(s, sg))
-	}
-	for _, s := range v.OneOf {
-		sh.OneOf = append(sh.OneOf, sharedValidationsFromSchema(s, sg))
-	}
 	sh.pruneEnums(sg)
 	return
 }

@@ -164,6 +164,9 @@ var schemaBodyTmpl string
 //go:embed templates/schemavalidator.gotmpl
 var schemaValidatorTmpl string
 
+//go:embed templates/schemaexpr.gotmpl
+var schemaExprTmpl string
+
 //go:embed templates/introduction.gotmpl
 var introductionTmpl string
 
@@ -179,6 +182,7 @@ func defaultAssets() map[string][]byte {
 		"schema.gotmpl":          []byte(schemaTmpl),
 		"schemabody.gotmpl":      []byte(schemaBodyTmpl),
 		"schemavalidator.gotmpl": []byte(schemaValidatorTmpl),
+		"schemaexpr.gotmpl":      []byte(schemaExprTmpl),
 		"introduction.gotmpl":    []byte(introductionTmpl),
 		"propertydoc.gotmpl":     []byte(propertyDocTmpl),
 	}
@@ -204,6 +208,7 @@ func defaultProtectedTemplates() map[string]bool {
 		"schemabody":                  true,
 		"schematype":                  true,
 		"schemavalidator":             true,
+		"schemaexpr":                  true,
 		"serverDoc":                   true,
 		"slicevalidator":              true,
 		"structfield":                 true,

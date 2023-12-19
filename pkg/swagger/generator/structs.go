@@ -155,13 +155,6 @@ type sharedValidations struct {
 	NeedsSize bool
 
 	// NOTE: "patternProperties" and "dependencies" not supported by Swagger 2.0
-
-	ItemPattern                 string
-	AdditionalPropertiesPattern string
-
-	AllOf []sharedValidations
-	AnyOf []sharedValidations
-	OneOf []sharedValidations
 }
 
 // pruneEnums omit nil from enum values
