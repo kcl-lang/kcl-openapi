@@ -346,11 +346,13 @@ func (sg *schemaGenContext) NewArrayBranch(schema *spec.Schema) *schemaGenContex
 	// check who is parent, if it's a base type then rewrite the value expression
 	if sg.Discrimination != nil && sg.Discrimination.Discriminators != nil {
 		_, rewriteValueExpr := sg.Discrimination.Discriminators["#/definitions/"+sg.TypeResolver.ModelName]
-		if (pg.IndexVar == "i" && rewriteValueExpr) || sg.GenSchema.ElemType.IsBaseType {
+		if (pg.IndexVar == "i" && rewriteValueExpr) || (sg.GenSchema.ElemType != nil && sg.GenSchema.ElemType.IsBaseType) {
 			pg.ValueExpr = sg.Receiver
 		}
 	}
-	sg.GenSchema.IsBaseType = sg.GenSchema.ElemType.HasDiscriminator
+	if sg.GenSchema.ElemType != nil {
+		sg.GenSchema.IsBaseType = sg.GenSchema.ElemType.HasDiscriminator
+	}
 	pg.IndexVar = indexVar + "i"
 	pg.ValueExpr = pg.ValueExpr + "[" + indexVar + "]"
 	pg.Schema = *schema
