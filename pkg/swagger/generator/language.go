@@ -15,6 +15,7 @@
 package generator
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"path"
@@ -164,14 +165,47 @@ func (l *LanguageOpts) ToKclValue(data interface{}) string {
 		return fmt.Sprintf("[%s]", content)
 	case reflect.String:
 		return fmt.Sprintf("\"%s\"", data)
+	case reflect.Int,
+		reflect.Int8,
+		reflect.Int16,
+		reflect.Int32,
+		reflect.Int64,
+		reflect.Uint,
+		reflect.Uint8,
+		reflect.Uint16,
+		reflect.Uint32,
+		reflect.Uint64:
+		return fmt.Sprintf("%v", data)
+	case reflect.Float32, reflect.Float64:
+		return fmt.Sprintf("%v", data)
 	case reflect.Bool:
 		if data.(bool) {
 			return "True"
 		}
 		return "False"
 	default:
-		//TODO(xiarui.xr): support user defined struct
-		return fmt.Sprintf("%v", data)
+		// Reflect value
+		if dataValue, ok := data.(reflect.Value); ok {
+			return l.ToKclValue(dataValue.Interface())
+		} else if dataSlice, ok := data.(yaml.MapSlice); ok {
+			// If is a MapSlice
+			var dictContents []string
+			for _, v := range dataSlice {
+				k := v.Key
+				v := v.Value
+				dictContents = append(dictContents, fmt.Sprintf("%s: %s", l.ToKclValue(k), l.ToKclValue(v)))
+			}
+			content := strings.Join(dictContents, ", ")
+			return fmt.Sprintf("{%s}", content)
+		} else {
+			// User defined struct
+			valueString, err := ToKCLValueString(data)
+			if err != nil {
+				log.Fatal(err)
+				return "None"
+			}
+			return valueString
+		}
 	}
 }
 
@@ -325,4 +359,16 @@ func KclLangOpts() *LanguageOpts {
 	}
 	opts.Init()
 	return opts
+}
+
+func ToKCLValueString(value interface{}) (string, error) {
+	jsonString, err := json.Marshal(value)
+	if err != nil {
+		return "", err
+	}
+	// In KCL, `true`, `false` and `null` are denoted by `True`, `False` and `None`.
+	result := strings.Replace(string(jsonString), ": true", ": True", -1)
+	result = strings.Replace(result, ": false", ": False", -1)
+	result = strings.Replace(result, ": null", ": None", -1)
+	return result, nil
 }
