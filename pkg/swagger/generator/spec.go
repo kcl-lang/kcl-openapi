@@ -17,7 +17,6 @@ package generator
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -186,11 +185,11 @@ func WithXOrder(specPath string, addXOrderFunc func(yamlDoc interface{}) interfa
 		panic(err)
 	}
 
-	tmpFile, err := ioutil.TempFile("", filepath.Base(specPath))
+	tmpFile, err := os.CreateTemp("", filepath.Base(specPath))
 	if err != nil {
 		panic(err)
 	}
-	if err := ioutil.WriteFile(tmpFile.Name(), out, 0); err != nil {
+	if err := os.WriteFile(tmpFile.Name(), out, 0); err != nil {
 		panic(err)
 	}
 	return tmpFile.Name()
@@ -250,17 +249,17 @@ func AddXOrderOnDefaultExample(yamlDoc interface{}) interface{} {
 			break
 		}
 	}
-	// add default / example x-order
+	// Add default / example x-order
 	var addXOrder func(interface{})
 	addXOrder = func(element interface{}) {
-		// 假设element是某个definition，即，是一个schema，首先找到其中的default、example选项
+		// Assuming element is a certain definition, that is, a schema, first find the default and example options in it
 		if defaultValue, ok := lookForSlice(element, "default"); ok {
 			addXOrder2MapValue(defaultValue)
 		}
 		if exampleValue, ok := lookForSlice(element, "example"); ok {
 			addXOrder2MapValue(exampleValue)
 		}
-		// look for the properties and add addXOrder on each property
+		// Look for the properties and add addXOrder on each property
 		if props, ok := lookForMapSlice(element, "properties"); ok {
 			for _, prop := range props {
 				if pSlice, ok := prop.Value.(yaml.MapSlice); ok {

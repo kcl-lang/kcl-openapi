@@ -878,8 +878,8 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecResou
 
 
     check:
-        all _, n in limits { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if limits
-        all _, n in requests { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if requests
+        all _, limits in limits {regex.match(str(limits), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if limits } if limits
+        all _, requests in requests {regex.match(str(requests), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if requests } if requests
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecSelector:
@@ -957,8 +957,8 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0Status:
 
 
     check:
-        all _, n in allocatedResources { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if allocatedResources
-        all _, n in capacity { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if capacity
+        all _, allocatedResources in allocatedResources {regex.match(str(allocatedResources), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if allocatedResources } if allocatedResources
+        all _, capacity in capacity {regex.match(str(capacity), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if capacity } if capacity
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0StatusConditionsItems0:
@@ -2475,8 +2475,8 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecResources:
 
 
     check:
-        all _, n in limits { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if limits
-        all _, n in requests { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if requests
+        all _, limits in limits {regex.match(str(limits), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if limits } if limits
+        all _, requests in requests {regex.match(str(requests), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if requests } if requests
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRollingUpdate:
@@ -2876,8 +2876,8 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
     check:
-        all _, n in limits { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if limits
-        all _, n in requests { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if requests
+        all _, limits in limits {regex.match(str(limits), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if limits } if limits
+        all _, requests in requests {regex.match(str(requests), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if requests } if requests
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateSpecSelector:
@@ -2955,8 +2955,8 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
     check:
-        all _, n in allocatedResources { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if allocatedResources
-        all _, n in capacity { regex.match(str(n), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") } if capacity
+        all _, allocatedResources in allocatedResources {regex.match(str(allocatedResources), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if allocatedResources } if allocatedResources
+        all _, capacity in capacity {regex.match(str(capacity), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if capacity } if capacity
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateStatusConditionsItems0:

@@ -1513,31 +1513,42 @@ func RecoverMapValueOrder(oldValue interface{}) interface{} {
 		keys := value.MapKeys()
 		var newValue yaml.MapSlice = make([]yaml.MapItem, len(keys))
 
-		for _, key := range keys {
+		for i, key := range keys {
 			k := key.Interface()
 			v := value.MapIndex(key).Interface()
-
 			mapV := reflect.ValueOf(v)
 			switch mapV.Kind() {
 			case reflect.Map:
+				hasXOrder := false
 				var order int64
 				var innerValue interface{}
 				mapIter := mapV.MapRange()
 				for mapIter.Next() {
 					kk := mapIter.Key().String()
 					if kk == xOrder {
+						hasXOrder = true
 						order = int64(mapIter.Value().Interface().(float64))
 					}
 					if kk == "value" {
 						innerValue = mapIter.Value().Interface()
 					}
 				}
-				newValue[order] = yaml.MapItem{
-					Key:   k,
-					Value: RecoverMapValueOrder(innerValue),
+				if hasXOrder {
+					newValue[order] = yaml.MapItem{
+						Key:   k,
+						Value: RecoverMapValueOrder(innerValue),
+					}
+				} else {
+					newValue[i] = yaml.MapItem{
+						Key:   k,
+						Value: RecoverMapValueOrder(v),
+					}
 				}
 			default:
-				log.Fatalf("unexpected ordered map value: %s", v)
+				newValue[i] = yaml.MapItem{
+					Key:   k,
+					Value: RecoverMapValueOrder(v),
+				}
 			}
 		}
 		return newValue
