@@ -4,6 +4,7 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 """
 import regex
 import k8s.apimachinery.pkg.apis.meta.v1
+regex_match = regex.match
 
 
 schema OperatorConfiguration:
@@ -293,10 +294,10 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationConnectionPooler:
 
 
     check:
-        regex.match(str(connection_pooler_default_cpu_limit), r"^(\d+m|\d+(\.\d{1,3})?)$") if connection_pooler_default_cpu_limit
-        regex.match(str(connection_pooler_default_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if connection_pooler_default_cpu_request
-        regex.match(str(connection_pooler_default_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if connection_pooler_default_memory_limit
-        regex.match(str(connection_pooler_default_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if connection_pooler_default_memory_request
+        regex_match(str(connection_pooler_default_cpu_limit), r"^(\d+m|\d+(\.\d{1,3})?)$") if connection_pooler_default_cpu_limit
+        regex_match(str(connection_pooler_default_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if connection_pooler_default_cpu_request
+        regex_match(str(connection_pooler_default_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if connection_pooler_default_memory_limit
+        regex_match(str(connection_pooler_default_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if connection_pooler_default_memory_request
         connection_pooler_number_of_instances >= 1
 
 
@@ -713,11 +714,11 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationLogicalBackup:
 
 
     check:
-        regex.match(str(logical_backup_cpu_limit), r"^(\d+m|\d+(\.\d{1,3})?)$") if logical_backup_cpu_limit
-        regex.match(str(logical_backup_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if logical_backup_cpu_request
-        regex.match(str(logical_backup_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if logical_backup_memory_limit
-        regex.match(str(logical_backup_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if logical_backup_memory_request
-        regex.match(str(logical_backup_schedule), r"^(\d+|\*)(/\d+)?(\s+(\d+|\*)(/\d+)?){4}$") if logical_backup_schedule
+        regex_match(str(logical_backup_cpu_limit), r"^(\d+m|\d+(\.\d{1,3})?)$") if logical_backup_cpu_limit
+        regex_match(str(logical_backup_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if logical_backup_cpu_request
+        regex_match(str(logical_backup_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if logical_backup_memory_limit
+        regex_match(str(logical_backup_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if logical_backup_memory_request
+        regex_match(str(logical_backup_schedule), r"^(\d+|\*)(/\d+)?(\s+(\d+|\*)(/\d+)?){4}$") if logical_backup_schedule
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationMajorVersionUpgrade:
@@ -803,14 +804,14 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationPostgresPodResources:
 
 
     check:
-        regex.match(str(default_cpu_limit), r"^(\d+m|\d+(\.\d{1,3})?)$") if default_cpu_limit
-        regex.match(str(default_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if default_cpu_request
-        regex.match(str(default_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if default_memory_limit
-        regex.match(str(default_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if default_memory_request
-        regex.match(str(max_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if max_cpu_request
-        regex.match(str(max_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if max_memory_request
-        regex.match(str(min_cpu_limit), r"^(\d+m|\d+(\.\d{1,3})?)$") if min_cpu_limit
-        regex.match(str(min_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if min_memory_limit
+        regex_match(str(default_cpu_limit), r"^(\d+m|\d+(\.\d{1,3})?)$") if default_cpu_limit
+        regex_match(str(default_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if default_cpu_request
+        regex_match(str(default_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if default_memory_limit
+        regex_match(str(default_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if default_memory_request
+        regex_match(str(max_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if max_cpu_request
+        regex_match(str(max_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if max_memory_request
+        regex_match(str(min_cpu_limit), r"^(\d+m|\d+(\.\d{1,3})?)$") if min_cpu_limit
+        regex_match(str(min_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if min_memory_limit
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationScalyr:
@@ -852,10 +853,10 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationScalyr:
 
 
     check:
-        regex.match(str(scalyr_cpu_limit), r"^(\d+m|\d+(\.\d{1,3})?)$") if scalyr_cpu_limit
-        regex.match(str(scalyr_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if scalyr_cpu_request
-        regex.match(str(scalyr_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if scalyr_memory_limit
-        regex.match(str(scalyr_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if scalyr_memory_request
+        regex_match(str(scalyr_cpu_limit), r"^(\d+m|\d+(\.\d{1,3})?)$") if scalyr_cpu_limit
+        regex_match(str(scalyr_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if scalyr_cpu_request
+        regex_match(str(scalyr_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if scalyr_memory_limit
+        regex_match(str(scalyr_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if scalyr_memory_request
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationTeamsAPI:

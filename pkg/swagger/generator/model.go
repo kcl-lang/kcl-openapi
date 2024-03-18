@@ -156,6 +156,9 @@ func makeGenDefinitionHierarchy(name, pkg, container string, schema spec.Schema,
 		DependsOn:    pg.Dependencies,
 		ExtraSchemas: gatherExtraSchemas(pg.ExtraSchemas),
 		Imports:      pg.collectSortedImports(),
+		// To avoid conflicts between the attributes of the schema and the names of
+		// the regex module, we represent the `regex.match` function with `regex_match = regex.match`
+		HasPatternValidation: pg.HasPatternValidation,
 	}, nil
 }
 
@@ -180,13 +183,15 @@ func (sg *schemaGenContext) collectSortedImports() []importStmt {
 	pkgImps := map[string]importStmt{}
 	collectImports(&sg.GenSchema, sg.GenSchema.Pkg, pkgImps)
 
+	if _, ok := builtInImps[RegexPkgPath]; ok {
+		sg.HasPatternValidation = true
+	}
+
 	// sort imports with rules:
 	// 1. built-in imports always appears before pkg imports
 	// 2. the import paths are sorted in lexicographical order
 	sortedImports := sortImports(builtInImps)
-	for _, imp := range sortImports(pkgImps) {
-		sortedImports = append(sortedImports, imp)
-	}
+	sortedImports = append(sortedImports, sortImports(pkgImps)...)
 	return sortedImports
 }
 
@@ -206,11 +211,34 @@ func sortImports(imports map[string]importStmt) []importStmt {
 func (schema *GenSchema) getBuiltInImports() map[string]importStmt {
 	imp := map[string]importStmt{}
 	for _, property := range schema.Properties {
-		if len(property.Pattern) != 0 {
-			imp["regex"] = importStmt{
-				ImportPath: "regex",
-				IsBuiltIn:  true,
-			}
+		for k, v := range property.getBuiltInImports() {
+			imp[k] = v
+		}
+	}
+	if schema.Pattern != "" {
+		imp[RegexPkgPath] = importStmt{
+			ImportPath: RegexPkgPath,
+			IsBuiltIn:  true,
+		}
+	}
+	if schema.Items != nil {
+		for k, v := range schema.Items.getBuiltInImports() {
+			imp[k] = v
+		}
+	}
+	if schema.AdditionalItems != nil {
+		for k, v := range schema.AdditionalItems.getBuiltInImports() {
+			imp[k] = v
+		}
+	}
+	if schema.AdditionalProperties != nil {
+		for k, v := range schema.AdditionalProperties.getBuiltInImports() {
+			imp[k] = v
+		}
+	}
+	for _, s := range schema.AllOf {
+		for k, v := range s.getBuiltInImports() {
+			imp[k] = v
 		}
 	}
 	return imp
@@ -246,7 +274,7 @@ func getImportAsName(imp map[string]importStmt, pkg string, module string) strin
 
 // collectImports collect import paths from the sch to the toPkg, the result will be collected to the importStmt map.
 func collectImports(sch *GenSchema, toPkg string, imp map[string]importStmt) {
-	if sch.Items != nil {
+	if sch.Items != nil && sch.IsArray {
 		collectImports(sch.Items, toPkg, imp)
 		sch.KclType = "[" + sch.Items.KclType + "]"
 	}
@@ -312,6 +340,7 @@ type schemaGenContext struct {
 	IsTuple                    bool
 	StrictAdditionalProperties bool
 	KeepOrder                  bool
+	HasPatternValidation       bool
 	Index                      int
 
 	Path         string
@@ -1137,7 +1166,8 @@ func (sg *schemaGenContext) buildArray() error {
 }
 
 func (sg *schemaGenContext) buildItems() error {
-	if sg.Schema.Items == nil {
+	tpe := sg.TypeResolver.firstType(&sg.Schema)
+	if sg.Schema.Items == nil || tpe == object {
 		// in swagger, arrays MUST have an items schema
 		return nil
 	}

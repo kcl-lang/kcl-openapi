@@ -6,7 +6,7 @@
 {{- end }}
 {{- if .MinLength }}len({{ .EscapedName }}) >= {{.MinLength}}
 {{- end }}
-{{- if .Pattern }}regex.match(str({{ .EscapedName }}), r"{{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
+{{- if .Pattern }}regex_match(str({{ .EscapedName }}), r"{{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
 {{- end }}
 {{- if .UniqueItems }}isunique({{ .EscapedName }})
 {{- end }}
