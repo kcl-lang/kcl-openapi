@@ -34,6 +34,10 @@ var (
 	DefaultLanguageFunc func() *LanguageOpts
 )
 
+const (
+	RegexPkgPath = "regex"
+)
+
 func initLanguage() {
 	DefaultLanguageFunc = KclLangOpts
 }
@@ -41,9 +45,11 @@ func initLanguage() {
 // LanguageOpts to describe a language to the code generator
 type LanguageOpts struct {
 	ReservedWords    []string
+	SystemModules    []string
 	BaseImportFunc   func(string) string            `json:"-"`
 	ImportsFunc      func(map[string]string) string `json:"-"`
 	reservedWordsSet map[string]struct{}
+	systemModuleSet  map[string]struct{}
 	initialized      bool
 	formatFunc       func(string, []byte) ([]byte, error)
 	fileNameFunc     func(string) string // language specific source file naming rules
@@ -57,8 +63,12 @@ func (l *LanguageOpts) Init() {
 	}
 	l.initialized = true
 	l.reservedWordsSet = make(map[string]struct{})
+	l.systemModuleSet = make(map[string]struct{})
 	for _, rw := range l.ReservedWords {
 		l.reservedWordsSet[rw] = struct{}{}
+	}
+	for _, rw := range l.SystemModules {
+		l.systemModuleSet[rw] = struct{}{}
 	}
 }
 
@@ -306,6 +316,20 @@ func KclLangOpts() *LanguageOpts {
 		"filter",
 		"map",
 		"type",
+	}
+	opts.SystemModules = []string{
+		"collection",
+		"net",
+		"manifests",
+		"math",
+		"datetime",
+		"regex",
+		"yaml",
+		"json",
+		"crypto",
+		"base64",
+		"units",
+		"file",
 	}
 
 	opts.formatFunc = func(ffn string, content []byte) ([]byte, error) {

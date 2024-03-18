@@ -37,11 +37,12 @@ type GenCommon struct {
 type GenDefinition struct {
 	GenCommon
 	GenSchema
-	Package      string
-	Imports      []importStmt
-	ExtraSchemas GenSchemaList
-	DependsOn    []string
-	External     bool
+	Package              string
+	Imports              []importStmt
+	ExtraSchemas         GenSchemaList
+	DependsOn            []string
+	External             bool
+	HasPatternValidation bool
 }
 
 // GenDefinitions represents a list of operations to generate

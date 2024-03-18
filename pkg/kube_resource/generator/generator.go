@@ -204,7 +204,7 @@ func crdObj2CrdInternal(crdObj runtime.Object) (*apiextensions.CustomResourceDef
 	case *apiextensions.CustomResourceDefinition:
 		crd = crdObj.(*apiextensions.CustomResourceDefinition)
 	default:
-		return nil, errors.New(fmt.Sprintf("unknown crd object type %v", crdObj.GetObjectKind()))
+		return nil, fmt.Errorf("unknown crd object type %v", crdObj.GetObjectKind())
 	}
 
 	if !CRDContainsValidation(crd) {
