@@ -5,7 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/kcl-lang/kcl-openapi/badge.svg)](https://coveralls.io/github/kcl-lang/kcl-openapi)
 
 The work on this project is mainly based on [go-swagger](https://github.com/go-swagger/go-swagger), and this project just adds some
-KCL-specific templates and language features on it. We are grateful and sincerely respectful for the outstanding work
+KCL-specific templates and language features to it. We are grateful and sincerely respectful for the outstanding work
 in [go-swagger](https://github.com/go-swagger/go-swagger). Meanwhile, we are working on making the customized features separated from the
 basic OpenAPI logic in go-swagger.
 
@@ -24,7 +24,7 @@ The kcl-openapi tool can be installed in both ways:
 
 - [go install](#1-go-install)
 - [curl|sh install (MacOS & Linux)](#2-curlsh-install-macos--linux)
-- [download from release](#3-dowload-from-release)
+- [download from release](#3-download-from-release)
 
 ## 1 go install
 
@@ -34,20 +34,20 @@ The kcl-openapi tool can be installed in both ways:
 
 ## 2 Curl|sh install (MacOS & Linux)
 
-If you don't have go, you can install the CLI with this one-liner:
+If you don't have to go, you can install the CLI with this one-liner:
 
   ```shell
   curl -fsSL https://kcl-lang.io/script/install-kcl-openapi.sh | /bin/bash
   ```
 
-## 3 Dowload from release
+## 3 Download from release
 
   ```shell
   # 1. download the released binary from:
   # https://github.com/kcl-lang/kcl-openapi/releases
 
   # 2. Unzip the package and add the binary location to PATH
-  export PATH="<Your directory to store KCLOpenapi binary>:$PATH"
+  export PATH="<Your directory to store KCLOpenAPI binary>:$PATH"
   ```
 
 ## Features
@@ -72,7 +72,7 @@ Alternatively, if you may want to generate them yourself, please refer [Generate
 
 The tool can also translate
 the [Kubernetes CRD](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/) to KCL models.
-By parsing the spec.versions[n].schema.openAPIV3Schema (n means the latest version of the spec will be used) section of the CRD, the KCL
+By parsing the `spec.versions[n].schema.openAPIV3Schema` (n means the latest version of the spec will be used) section of the CRD, the KCL
 OpenAPI tool will extract the structural schema and generate the corresponding KCL representation.
 
 The command is as follows:
@@ -83,8 +83,7 @@ The command is as follows:
 
 ## KCL OpenAPI Spec
 
-The [KCL OpenAPI Spec](https://kcl-lang.io/docs/reference/cli/openapi/spec) defines a complete specification of how OpenAPI objects are
-mapping to KCL language elements.
+The [KCL OpenAPI Spec](https://kcl-lang.io/docs/reference/cli/openapi/spec) defines a complete specification of how OpenAPI objects are mapped to KCL language elements.
 
 ## Ask for help
 
