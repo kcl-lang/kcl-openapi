@@ -3,6 +3,7 @@
 [![GoDoc](https://godoc.org/github.com/kcl-lang/kcl-openapi?status.svg)](https://pkg.go.dev/kcl-lang.io/kcl-openapi)
 [![license](https://img.shields.io/github/license/kcl-lang/kcl-openapi.svg)](https://github.com/kcl-lang/kcl-openapi/blob/master/LICENSE)
 [![Coverage Status](https://coveralls.io/repos/github/kcl-lang/kcl-openapi/badge.svg)](https://coveralls.io/github/kcl-lang/kcl-openapi)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkcl-lang%2Fkcl-openapi.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkcl-lang%2Fkcl-openapi?ref=badge_shield)
 
 The work on this project is mainly based on [go-swagger](https://github.com/go-swagger/go-swagger), and this project just adds some
 KCL-specific templates and language features to it. We are grateful and sincerely respectful for the outstanding work
@@ -92,3 +93,6 @@ If the tool isn't working as you expect, please reach out to us by filing an [is
 ## License
 
 Apache License Version 2.0
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkcl-lang%2Fkcl-openapi.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkcl-lang%2Fkcl-openapi?ref=badge_large)
