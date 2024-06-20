@@ -92,8 +92,8 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpec:
 
 
     check:
-        len(amiSelectorTerms) <= 30
-        len(blockDeviceMappings) <= 50
+        len(amiSelectorTerms) <= 30 if amiSelectorTerms
+        len(blockDeviceMappings) <= 50 if blockDeviceMappings
         len(securityGroupSelectorTerms) <= 30
         len(subnetSelectorTerms) <= 30
 
@@ -239,8 +239,8 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecMetadataOptions:
 
 
     check:
-        httpPutResponseHopLimit <= 64
-        httpPutResponseHopLimit >= 1
+        httpPutResponseHopLimit <= 64 if httpPutResponseHopLimit not in [None, Undefined]
+        httpPutResponseHopLimit >= 1 if httpPutResponseHopLimit not in [None, Undefined]
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpecSecurityGroupSelectorTermsItems0:

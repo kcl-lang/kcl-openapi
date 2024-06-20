@@ -184,9 +184,9 @@ schema AcidZalanDoV1OperatorConfigurationConfiguration:
 
 
     check:
-        max_instances >= -1
-        min_instances >= -1
-        workers >= 1
+        max_instances >= -1 if max_instances not in [None, Undefined]
+        min_instances >= -1 if min_instances not in [None, Undefined]
+        workers >= 1 if workers not in [None, Undefined]
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationAwsOrGcp:
@@ -298,7 +298,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationConnectionPooler:
         regex_match(str(connection_pooler_default_cpu_request), r"^(\d+m|\d+(\.\d{1,3})?)$") if connection_pooler_default_cpu_request
         regex_match(str(connection_pooler_default_memory_limit), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if connection_pooler_default_memory_limit
         regex_match(str(connection_pooler_default_memory_request), r"^(\d+(e\d+)?|\d+(\.\d+)?(e\d+)?[EPTGMK]i?)$") if connection_pooler_default_memory_request
-        connection_pooler_number_of_instances >= 1
+        connection_pooler_number_of_instances >= 1 if connection_pooler_number_of_instances not in [None, Undefined]
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationDebug:
