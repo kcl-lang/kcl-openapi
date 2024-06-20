@@ -1,20 +1,20 @@
-{{- define "schemaexpr" -}}{{- if .Maximum }}{{ if .ExclusiveMaximum }}{{ .EscapedName }} < {{.Maximum}}{{- else }}{{ .EscapedName }} <= {{.Maximum}}{{ end }}
+{{- define "schemaexpr" -}}{{- if .Maximum }}{{ if .ExclusiveMaximum }}{{ .EscapedName }} < {{.Maximum}}{{- else }}{{ .EscapedName }} <= {{.Maximum}}{{ end }}{{ if not .Required }} if {{ .EscapedName }} not in [None, Undefined]{{ end }}
 {{- end }}
-{{- if .Minimum }}{{ if .ExclusiveMinimum }}{{ .EscapedName }} > {{.Minimum}}{{- else }}{{ .EscapedName }} >= {{.Minimum}}{{ end }}
+{{- if .Minimum }}{{ if .ExclusiveMinimum }}{{ .EscapedName }} > {{.Minimum}}{{- else }}{{ .EscapedName }} >= {{.Minimum}}{{ end }}{{ if not .Required }} if {{ .EscapedName }} not in [None, Undefined]{{ end }}
 {{- end }}
-{{- if .MaxLength }}len({{ .EscapedName }}) <= {{.MaxLength}}
+{{- if .MaxLength }}len({{ .EscapedName }}) <= {{.MaxLength}}{{ if not .Required }} if {{ .EscapedName }} not in [None, Undefined]{{ end }}
 {{- end }}
-{{- if .MinLength }}len({{ .EscapedName }}) >= {{.MinLength}}
+{{- if .MinLength }}len({{ .EscapedName }}) >= {{.MinLength}}{{ if not .Required }} if {{ .EscapedName }} not in [None, Undefined]{{ end }}
 {{- end }}
 {{- if .Pattern }}regex_match(str({{ .EscapedName }}), r"{{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
 {{- end }}
-{{- if .UniqueItems }}isunique({{ .EscapedName }})
+{{- if .UniqueItems }}isunique({{ .EscapedName }}){{ if not .Required }} if {{ .EscapedName }}{{ end }}
 {{- end }}
-{{- if .MinItems }}len({{ .EscapedName }}) >= {{ .MinItems }}
+{{- if .MinItems }}len({{ .EscapedName }}) >= {{ .MinItems }}{{ if not .Required }} if {{ .EscapedName }}{{ end }}
 {{- end }}
-{{- if .MaxItems }}len({{ .EscapedName }}) <= {{ .MaxItems }}
+{{- if .MaxItems }}len({{ .EscapedName }}) <= {{ .MaxItems }}{{ if not .Required }} if {{ .EscapedName }}{{ end }}
 {{- end }}
-{{- if .MultipleOf }}multiplyof(int({{ .EscapedName }}), int({{ .MultipleOf }}))
+{{- if .MultipleOf }}multiplyof(int({{ .EscapedName }}), int({{ .MultipleOf }})){{ if not .Required }} if {{ .EscapedName }}{{ end }}
 {{- end }}
 {{- if and .Items .Items.HasValidations }}all n in {{ .EscapedName }} { {{- template "schemaexpr" .Items }} }{{ if not .Required }} if {{ .EscapedName }}{{ end }}
 {{- end }}
