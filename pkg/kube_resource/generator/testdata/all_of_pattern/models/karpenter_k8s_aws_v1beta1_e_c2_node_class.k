@@ -4,7 +4,7 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 """
 import regex
 import k8s.apimachinery.pkg.apis.meta.v1
-regex_match = regex.match
+_regex_match = regex.match
 
 
 schema EC2NodeClass:
@@ -125,7 +125,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecAmiSelectorTermsItems0:
 
 
     check:
-        regex_match(str(id), r"ami-[0-9a-z]+") if id
+        _regex_match(str(id), r"ami-[0-9a-z]+") if id
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpecBlockDeviceMappingsItems0:
@@ -203,8 +203,8 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecBlockDeviceMappingsItems0Ebs:
 
 
     check:
-        regex_match(str(volumeSize), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if volumeSize
-        regex_match(str(volumeSize), r"^((?:[1-9][0-9]{0,3}|[1-4][0-9]{4}|[5][0-8][0-9]{3}|59000)Gi|(?:[1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-3][0-9]{3}|64000)G|([1-9]||[1-5][0-7]|58)Ti|([1-9]||[1-5][0-9]|6[0-3]|64)T)$") if volumeSize
+        _regex_match(str(volumeSize), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if volumeSize
+        _regex_match(str(volumeSize), r"^((?:[1-9][0-9]{0,3}|[1-4][0-9]{4}|[5][0-8][0-9]{3}|59000)Gi|(?:[1-9][0-9]{0,3}|[1-5][0-9]{4}|[6][0-3][0-9]{3}|64000)G|([1-9]||[1-5][0-7]|58)Ti|([1-9]||[1-5][0-9]|6[0-3]|64)T)$") if volumeSize
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpecMetadataOptions:
@@ -266,7 +266,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecSecurityGroupSelectorTermsItems0:
 
 
     check:
-        regex_match(str(id), r"sg-[0-9a-z]+") if id
+        _regex_match(str(id), r"sg-[0-9a-z]+") if id
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpecSubnetSelectorTermsItems0:
@@ -288,7 +288,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecSubnetSelectorTermsItems0:
 
 
     check:
-        regex_match(str(id), r"subnet-[0-9a-z]+") if id
+        _regex_match(str(id), r"subnet-[0-9a-z]+") if id
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassStatus:
