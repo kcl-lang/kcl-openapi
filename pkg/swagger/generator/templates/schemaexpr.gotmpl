@@ -6,7 +6,7 @@
 {{- end }}
 {{- if .MinLength }}len({{ .EscapedName }}) >= {{.MinLength}}{{ if not .Required }} if {{ .EscapedName }} not in [None, Undefined]{{ end }}
 {{- end }}
-{{- if .Pattern }}regex_match(str({{ .EscapedName }}), r"{{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
+{{- if .Pattern }}_regex_match(str({{ .EscapedName }}), r"{{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
 {{- end }}
 {{- if .UniqueItems }}isunique({{ .EscapedName }}){{ if not .Required }} if {{ .EscapedName }}{{ end }}
 {{- end }}

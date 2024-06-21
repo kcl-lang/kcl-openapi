@@ -19,7 +19,7 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 import {{ .ImportPath }}{{ if .MustAsName }} as {{ .AsName }}{{ end }}
 {{- end }}
 {{- if .HasPatternValidation }}
-regex_match = regex.match
+_regex_match = regex.match
 {{- end }}
 {{- end }}
 {{ "\n" -}}

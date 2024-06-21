@@ -14,7 +14,7 @@
         len({{ .EscapedName }}) >= {{.MinLength}}{{ if not .Required }} if {{ .EscapedName }}{{ end }}
     {{- end }}
     {{- if .Pattern }}
-        regex_match(str({{ .EscapedName }}), r"{{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
+        _regex_match(str({{ .EscapedName }}), r"{{.Pattern}}"){{ if not .Required }} if {{ .EscapedName }}{{ end }}
     {{- end }}
     {{- if .UniqueItems }}
         isunique({{ .EscapedName }}){{ if not .Required }} if {{ .EscapedName }}{{ end }}

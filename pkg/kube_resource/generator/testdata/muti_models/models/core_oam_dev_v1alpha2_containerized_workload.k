@@ -4,7 +4,7 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 """
 import regex
 import k8s.apimachinery.pkg.apis.meta.v1
-regex_match = regex.match
+_regex_match = regex.match
 
 
 schema ContainerizedWorkload:
@@ -150,7 +150,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0EnvItems0:
 
 
     check:
-        regex_match(str(name), r"^[-_a-zA-Z0-9]+$")
+        _regex_match(str(name), r"^[-_a-zA-Z0-9]+$")
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbe:
@@ -286,7 +286,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0PortsItems0:
 
 
     check:
-        regex_match(str(name), r"^[a-z]+$")
+        _regex_match(str(name), r"^[a-z]+$")
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbe:
