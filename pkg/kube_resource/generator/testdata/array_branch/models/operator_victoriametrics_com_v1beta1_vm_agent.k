@@ -8,7 +8,7 @@ _regex_match = regex.match
 
 
 schema VMAgent:
-    """
+    r"""
     VMAgent - is a tiny but brave agent, which helps you collect metrics from various sources and stores them in VictoriaMetrics or any other Prometheus-compatible storage system that supports the remote_write protocol.
 
     Attributes
@@ -38,7 +38,7 @@ schema VMAgent:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpec:
-    """
+    r"""
     VMAgentSpec defines the desired state of VMAgent
 
     Attributes
@@ -377,7 +377,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpec:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfig:
-    """
+    r"""
     APIServerConfig allows specifying a host and auth methods to access apiserver. If left empty, VMAgent is assumed to run inside of the cluster and will discover API servers automatically and use the pod's CA certificate and bearer token file at /var/run/secrets/kubernetes.io/serviceaccount/.
 
     Attributes
@@ -411,7 +411,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfig:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigAuthorization:
-    """
+    r"""
     Authorization configures generic authorization params
 
     Attributes
@@ -433,7 +433,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigAuthorization:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigAuthorizationCredentials:
-    """
+    r"""
     Reference to the secret with value for authorization
 
     Attributes
@@ -455,7 +455,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigAuthorizationC
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigBasicAuth:
-    """
+    r"""
     BasicAuth allow an endpoint to authenticate over basic authentication
 
     Attributes
@@ -477,7 +477,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigBasicAuth:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigBasicAuthPassword:
-    """
+    r"""
     The secret in the service scrape namespace that contains the password for authentication. It must be at them same namespace as CRD
 
     Attributes
@@ -499,7 +499,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigBasicAuthPassw
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigBasicAuthUsername:
-    """
+    r"""
     The secret in the service scrape namespace that contains the username for authentication. It must be at them same namespace as CRD
 
     Attributes
@@ -521,7 +521,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigBasicAuthUsern
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfig:
-    """
+    r"""
     TLSConfig Config to use for accessing apiserver.
 
     Attributes
@@ -563,7 +563,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfig:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCa:
-    """
+    r"""
     Stuct containing the CA cert to use for the targets.
 
     Attributes
@@ -581,7 +581,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCa:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCaConfigMap:
-    """
+    r"""
     ConfigMap containing data to use for the targets.
 
     Attributes
@@ -603,7 +603,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCaCon
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCaSecret:
-    """
+    r"""
     Secret containing data to use for the targets.
 
     Attributes
@@ -625,7 +625,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCaSec
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCert:
-    """
+    r"""
     Struct containing the client cert file for the targets.
 
     Attributes
@@ -643,7 +643,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCert:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCertConfigMap:
-    """
+    r"""
     ConfigMap containing data to use for the targets.
 
     Attributes
@@ -665,7 +665,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCertC
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCertSecret:
-    """
+    r"""
     Secret containing data to use for the targets.
 
     Attributes
@@ -687,7 +687,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigCertS
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigKeySecret:
-    """
+    r"""
     Secret containing the client key file for the targets.
 
     Attributes
@@ -709,7 +709,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAPIServerConfigTLSConfigKeySe
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecAdditionalScrapeConfigs:
-    """
+    r"""
     AdditionalScrapeConfigs As scrape configs are appended, the user is responsible to make sure it is valid. Note that using this feature may expose the possibility to break upgrades of VMAgent. It is advised to review VMAgent release notes to ensure that no incompatible scrape configs are going to break VMAgent after the upgrade.
 
     Attributes
@@ -731,7 +731,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecAdditionalScrapeConfigs:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecArbitraryFSAccessThroughSMs:
-    """
+    r"""
     ArbitraryFSAccessThroughSMs configures whether configuration based on a service scrape can access arbitrary files on the file system of the VMAgent container e.g. bearer token files.
 
     Attributes
@@ -745,7 +745,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecArbitraryFSAccessThroughSMs:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0:
-    """
+    r"""
     PersistentVolumeClaim is a user's request for and claim to a persistent volume
 
     Attributes
@@ -775,7 +775,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0Spec:
-    """
+    r"""
     spec defines the desired characteristics of a volume requested by a pod author. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
 
     Attributes
@@ -817,7 +817,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0Spec:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecDataSource:
-    """
+    r"""
     dataSource field can be used to specify either: * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot) * An existing PVC (PersistentVolumeClaim) If the provisioner or an external controller can support the specified data source, it will create a new volume based on the contents of the specified data source. If the AnyVolumeDataSource feature gate is enabled, this field will always have the same contents as the DataSourceRef field.
 
     Attributes
@@ -839,7 +839,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecDataS
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecDataSourceRef:
-    """
+    r"""
     dataSourceRef specifies the object from which to populate the volume with data, if a non-empty volume is desired. This may be any local object from a non-empty API group (non core object) or a PersistentVolumeClaim object. When this field is specified, volume binding will only succeed if the type of the specified object matches some installed volume populator or dynamic provisioner. This field will replace the functionality of the DataSource field and as such if both fields are non-empty, they must have the same value. For backwards compatibility, both fields (DataSource and DataSourceRef) will be set to the same value automatically if one of them is empty and the other is non-empty. There are two important differences between DataSource and DataSourceRef: * While DataSource only allows two specific types of objects, DataSourceRef allows any non-core object, as well as PersistentVolumeClaim objects. * While DataSource ignores disallowed values (dropping them), DataSourceRef preserves all values, and generates an error if a disallowed value is specified. (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.
 
     Attributes
@@ -861,7 +861,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecDataS
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecResources:
-    """
+    r"""
     resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
 
     Attributes
@@ -884,7 +884,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecResou
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecSelector:
-    """
+    r"""
     selector is a label query over volumes to consider for binding.
 
     Attributes
@@ -902,7 +902,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecSelec
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -924,7 +924,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0SpecSelec
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0Status:
-    """
+    r"""
     status represents the current information/status of a persistent volume claim. Read-only. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
 
     Attributes
@@ -963,7 +963,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0Status:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0StatusConditionsItems0:
-    """
+    r"""
     PersistentVolumeClaimCondition contails details about state of pvc
 
     Attributes
@@ -997,7 +997,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecClaimTemplatesItems0StatusCon
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecDNSConfig:
-    """
+    r"""
     Specifies the DNS parameters of a pod. Parameters specified here will be merged to the generated DNS configuration based on DNSPolicy.
 
     Attributes
@@ -1019,7 +1019,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecDNSConfig:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecDNSConfigOptionsItems0:
-    """
+    r"""
     PodDNSConfigOption defines DNS resolver options of a pod.
 
     Attributes
@@ -1037,7 +1037,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecDNSConfigOptionsItems0:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecExtraEnvsItems0:
-    """
+    r"""
     EnvVar represents an environment variable present in a Container.
 
     Attributes
@@ -1055,7 +1055,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecExtraEnvsItems0:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecHostAliasesItems0:
-    """
+    r"""
     HostAlias holds the mapping between IP and hostnames that will be injected as an entry in the pod's hosts file.
 
     Attributes
@@ -1073,7 +1073,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecHostAliasesItems0:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecImage:
-    """
+    r"""
     Image - docker image settings for VMAgent if no specified operator uses default config version
 
     Attributes
@@ -1095,7 +1095,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecImage:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecImagePullSecretsItems0:
-    """
+    r"""
     LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.
 
     Attributes
@@ -1109,7 +1109,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecImagePullSecretsItems0:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecInlineRelabelConfigItems0:
-    """
+    r"""
     RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 
     Attributes
@@ -1167,7 +1167,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecInlineRelabelConfigItems0:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecInsertPorts:
-    """
+    r"""
     InsertPorts - additional listen ports for data ingestion.
 
     Attributes
@@ -1193,7 +1193,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecInsertPorts:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecNodeScrapeNamespaceSelector:
-    """
+    r"""
     NodeScrapeNamespaceSelector defines Namespaces to be selected for VMNodeScrape discovery. Works in combination with Selector. NamespaceSelector nil - only objects at VMAgent namespace. Selector nil - only objects at NamespaceSelector namespaces. If both nil - behaviour controlled by selectAllByDefault
 
     Attributes
@@ -1211,7 +1211,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecNodeScrapeNamespaceSelector:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecNodeScrapeNamespaceSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -1233,7 +1233,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecNodeScrapeNamespaceSelectorMa
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecNodeScrapeRelabelTemplateItems0:
-    """
+    r"""
     RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 
     Attributes
@@ -1291,7 +1291,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecNodeScrapeRelabelTemplateItem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecNodeScrapeSelector:
-    """
+    r"""
     NodeScrapeSelector defines VMNodeScrape to be selected for scraping. Works in combination with NamespaceSelector. NamespaceSelector nil - only objects at VMAgent namespace. Selector nil - only objects at NamespaceSelector namespaces. If both nil - behaviour controlled by selectAllByDefault
 
     Attributes
@@ -1309,7 +1309,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecNodeScrapeSelector:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecNodeScrapeSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -1331,7 +1331,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecNodeScrapeSelectorMatchExpres
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecPodDisruptionBudget:
-    """
+    r"""
     PodDisruptionBudget created by operator
 
     Attributes
@@ -1353,7 +1353,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecPodDisruptionBudget:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecPodMetadata:
-    """
+    r"""
     PodMetadata configures Labels and Annotations which are propagated to the vmagent pods.
 
     Attributes
@@ -1375,7 +1375,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecPodMetadata:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecPodScrapeNamespaceSelector:
-    """
+    r"""
     PodScrapeNamespaceSelector defines Namespaces to be selected for VMPodScrape discovery. Works in combination with Selector. NamespaceSelector nil - only objects at VMAgent namespace. Selector nil - only objects at NamespaceSelector namespaces. If both nil - behaviour controlled by selectAllByDefault
 
     Attributes
@@ -1393,7 +1393,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecPodScrapeNamespaceSelector:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecPodScrapeNamespaceSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -1415,7 +1415,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecPodScrapeNamespaceSelectorMat
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecPodScrapeRelabelTemplateItems0:
-    """
+    r"""
     RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 
     Attributes
@@ -1473,7 +1473,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecPodScrapeRelabelTemplateItems
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecPodScrapeSelector:
-    """
+    r"""
     PodScrapeSelector defines PodScrapes to be selected for target discovery. Works in combination with NamespaceSelector. NamespaceSelector nil - only objects at VMAgent namespace. Selector nil - only objects at NamespaceSelector namespaces. If both nil - behaviour controlled by selectAllByDefault
 
     Attributes
@@ -1491,7 +1491,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecPodScrapeSelector:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecPodScrapeSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -1513,7 +1513,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecPodScrapeSelectorMatchExpress
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecProbeNamespaceSelector:
-    """
+    r"""
     ProbeNamespaceSelector defines Namespaces to be selected for VMProbe discovery. Works in combination with Selector. NamespaceSelector nil - only objects at VMAgent namespace. Selector nil - only objects at NamespaceSelector namespaces. If both nil - behaviour controlled by selectAllByDefault
 
     Attributes
@@ -1531,7 +1531,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecProbeNamespaceSelector:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecProbeNamespaceSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -1553,7 +1553,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecProbeNamespaceSelectorMatchEx
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecProbeScrapeRelabelTemplateItems0:
-    """
+    r"""
     RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 
     Attributes
@@ -1611,7 +1611,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecProbeScrapeRelabelTemplateIte
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecProbeSelector:
-    """
+    r"""
     ProbeSelector defines VMProbe to be selected for target probing. Works in combination with NamespaceSelector. NamespaceSelector nil - only objects at VMAgent namespace. Selector nil - only objects at NamespaceSelector namespaces. If both nil - behaviour controlled by selectAllByDefault
 
     Attributes
@@ -1629,7 +1629,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecProbeSelector:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecProbeSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -1651,7 +1651,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecProbeSelectorMatchExpressions
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecReadinessGatesItems0:
-    """
+    r"""
     PodReadinessGate contains the reference to a pod condition
 
     Attributes
@@ -1665,7 +1665,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecReadinessGatesItems0:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRelabelConfig:
-    """
+    r"""
     RelabelConfig ConfigMap with global relabel config -remoteWrite.relabelConfig This relabeling is applied to all the collected metrics before sending them to remote storage.
 
     Attributes
@@ -1687,7 +1687,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRelabelConfig:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0:
-    """
+    r"""
     VMAgentRemoteWriteSpec defines the remote storage configuration for VmAgent
 
     Attributes
@@ -1741,7 +1741,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0BasicAuth:
-    """
+    r"""
     BasicAuth allow an endpoint to authenticate over basic authentication
 
     Attributes
@@ -1763,7 +1763,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0BasicAuth:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0BasicAuthPassword:
-    """
+    r"""
     The secret in the service scrape namespace that contains the password for authentication. It must be at them same namespace as CRD
 
     Attributes
@@ -1785,7 +1785,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0BasicAuthPas
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0BasicAuthUsername:
-    """
+    r"""
     The secret in the service scrape namespace that contains the username for authentication. It must be at them same namespace as CRD
 
     Attributes
@@ -1807,7 +1807,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0BasicAuthUse
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0BearerTokenSecret:
-    """
+    r"""
     Optional bearer auth token to use for -remoteWrite.url
 
     Attributes
@@ -1829,7 +1829,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0BearerTokenS
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0InlineURLRelabelConfigItems0:
-    """
+    r"""
     RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 
     Attributes
@@ -1887,7 +1887,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0InlineURLRel
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0Oauth2:
-    """
+    r"""
     OAuth2 defines auth configuration
 
     Attributes
@@ -1925,7 +1925,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0Oauth2:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0Oauth2ClientID:
-    """
+    r"""
     The secret or configmap containing the OAuth2 client id
 
     Attributes
@@ -1943,7 +1943,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0Oauth2Client
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0Oauth2ClientIDConfigMap:
-    """
+    r"""
     ConfigMap containing data to use for the targets.
 
     Attributes
@@ -1965,7 +1965,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0Oauth2Client
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0Oauth2ClientIDSecret:
-    """
+    r"""
     Secret containing data to use for the targets.
 
     Attributes
@@ -1987,7 +1987,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0Oauth2Client
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0Oauth2ClientSecret:
-    """
+    r"""
     The secret containing the OAuth2 client secret
 
     Attributes
@@ -2009,7 +2009,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0Oauth2Client
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0StreamAggrConfig:
-    """
+    r"""
     StreamAggrConfig defines stream aggregation configuration for VMAgent for -remoteWrite.url
 
     Attributes
@@ -2035,7 +2035,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0StreamAggrCo
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0StreamAggrConfigRulesItems0:
-    """
+    r"""
     StreamAggrRule defines the rule in stream aggregation config
 
     Attributes
@@ -2086,7 +2086,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0StreamAggrCo
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0StreamAggrConfigRulesItems0InputRelabelConfigsItems0:
-    """
+    r"""
     RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 
     Attributes
@@ -2144,7 +2144,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0StreamAggrCo
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0StreamAggrConfigRulesItems0OutputRelabelConfigsItems0:
-    """
+    r"""
     RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 
     Attributes
@@ -2202,7 +2202,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0StreamAggrCo
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfig:
-    """
+    r"""
     TLSConfig describes tls configuration for remote write target
 
     Attributes
@@ -2244,7 +2244,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfig:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCa:
-    """
+    r"""
     Stuct containing the CA cert to use for the targets.
 
     Attributes
@@ -2262,7 +2262,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCa:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCaConfigMap:
-    """
+    r"""
     ConfigMap containing data to use for the targets.
 
     Attributes
@@ -2284,7 +2284,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCaC
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCaSecret:
-    """
+    r"""
     Secret containing data to use for the targets.
 
     Attributes
@@ -2306,7 +2306,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCaS
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCert:
-    """
+    r"""
     Struct containing the client cert file for the targets.
 
     Attributes
@@ -2324,7 +2324,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCer
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCertConfigMap:
-    """
+    r"""
     ConfigMap containing data to use for the targets.
 
     Attributes
@@ -2346,7 +2346,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCer
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCertSecret:
-    """
+    r"""
     Secret containing data to use for the targets.
 
     Attributes
@@ -2368,7 +2368,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigCer
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigKeySecret:
-    """
+    r"""
     Secret containing the client key file for the targets.
 
     Attributes
@@ -2390,7 +2390,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0TLSConfigKey
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0URLRelabelConfig:
-    """
+    r"""
     ConfigMap with relabeling config which is applied to metrics before sending them to the corresponding -remoteWrite.url
 
     Attributes
@@ -2412,7 +2412,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteItems0URLRelabelCo
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteSettings:
-    """
+    r"""
     RemoteWriteSettings defines global settings for all remoteWrite urls.
 
     Attributes
@@ -2458,7 +2458,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRemoteWriteSettings:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecResources:
-    """
+    r"""
     Resources container resource request and limits, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ if not specified - default setting will be used
 
     Attributes
@@ -2481,7 +2481,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecResources:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecRollingUpdate:
-    """
+    r"""
     RollingUpdate - overrides deployment update params.
 
     Attributes
@@ -2499,7 +2499,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecRollingUpdate:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceScrapeNamespaceSelector:
-    """
+    r"""
     ServiceScrapeNamespaceSelector Namespaces to be selected for VMServiceScrape discovery. Works in combination with Selector. NamespaceSelector nil - only objects at VMAgent namespace. Selector nil - only objects at NamespaceSelector namespaces. If both nil - behaviour controlled by selectAllByDefault
 
     Attributes
@@ -2517,7 +2517,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceScrapeNamespaceSelecto
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceScrapeNamespaceSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -2539,7 +2539,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceScrapeNamespaceSelecto
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceScrapeRelabelTemplateItems0:
-    """
+    r"""
     RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 
     Attributes
@@ -2597,7 +2597,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceScrapeRelabelTemplateI
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceScrapeSelector:
-    """
+    r"""
     ServiceScrapeSelector defines ServiceScrapes to be selected for target discovery. Works in combination with NamespaceSelector. NamespaceSelector nil - only objects at VMAgent namespace. Selector nil - only objects at NamespaceSelector namespaces. If both nil - behaviour controlled by selectAllByDefault
 
     Attributes
@@ -2615,7 +2615,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceScrapeSelector:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceScrapeSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -2637,7 +2637,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceScrapeSelectorMatchExp
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceSpec:
-    """
+    r"""
     ServiceSpec that will be added to vmagent service spec
 
     Attributes
@@ -2655,7 +2655,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceSpec:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceSpecMetadata:
-    """
+    r"""
     EmbeddedObjectMetadata defines objectMeta for additional service.
 
     Attributes
@@ -2677,7 +2677,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecServiceSpecMetadata:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorage:
-    """
+    r"""
     StatefulStorage configures storage for StatefulSet
 
     Attributes
@@ -2699,7 +2699,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorage:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageEmptyDir:
-    """
+    r"""
     EmptyDirVolumeSource to be used by the Prometheus StatefulSets. If specified, used in place of any volumeClaimTemplate. More info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
 
     Attributes
@@ -2721,7 +2721,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageEmptyDir:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplate:
-    """
+    r"""
     A PVC spec to be used by the VMAlertManager StatefulSets.
 
     Attributes
@@ -2751,7 +2751,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateMetadata:
-    """
+    r"""
     EmbeddedMetadata contains metadata relevant to an EmbeddedResource.
 
     Attributes
@@ -2773,7 +2773,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateSpec:
-    """
+    r"""
     Spec defines the desired characteristics of a volume requested by a pod author. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
 
     Attributes
@@ -2815,7 +2815,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateSpecDataSource:
-    """
+    r"""
     dataSource field can be used to specify either: * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot) * An existing PVC (PersistentVolumeClaim) If the provisioner or an external controller can support the specified data source, it will create a new volume based on the contents of the specified data source. If the AnyVolumeDataSource feature gate is enabled, this field will always have the same contents as the DataSourceRef field.
 
     Attributes
@@ -2837,7 +2837,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateSpecDataSourceRef:
-    """
+    r"""
     dataSourceRef specifies the object from which to populate the volume with data, if a non-empty volume is desired. This may be any local object from a non-empty API group (non core object) or a PersistentVolumeClaim object. When this field is specified, volume binding will only succeed if the type of the specified object matches some installed volume populator or dynamic provisioner. This field will replace the functionality of the DataSource field and as such if both fields are non-empty, they must have the same value. For backwards compatibility, both fields (DataSource and DataSourceRef) will be set to the same value automatically if one of them is empty and the other is non-empty. There are two important differences between DataSource and DataSourceRef: * While DataSource only allows two specific types of objects, DataSourceRef allows any non-core object, as well as PersistentVolumeClaim objects. * While DataSource ignores disallowed values (dropping them), DataSourceRef preserves all values, and generates an error if a disallowed value is specified. (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.
 
     Attributes
@@ -2859,7 +2859,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateSpecResources:
-    """
+    r"""
     resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
 
     Attributes
@@ -2882,7 +2882,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateSpecSelector:
-    """
+    r"""
     selector is a label query over volumes to consider for binding.
 
     Attributes
@@ -2900,7 +2900,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateSpecSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -2922,7 +2922,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateStatus:
-    """
+    r"""
     Status represents the current information/status of a persistent volume claim. Read-only. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
 
     Attributes
@@ -2961,7 +2961,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTemplateStatusConditionsItems0:
-    """
+    r"""
     PersistentVolumeClaimCondition contails details about state of pvc
 
     Attributes
@@ -2995,7 +2995,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStatefulStorageVolumeClaimTem
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStaticScrapeNamespaceSelector:
-    """
+    r"""
     StaticScrapeNamespaceSelector defines Namespaces to be selected for VMStaticScrape discovery. Works in combination with NamespaceSelector. NamespaceSelector nil - only objects at VMAgent namespace. Selector nil - only objects at NamespaceSelector namespaces. If both nil - behaviour controlled by selectAllByDefault
 
     Attributes
@@ -3013,7 +3013,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStaticScrapeNamespaceSelector
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStaticScrapeNamespaceSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -3035,7 +3035,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStaticScrapeNamespaceSelector
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStaticScrapeRelabelTemplateItems0:
-    """
+    r"""
     RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 
     Attributes
@@ -3093,7 +3093,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStaticScrapeRelabelTemplateIt
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStaticScrapeSelector:
-    """
+    r"""
     StaticScrapeSelector defines PodScrapes to be selected for target discovery. Works in combination with NamespaceSelector. If both nil - match everything. NamespaceSelector nil - only objects at VMAgent namespace. Selector nil - only objects at NamespaceSelector namespaces.
 
     Attributes
@@ -3111,7 +3111,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStaticScrapeSelector:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecStaticScrapeSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -3133,7 +3133,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecStaticScrapeSelectorMatchExpr
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecTolerationsItems0:
-    """
+    r"""
     The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
 
     Attributes
@@ -3163,7 +3163,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecTolerationsItems0:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentSpecVolumeMountsItems0:
-    """
+    r"""
     VolumeMount describes a mounting of a Volume within a container.
 
     Attributes
@@ -3197,7 +3197,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpecVolumeMountsItems0:
 
 
 schema OperatorVictoriametricsComV1beta1VMAgentStatus:
-    """
+    r"""
     VMAgentStatus defines the observed state of VMAgent
 
     Attributes

@@ -8,7 +8,7 @@ _regex_match = regex.match
 
 
 schema EC2NodeClass:
-    """
+    r"""
     EC2NodeClass is the Schema for the EC2NodeClass API
 
     Attributes
@@ -38,7 +38,7 @@ schema EC2NodeClass:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpec:
-    """
+    r"""
     EC2NodeClassSpec is the top level specification for the AWS Karpenter Provider. This will contain configuration necessary to launch instances in AWS.
 
     Attributes
@@ -99,7 +99,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpec:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpecAmiSelectorTermsItems0:
-    """
+    r"""
     AMISelectorTerm defines selection logic for an ami used by Karpenter to launch nodes. If multiple fields are used for selection, the requirements are ANDed.
 
     Attributes
@@ -129,7 +129,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecAmiSelectorTermsItems0:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpecBlockDeviceMappingsItems0:
-    """
+    r"""
     karpenter k8s aws v1beta1 e c2 node class spec block device mappings items0
 
     Attributes
@@ -151,7 +151,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecBlockDeviceMappingsItems0:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpecBlockDeviceMappingsItems0Ebs:
-    """
+    r"""
     EBS contains parameters used to automatically set up EBS volumes when an instance is launched.
 
     Attributes
@@ -208,7 +208,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecBlockDeviceMappingsItems0Ebs:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpecMetadataOptions:
-    """
+    r"""
     MetadataOptions for the generated launch template of provisioned nodes. 
      This specifies the exposure of the Instance Metadata Service to provisioned EC2 nodes. For more information, see Instance Metadata and User Data (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html) in the Amazon Elastic Compute Cloud User Guide. 
      Refer to recommended, security best practices (https://aws.github.io/aws-eks-best-practices/security/docs/iam/#restrict-access-to-the-instance-profile-assigned-to-the-worker-node) for limiting exposure of Instance Metadata and User Data to pods. If omitted, defaults to httpEndpoint enabled, with httpProtocolIPv6 disabled, with httpPutResponseLimit of 2, and with httpTokens required.
@@ -244,7 +244,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecMetadataOptions:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpecSecurityGroupSelectorTermsItems0:
-    """
+    r"""
     SecurityGroupSelectorTerm defines selection logic for a security group used by Karpenter to launch nodes. If multiple fields are used for selection, the requirements are ANDed.
 
     Attributes
@@ -270,7 +270,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecSecurityGroupSelectorTermsItems0:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassSpecSubnetSelectorTermsItems0:
-    """
+    r"""
     SubnetSelectorTerm defines selection logic for a subnet used by Karpenter to launch nodes. If multiple fields are used for selection, the requirements are ANDed.
 
     Attributes
@@ -292,7 +292,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassSpecSubnetSelectorTermsItems0:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassStatus:
-    """
+    r"""
     EC2NodeClassStatus contains the resolved state of the EC2NodeClass
 
     Attributes
@@ -318,7 +318,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassStatus:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassStatusAmisItems0:
-    """
+    r"""
     AMI contains resolved AMI selector values utilized for node launch
 
     Attributes
@@ -340,7 +340,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassStatusAmisItems0:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassStatusAmisItems0RequirementsItems0:
-    """
+    r"""
     A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -362,7 +362,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassStatusAmisItems0RequirementsItems0:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassStatusSecurityGroupsItems0:
-    """
+    r"""
     SecurityGroup contains resolved SecurityGroup selector values utilized for node launch
 
     Attributes
@@ -380,7 +380,7 @@ schema KarpenterK8sAwsV1beta1EC2NodeClassStatusSecurityGroupsItems0:
 
 
 schema KarpenterK8sAwsV1beta1EC2NodeClassStatusSubnetsItems0:
-    """
+    r"""
     Subnet contains resolved Subnet selector values utilized for node launch
 
     Attributes

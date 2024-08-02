@@ -7,7 +7,7 @@ import base
 
 
 schema Pet:
-    """
+    r"""
     main pet
 
     Attributes

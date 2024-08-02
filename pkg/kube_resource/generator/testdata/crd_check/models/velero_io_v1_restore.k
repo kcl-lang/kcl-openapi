@@ -6,7 +6,7 @@ import k8s.apimachinery.pkg.apis.meta.v1
 
 
 schema Restore:
-    """
+    r"""
     Restore is a Velero resource that represents the application of resources from a Velero backup to a target Kubernetes cluster.
 
     Attributes
@@ -36,7 +36,7 @@ schema Restore:
 
 
 schema VeleroIoV1RestoreSpec:
-    """
+    r"""
     RestoreSpec defines the specification for a Velero restore.
 
     Attributes
@@ -110,7 +110,7 @@ schema VeleroIoV1RestoreSpec:
 
 
 schema VeleroIoV1RestoreSpecHooks:
-    """
+    r"""
     Hooks represent custom behaviors that should be executed during or post restore.
 
     Attributes
@@ -124,7 +124,7 @@ schema VeleroIoV1RestoreSpecHooks:
 
 
 schema VeleroIoV1RestoreSpecHooksResourcesItems0:
-    """
+    r"""
     RestoreResourceHookSpec defines one or more RestoreResrouceHooks that should be executed based on the rules defined for namespaces, resources, and label selector.
 
     Attributes
@@ -162,7 +162,7 @@ schema VeleroIoV1RestoreSpecHooksResourcesItems0:
 
 
 schema VeleroIoV1RestoreSpecHooksResourcesItems0LabelSelector:
-    """
+    r"""
     LabelSelector, if specified, filters the resources to which this hook spec applies.
 
     Attributes
@@ -180,7 +180,7 @@ schema VeleroIoV1RestoreSpecHooksResourcesItems0LabelSelector:
 
 
 schema VeleroIoV1RestoreSpecHooksResourcesItems0LabelSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -202,7 +202,7 @@ schema VeleroIoV1RestoreSpecHooksResourcesItems0LabelSelectorMatchExpressionsIte
 
 
 schema VeleroIoV1RestoreSpecHooksResourcesItems0PostHooksItems0:
-    """
+    r"""
     RestoreResourceHook defines a restore hook for a resource.
 
     Attributes
@@ -220,7 +220,7 @@ schema VeleroIoV1RestoreSpecHooksResourcesItems0PostHooksItems0:
 
 
 schema VeleroIoV1RestoreSpecHooksResourcesItems0PostHooksItems0Exec:
-    """
+    r"""
     Exec defines an exec restore hook.
 
     Attributes
@@ -254,7 +254,7 @@ schema VeleroIoV1RestoreSpecHooksResourcesItems0PostHooksItems0Exec:
 
 
 schema VeleroIoV1RestoreSpecHooksResourcesItems0PostHooksItems0Init:
-    """
+    r"""
     Init defines an init restore hook.
 
     Attributes
@@ -272,7 +272,7 @@ schema VeleroIoV1RestoreSpecHooksResourcesItems0PostHooksItems0Init:
 
 
 schema VeleroIoV1RestoreSpecLabelSelector:
-    """
+    r"""
     LabelSelector is a metav1.LabelSelector to filter with when restoring individual objects from the backup. If empty or nil, all objects are included. Optional.
 
     Attributes
@@ -290,7 +290,7 @@ schema VeleroIoV1RestoreSpecLabelSelector:
 
 
 schema VeleroIoV1RestoreSpecLabelSelectorMatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -312,7 +312,7 @@ schema VeleroIoV1RestoreSpecLabelSelectorMatchExpressionsItems0:
 
 
 schema VeleroIoV1RestoreSpecOrLabelSelectorsItems0:
-    """
+    r"""
     A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.
 
     Attributes
@@ -330,7 +330,7 @@ schema VeleroIoV1RestoreSpecOrLabelSelectorsItems0:
 
 
 schema VeleroIoV1RestoreSpecOrLabelSelectorsItems0MatchExpressionsItems0:
-    """
+    r"""
     A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
 
     Attributes
@@ -352,7 +352,7 @@ schema VeleroIoV1RestoreSpecOrLabelSelectorsItems0MatchExpressionsItems0:
 
 
 schema VeleroIoV1RestoreSpecRestoreStatus:
-    """
+    r"""
     RestoreStatus specifies which resources we should restore the status field. If nil, no objects are included. Optional.
 
     Attributes
@@ -370,7 +370,7 @@ schema VeleroIoV1RestoreSpecRestoreStatus:
 
 
 schema VeleroIoV1RestoreStatus:
-    """
+    r"""
     RestoreStatus captures the current status of a Velero restore
 
     Attributes
@@ -424,7 +424,7 @@ schema VeleroIoV1RestoreStatus:
 
 
 schema VeleroIoV1RestoreStatusProgress:
-    """
+    r"""
     Progress contains information about the restore's execution progress. Note that this information is best-effort only -- if Velero fails to update it during a restore for any reason, it may be inaccurate/stale.
 
     Attributes

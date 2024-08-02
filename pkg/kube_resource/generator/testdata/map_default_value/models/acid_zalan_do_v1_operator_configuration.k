@@ -8,7 +8,7 @@ _regex_match = regex.match
 
 
 schema OperatorConfiguration:
-    """
+    r"""
     acid zalan do v1 operator configuration
 
     Attributes
@@ -38,7 +38,7 @@ schema OperatorConfiguration:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfiguration:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration
 
     Attributes
@@ -190,7 +190,7 @@ schema AcidZalanDoV1OperatorConfigurationConfiguration:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationAwsOrGcp:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration aws or gcp
 
     Attributes
@@ -244,7 +244,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationAwsOrGcp:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationConnectionPooler:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration connection pooler
 
     Attributes
@@ -302,7 +302,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationConnectionPooler:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationDebug:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration debug
 
     Attributes
@@ -320,7 +320,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationDebug:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationKubernetes:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration kubernetes
 
     Attributes
@@ -510,7 +510,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationKubernetes:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationKubernetesInfrastructureRolesSecretsItems0:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration kubernetes infrastructure roles secrets items0
 
     Attributes
@@ -552,7 +552,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationKubernetesInfrastructureRo
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationLoadBalancer:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration load balancer
 
     Attributes
@@ -606,7 +606,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationLoadBalancer:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationLoggingRestAPI:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration logging rest API
 
     Attributes
@@ -628,7 +628,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationLoggingRestAPI:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationLogicalBackup:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration logical backup
 
     Attributes
@@ -722,7 +722,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationLogicalBackup:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationMajorVersionUpgrade:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration major version upgrade
 
     Attributes
@@ -748,7 +748,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationMajorVersionUpgrade:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationPatroni:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration patroni
 
     Attributes
@@ -762,7 +762,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationPatroni:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationPostgresPodResources:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration postgres pod resources
 
     Attributes
@@ -815,7 +815,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationPostgresPodResources:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationScalyr:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration scalyr
 
     Attributes
@@ -860,7 +860,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationScalyr:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationTeamsAPI:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration teams API
 
     Attributes
@@ -926,7 +926,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationTeamsAPI:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationTimeouts:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration timeouts
 
     Attributes
@@ -968,7 +968,7 @@ schema AcidZalanDoV1OperatorConfigurationConfigurationTimeouts:
 
 
 schema AcidZalanDoV1OperatorConfigurationConfigurationUsers:
-    """
+    r"""
     acid zalan do v1 operator configuration configuration users
 
     Attributes

@@ -5,7 +5,7 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 
 
 schema CatalogItem:
-    """
+    r"""
     catalog item
 
     Attributes
@@ -27,7 +27,7 @@ schema CatalogItem:
 
 
 schema CatalogItemImage:
-    """
+    r"""
     catalog item image
 
     Attributes
