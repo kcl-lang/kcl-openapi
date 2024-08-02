@@ -5,7 +5,7 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 
 
 schema Pet:
-    """
+    r"""
     pet
 
     Attributes
@@ -23,7 +23,7 @@ schema Pet:
 
 
 schema PetCategory:
-    """
+    r"""
     pet category
 
     Attributes

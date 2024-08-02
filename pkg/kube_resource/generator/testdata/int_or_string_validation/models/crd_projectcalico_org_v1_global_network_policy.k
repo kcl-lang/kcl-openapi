@@ -8,7 +8,7 @@ _regex_match = regex.match
 
 
 schema GlobalNetworkPolicy:
-    """
+    r"""
     crd projectcalico org v1 global network policy
 
     Attributes
@@ -46,7 +46,7 @@ schema GlobalNetworkPolicy:
 
 
 schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestination:
-    """
+    r"""
     Destination contains the match criteria that apply to destination entity.
 
     Attributes
@@ -105,7 +105,7 @@ schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestination:
 
 
 schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestinationServiceAccounts:
-    """
+    r"""
     ServiceAccounts is an optional field that restricts the rule to only apply to traffic that originates from (or terminates at) a pod running as a matching service account.
 
     Attributes
@@ -123,7 +123,7 @@ schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestinationServiceAccounts:
 
 
 schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestinationServices:
-    """
+    r"""
     Services is an optional field that contains options for matching Kubernetes Services. If specified, only traffic that originates from or terminates at endpoints within the selected service(s) will be matched, and only to/from each endpoint's port. 
      Services cannot be specified on the same rule as Selector, NotSelector, NamespaceSelector, Nets, NotNets or ServiceAccounts. 
      Ports and NotPorts can only be specified with Services on ingress rules.

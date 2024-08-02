@@ -5,7 +5,7 @@ Editing this file might prove futile when you re-run the KCL auto-gen generate c
 
 
 schema Question:
-    """
+    r"""
     question
 
     Attributes
@@ -19,7 +19,7 @@ schema Question:
 
 
 schema QuestionAnswer:
-    """
+    r"""
     question answer
 
     Attributes

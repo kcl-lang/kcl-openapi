@@ -6,7 +6,7 @@ import k8s.apimachinery.pkg.apis.meta.v1
 
 
 schema ExternalSecret:
-    """
+    r"""
     ExternalSecret is the Schema for the external-secrets API.
 
     Attributes
@@ -36,7 +36,7 @@ schema ExternalSecret:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpec:
-    """
+    r"""
     ExternalSecretSpec defines the desired state of ExternalSecret.
 
     Attributes
@@ -66,7 +66,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpec:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecDataFromItems0:
-    """
+    r"""
     ExternalSecretDataRemoteRef defines Provider data location.
 
     Attributes
@@ -92,7 +92,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecDataFromItems0:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecDataItems0:
-    """
+    r"""
     ExternalSecretData defines the connection between the Kubernetes Secret key (spec.data.<key>) and the Provider data.
 
     Attributes
@@ -110,7 +110,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecDataItems0:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecDataItems0RemoteRef:
-    """
+    r"""
     ExternalSecretDataRemoteRef defines Provider data location.
 
     Attributes
@@ -136,7 +136,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecDataItems0RemoteRef:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecSecretStoreRef:
-    """
+    r"""
     SecretStoreRef defines which SecretStore to fetch the ExternalSecret data.
 
     Attributes
@@ -154,7 +154,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecSecretStoreRef:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecTarget:
-    """
+    r"""
     ExternalSecretTarget defines the Kubernetes Secret to be created There can be only one target per ExternalSecret.
 
     Attributes
@@ -180,7 +180,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecTarget:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplate:
-    """
+    r"""
     Template defines a blueprint for the created Secret resource.
 
     Attributes
@@ -210,7 +210,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplate:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateMetadata:
-    """
+    r"""
     ExternalSecretTemplateMetadata defines metadata fields for the Secret blueprint.
 
     Attributes
@@ -228,7 +228,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateMetadata:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateTemplateFromItems0:
-    """
+    r"""
     external secrets io v1alpha1 external secret spec target template template from items0
 
     Attributes
@@ -246,7 +246,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateTemplateFromItem
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateTemplateFromItems0ConfigMap:
-    """
+    r"""
     external secrets io v1alpha1 external secret spec target template template from items0 config map
 
     Attributes
@@ -264,7 +264,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateTemplateFromItem
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateTemplateFromItems0ConfigMapItemsItems0:
-    """
+    r"""
     external secrets io v1alpha1 external secret spec target template template from items0 config map items items0
 
     Attributes
@@ -278,7 +278,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateTemplateFromItem
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateTemplateFromItems0Secret:
-    """
+    r"""
     external secrets io v1alpha1 external secret spec target template template from items0 secret
 
     Attributes
@@ -296,7 +296,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateTemplateFromItem
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateTemplateFromItems0SecretItemsItems0:
-    """
+    r"""
     external secrets io v1alpha1 external secret spec target template template from items0 secret items items0
 
     Attributes
@@ -310,7 +310,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretSpecTargetTemplateTemplateFromItem
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretStatus:
-    """
+    r"""
     external secrets io v1alpha1 external secret status
 
     Attributes
@@ -336,7 +336,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretStatus:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretStatusBinding:
-    """
+    r"""
     Binding represents a servicebinding.io Provisioned Service reference to the secret
 
     Attributes
@@ -350,7 +350,7 @@ schema ExternalSecretsIoV1alpha1ExternalSecretStatusBinding:
 
 
 schema ExternalSecretsIoV1alpha1ExternalSecretStatusConditionsItems0:
-    """
+    r"""
     external secrets io v1alpha1 external secret status conditions items0
 
     Attributes

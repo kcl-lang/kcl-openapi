@@ -6,7 +6,7 @@ import k8s.apimachinery.pkg.apis.meta.v1
 
 
 schema GitHubSource:
-    """
+    r"""
     sources knative dev v1alpha1 git hub source
 
     Attributes
@@ -36,7 +36,7 @@ schema GitHubSource:
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceSpec:
-    """
+    r"""
     sources knative dev v1alpha1 git hub source spec
 
     Attributes
@@ -79,7 +79,7 @@ schema SourcesKnativeDevV1alpha1GitHubSourceSpec:
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceSpecAccessToken:
-    """
+    r"""
     Access token for the GitHub API.
 
     Attributes
@@ -93,7 +93,7 @@ schema SourcesKnativeDevV1alpha1GitHubSourceSpecAccessToken:
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceSpecAccessTokenSecretKeyRef:
-    """
+    r"""
     A reference to a Kubernetes Secret object containing a GitHub access token.
 
     Attributes
@@ -111,7 +111,7 @@ schema SourcesKnativeDevV1alpha1GitHubSourceSpecAccessTokenSecretKeyRef:
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceSpecCeOverrides:
-    """
+    r"""
     Defines overrides to control modifications of the event sent to the sink.
 
     Attributes
@@ -129,7 +129,7 @@ schema SourcesKnativeDevV1alpha1GitHubSourceSpecCeOverrides:
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceSpecSecretToken:
-    """
+    r"""
     Arbitrary token used to validate requests to webhooks.
 
     Attributes
@@ -143,7 +143,7 @@ schema SourcesKnativeDevV1alpha1GitHubSourceSpecSecretToken:
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceSpecSecretTokenSecretKeyRef:
-    """
+    r"""
     A reference to a Kubernetes Secret object containing the webhook token.
 
     Attributes
@@ -161,7 +161,7 @@ schema SourcesKnativeDevV1alpha1GitHubSourceSpecSecretTokenSecretKeyRef:
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceSpecSink:
-    """
+    r"""
     The destination of events received from webhooks.
 
     Attributes
@@ -179,7 +179,7 @@ schema SourcesKnativeDevV1alpha1GitHubSourceSpecSink:
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceSpecSinkRef:
-    """
+    r"""
     Reference to an addressable Kubernetes object to be used as the destination of events.
 
     Attributes
@@ -212,7 +212,7 @@ schema SourcesKnativeDevV1alpha1GitHubSourceSpecSinkRef:
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceStatus:
-    """
+    r"""
     sources knative dev v1alpha1 git hub source status
 
     Attributes
@@ -234,7 +234,7 @@ schema SourcesKnativeDevV1alpha1GitHubSourceStatus:
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceStatusConditionsItems0:
-    """
+    r"""
     sources knative dev v1alpha1 git hub source status conditions items0
 
     Attributes

@@ -6,7 +6,7 @@ import k8s.apimachinery.pkg.apis.meta.v1
 
 
 schema ContainerizedWorkload:
-    """
+    r"""
     A ContainerizedWorkload is a workload that runs OCI containers.
 
     Attributes
@@ -32,7 +32,7 @@ schema ContainerizedWorkload:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpec:
-    """
+    r"""
     A ContainerizedWorkloadSpec defines the desired state of a ContainerizedWorkload.
 
     Attributes
@@ -46,7 +46,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpec:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecSocket:
-    """
+    r"""
     core oam dev v1alpha2 containerized workload spec socket
 
     Attributes

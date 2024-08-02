@@ -6,7 +6,7 @@ import k8s.apimachinery.pkg.apis.meta.v1
 
 
 schema VirtualService:
-    """
+    r"""
     networking istio io v1beta1 virtual service
 
     Attributes
@@ -36,7 +36,7 @@ schema VirtualService:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpec:
-    """
+    r"""
     Configuration affecting label/content routing, sni routing, etc. See more details at: https://istio.io/docs/reference/config/networking/virtual-service.html
 
     Attributes
@@ -70,7 +70,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpec:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0
 
     Attributes
@@ -155,7 +155,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0CorsPolicy:
-    """
+    r"""
     Cross-Origin Resource Sharing policy (CORS).
 
     Attributes
@@ -199,7 +199,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0CorsPolicy:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0CorsPolicyAllowOriginsItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 cors policy allow origins items0
 
     Attributes
@@ -221,7 +221,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0CorsPolicyAllowOrigin
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Delegate:
-    """
+    r"""
     Delegate is used to specify the particular VirtualService which can be used to define delegate HTTPRoute.
 
     Attributes
@@ -239,7 +239,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Delegate:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0DirectResponse:
-    """
+    r"""
     A HTTP rule can either return a direct_response, redirect or forward (default) traffic.
 
     Attributes
@@ -262,7 +262,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0DirectResponse:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0DirectResponseBody:
-    """
+    r"""
     Specifies the content of the response body.
 
     Attributes
@@ -280,7 +280,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0DirectResponseBody:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Fault:
-    """
+    r"""
     Fault injection policy to apply on HTTP traffic at the client side.
 
     Attributes
@@ -298,7 +298,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Fault:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0FaultAbort:
-    """
+    r"""
     Abort Http request attempts and return error codes back to downstream service, giving the impression that the upstream service is faulty.
 
     Attributes
@@ -324,7 +324,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0FaultAbort:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0FaultAbortPercentage:
-    """
+    r"""
     Percentage of requests to be aborted with the error code provided.
 
     Attributes
@@ -338,7 +338,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0FaultAbortPercentage:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0FaultDelay:
-    """
+    r"""
     Delay requests before forwarding, emulating various failures such as network issues, overloaded upstream service, etc.
 
     Attributes
@@ -364,7 +364,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0FaultDelay:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0FaultDelayPercentage:
-    """
+    r"""
     Percentage of requests on which the delay will be injected.
 
     Attributes
@@ -378,7 +378,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0FaultDelayPercentage:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Headers:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 headers
 
     Attributes
@@ -396,7 +396,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Headers:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0HeadersRequest:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 headers request
 
     Attributes
@@ -418,7 +418,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0HeadersRequest:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0HeadersResponse:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 headers response
 
     Attributes
@@ -440,7 +440,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0HeadersResponse:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 match items0
 
     Attributes
@@ -511,7 +511,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0Authority:
-    """
+    r"""
     HTTP Authority values are case-sensitive and formatted as follows: - `exact: "value"` for exact string match - `prefix: "value"` for prefix-based match - `regex: "value"` for [RE2 style regex-based match](https://github.com/google/re2/wiki/Syntax).
 
     Attributes
@@ -533,7 +533,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0Authority:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0HeadersAnon:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 match items0 headers anon
 
     Attributes
@@ -555,7 +555,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0HeadersAno
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0Method:
-    """
+    r"""
     HTTP Method values are case-sensitive and formatted as follows: - `exact: "value"` for exact string match - `prefix: "value"` for prefix-based match - `regex: "value"` for [RE2 style regex-based match](https://github.com/google/re2/wiki/Syntax).
 
     Attributes
@@ -577,7 +577,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0Method:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0QueryParamsAnon:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 match items0 query params anon
 
     Attributes
@@ -599,7 +599,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0QueryParam
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0Scheme:
-    """
+    r"""
     URI Scheme values are case-sensitive and formatted as follows: - `exact: "value"` for exact string match - `prefix: "value"` for prefix-based match - `regex: "value"` for [RE2 style regex-based match](https://github.com/google/re2/wiki/Syntax).
 
     Attributes
@@ -621,7 +621,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0Scheme:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0URI:
-    """
+    r"""
     URI to match values are case-sensitive and formatted as follows: - `exact: "value"` for exact string match - `prefix: "value"` for prefix-based match - `regex: "value"` for [RE2 style regex-based match](https://github.com/google/re2/wiki/Syntax).
 
     Attributes
@@ -643,7 +643,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0URI:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0WithoutHeadersAnon:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 match items0 without headers anon
 
     Attributes
@@ -665,7 +665,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MatchItems0WithoutHea
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Mirror:
-    """
+    r"""
     Mirror HTTP traffic to a another destination in addition to forwarding the requests to the intended destination.
 
     Attributes
@@ -687,7 +687,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Mirror:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorPercentage:
-    """
+    r"""
     Percentage of the traffic to be mirrored by the `mirror` field.
 
     Attributes
@@ -701,7 +701,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorPercentage:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorPort:
-    """
+    r"""
     Specifies the port on the host that is being addressed.
 
     Attributes
@@ -720,7 +720,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorPort:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorsItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 mirrors items0
 
     Attributes
@@ -738,7 +738,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorsItems0:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorsItems0Destination:
-    """
+    r"""
     Destination specifies the target of the mirror operation.
 
     Attributes
@@ -760,7 +760,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorsItems0Destinat
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorsItems0DestinationPort:
-    """
+    r"""
     Specifies the port on the host that is being addressed.
 
     Attributes
@@ -779,7 +779,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorsItems0Destinat
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorsItems0Percentage:
-    """
+    r"""
     Percentage of the traffic to be mirrored by the `destination` field.
 
     Attributes
@@ -793,7 +793,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0MirrorsItems0Percenta
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Redirect:
-    """
+    r"""
     A HTTP rule can either return a direct_response, redirect or forward (default) traffic.
 
     Attributes
@@ -836,7 +836,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Redirect:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Retries:
-    """
+    r"""
     Retry policy for HTTP requests.
 
     Attributes
@@ -862,7 +862,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Retries:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Rewrite:
-    """
+    r"""
     Rewrite HTTP URIs and Authority headers.
 
     Attributes
@@ -884,7 +884,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0Rewrite:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RewriteURIRegexRewrite:
-    """
+    r"""
     rewrite the path portion of the URI with the specified regex.
 
     Attributes
@@ -902,7 +902,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RewriteURIRegexRewrit
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 route items0
 
     Attributes
@@ -924,7 +924,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0Destination:
-    """
+    r"""
     Destination uniquely identifies the instances of a service to which the request/connection should be forwarded to.
 
     Attributes
@@ -946,7 +946,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0Destinatio
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0DestinationPort:
-    """
+    r"""
     Specifies the port on the host that is being addressed.
 
     Attributes
@@ -965,7 +965,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0Destinatio
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0Headers:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 route items0 headers
 
     Attributes
@@ -983,7 +983,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0Headers:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0HeadersRequest:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 route items0 headers request
 
     Attributes
@@ -1005,7 +1005,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0HeadersReq
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0HeadersResponse:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec HTTP items0 route items0 headers response
 
     Attributes
@@ -1027,7 +1027,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecHTTPItems0RouteItems0HeadersRes
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecTCPItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec TCP items0
 
     Attributes
@@ -1045,7 +1045,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecTCPItems0:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecTCPItems0MatchItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec TCP items0 match items0
 
     Attributes
@@ -1084,7 +1084,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecTCPItems0MatchItems0:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecTCPItems0RouteItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec TCP items0 route items0
 
     Attributes
@@ -1102,7 +1102,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecTCPItems0RouteItems0:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecTCPItems0RouteItems0Destination:
-    """
+    r"""
     Destination uniquely identifies the instances of a service to which the request/connection should be forwarded to.
 
     Attributes
@@ -1124,7 +1124,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecTCPItems0RouteItems0Destination
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecTCPItems0RouteItems0DestinationPort:
-    """
+    r"""
     Specifies the port on the host that is being addressed.
 
     Attributes
@@ -1143,7 +1143,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecTCPItems0RouteItems0Destination
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecTLSItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec TLS items0
 
     Attributes
@@ -1161,7 +1161,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecTLSItems0:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecTLSItems0MatchItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec TLS items0 match items0
 
     Attributes
@@ -1200,7 +1200,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecTLSItems0MatchItems0:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecTLSItems0RouteItems0:
-    """
+    r"""
     networking istio io v1beta1 virtual service spec TLS items0 route items0
 
     Attributes
@@ -1218,7 +1218,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecTLSItems0RouteItems0:
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecTLSItems0RouteItems0Destination:
-    """
+    r"""
     Destination uniquely identifies the instances of a service to which the request/connection should be forwarded to.
 
     Attributes
@@ -1240,7 +1240,7 @@ schema NetworkingIstioIoV1beta1VirtualServiceSpecTLSItems0RouteItems0Destination
 
 
 schema NetworkingIstioIoV1beta1VirtualServiceSpecTLSItems0RouteItems0DestinationPort:
-    """
+    r"""
     Specifies the port on the host that is being addressed.
 
     Attributes

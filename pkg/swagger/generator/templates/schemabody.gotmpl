@@ -1,6 +1,6 @@
 {{- define "schemaBody" -}}
 schema {{ shortType .KclType }} {{- if gt (len (baseTypes .AllOf)) 0 }} ({{ range $i, $e := baseTypes .AllOf }}{{if $i }}, {{ end }}{{ $e.KclType }}{{- end }}) {{- end }}:
-    """
+    r"""
 {{ template "docstring" . }}
     """
 {{- "\n" -}}

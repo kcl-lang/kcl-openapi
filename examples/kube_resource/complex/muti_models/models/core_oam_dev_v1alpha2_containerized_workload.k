@@ -8,7 +8,7 @@ _regex_match = regex.match
 
 
 schema ContainerizedWorkload:
-    """
+    r"""
     A ContainerizedWorkload is a workload that runs OCI containers.
 
     Attributes
@@ -38,7 +38,7 @@ schema ContainerizedWorkload:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpec:
-    """
+    r"""
     A ContainerizedWorkloadSpec defines the desired state of a ContainerizedWorkload.
 
     Attributes
@@ -60,7 +60,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpec:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0:
-    """
+    r"""
     A Container represents an Open Containers Initiative (OCI) container.
 
     Attributes
@@ -114,7 +114,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ConfigItems0:
-    """
+    r"""
     A ContainerConfigFile specifies a configuration file that should be written within a container.
 
     Attributes
@@ -132,7 +132,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ConfigItems0:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0EnvItems0:
-    """
+    r"""
     A ContainerEnvVar specifies an environment variable that should be set within a container.
 
     Attributes
@@ -154,7 +154,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0EnvItems0:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbe:
-    """
+    r"""
     A LivenessProbe assesses whether this container is alive. Containers that fail liveness probes will be restarted.
 
     Attributes
@@ -196,7 +196,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbe:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeExec:
-    """
+    r"""
     Exec probes a container's health by executing a command.
 
     Attributes
@@ -210,7 +210,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeE
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeHTTPGet:
-    """
+    r"""
     HTTPGet probes a container's health by sending an HTTP GET request.
 
     Attributes
@@ -232,7 +232,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeH
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeHTTPGetHTTPHeadersItems0:
-    """
+    r"""
     A HTTPHeader to be passed when probing a container.
 
     Attributes
@@ -250,7 +250,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeH
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeTCPSocket:
-    """
+    r"""
     TCPSocketProbe probes a container's health by connecting to a TCP socket.
 
     Attributes
@@ -264,7 +264,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0LivenessProbeT
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0PortsItems0:
-    """
+    r"""
     A ContainerPort specifies a port that is exposed by a container.
 
     Attributes
@@ -290,7 +290,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0PortsItems0:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbe:
-    """
+    r"""
     A ReadinessProbe assesses whether this container is ready to serve requests. Containers that fail readiness probes will be withdrawn from service.
 
     Attributes
@@ -332,7 +332,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbe:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeExec:
-    """
+    r"""
     Exec probes a container's health by executing a command.
 
     Attributes
@@ -346,7 +346,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeE
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeHTTPGet:
-    """
+    r"""
     HTTPGet probes a container's health by sending an HTTP GET request.
 
     Attributes
@@ -368,7 +368,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeH
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeHTTPGetHTTPHeadersItems0:
-    """
+    r"""
     A HTTPHeader to be passed when probing a container.
 
     Attributes
@@ -386,7 +386,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeH
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeTCPSocket:
-    """
+    r"""
     TCPSocketProbe probes a container's health by connecting to a TCP socket.
 
     Attributes
@@ -400,7 +400,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ReadiessProbeT
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0Resources:
-    """
+    r"""
     Resources required by this container
 
     Attributes
@@ -430,7 +430,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0Resources:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesCPU:
-    """
+    r"""
     CPU required by this container.
 
     Attributes
@@ -444,7 +444,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesCPU:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesExtendedItems0:
-    """
+    r"""
     ExtendedResource required by a container.
 
     Attributes
@@ -462,7 +462,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesExten
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesGpu:
-    """
+    r"""
     GPU required by this container.
 
     Attributes
@@ -476,7 +476,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesGpu:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesMemory:
-    """
+    r"""
     Memory required by this container.
 
     Attributes
@@ -490,7 +490,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesMemor
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesVolumesItems0:
-    """
+    r"""
     VolumeResource required by a container.
 
     Attributes
@@ -520,7 +520,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesVolum
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesVolumesItems0Disk:
-    """
+    r"""
     Disk requirements of this volume.
 
     Attributes
@@ -538,7 +538,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadSpecContainersItems0ResourcesVolum
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadStatus:
-    """
+    r"""
     A ContainerizedWorkloadStatus represents the observed state of a ContainerizedWorkload.
 
     Attributes
@@ -556,7 +556,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadStatus:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadStatusConditionsItems0:
-    """
+    r"""
     A Condition that may apply to a resource.
 
     Attributes
@@ -586,7 +586,7 @@ schema CoreOamDevV1alpha2ContainerizedWorkloadStatusConditionsItems0:
 
 
 schema CoreOamDevV1alpha2ContainerizedWorkloadStatusResourcesItems0:
-    """
+    r"""
     A ResourceReference refers to an resource managed by an OAM resource.
 
     Attributes
