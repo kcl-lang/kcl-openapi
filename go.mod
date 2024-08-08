@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/go-openapi/analysis v0.21.2
 	github.com/go-openapi/errors v0.20.2
-	github.com/go-openapi/inflect v0.19.0
+	github.com/go-openapi/inflect v0.21.0
 	github.com/go-openapi/loads v0.21.1
 	github.com/go-openapi/spec v0.20.6
 	github.com/go-openapi/strfmt v0.21.2
