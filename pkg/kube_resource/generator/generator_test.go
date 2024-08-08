@@ -10,6 +10,7 @@ import (
 
 const (
 	workload = `
+
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -626,7 +627,7 @@ func TestGenerate(t *testing.T) {
 func TestSplitDocuments(t *testing.T) {
 	crds := v1Crd + v1beta1Crd
 	files, _ := splitDocuments(crds)
-	if len(files) != 3 {
-		t.Errorf("splitDocuments failed. expected 3, got %d", len(files))
+	if len(files) != 2 {
+		t.Errorf("splitDocuments failed. expected 2, got %d", len(files))
 	}
 }

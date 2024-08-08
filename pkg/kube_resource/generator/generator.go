@@ -22,6 +22,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"unicode"
 
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/install"
@@ -159,8 +160,16 @@ func splitDocuments(s string) ([]string, error) {
 			if len(trimmedContentAfterSeparator) > 0 && trimmedContentAfterSeparator[0] != '#' {
 				return nil, fmt.Errorf("invalid document separator: %s", strings.TrimSpace(separator))
 			}
-
-			docs = append(docs, s[prev:loc[0]])
+			// Remove all whitespace
+			result := strings.Map(func(r rune) rune {
+				if unicode.IsSpace(r) {
+					return -1
+				}
+				return r
+			}, s[prev:loc[0]])
+			if len(result) > 0 {
+				docs = append(docs, result)
+			}
 			prev = loc[1]
 		}
 		docs = append(docs, s[prev:])

@@ -12,7 +12,7 @@ basic OpenAPI logic in go-swagger.
 
 Main use cases:
 
-+ Swagger Openapi
++ Swagger OpenAPI
     + Translate Swagger OpenAPI spec to KCL code
 + Kubernetes CRD
     + Translate Kubernetes CRD to KCL code
@@ -93,6 +93,5 @@ If the tool isn't working as you expect, please reach out to us by filing an [is
 ## License
 
 Apache License Version 2.0
-
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkcl-lang%2Fkcl-openapi.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkcl-lang%2Fkcl-openapi?ref=badge_large)
