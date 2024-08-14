@@ -238,6 +238,10 @@ func (t *typeResolver) firstType(schema *spec.Schema) string {
 	if len(schema.Type) == 0 || schema.Type[0] == "" {
 		return object
 	}
+	// int or str
+	if len(schema.Type) == 2 && ((schema.Type[0] == str && schema.Type[1] == integer) || (schema.Type[0] == integer && schema.Type[1] == str)) {
+		return intOrStr
+	}
 	if len(schema.Type) > 1 {
 		// JSON-Schema multiple types, e.g. {"type": [ "object", "array" ]} are not supported.
 		// TODO: should keep the first _supported_ type, e.g. skip null
