@@ -1,0 +1,15 @@
+definitions:
+  My-Config:
+    type: object
+    properties:
+      my-name:
+        type: string
+      my-labels:
+        type: object
+        additionalProperties:
+          type: integer
+swagger: "2.0"
+info:
+  title: kcl
+  version: v0.0.2
+paths: {}

@@ -43,7 +43,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpec:
 
     Attributes
     ----------
-    _ : str, default is Undefined, optional
+    "-" : str, default is Undefined, optional
         ParsingError contents error with context if operator was failed to parse json object from kubernetes api server
     affinity : any, default is Undefined, optional
         Affinity If specified, the pod's scheduling constraints.
@@ -208,7 +208,7 @@ schema OperatorVictoriametricsComV1beta1VMAgentSpec:
     """
 
 
-    _?: str
+    "-"?: str
 
     affinity?: any
 

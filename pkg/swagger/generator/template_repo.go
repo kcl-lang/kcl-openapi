@@ -133,15 +133,12 @@ func DefaultFuncMap(lang *LanguageOpts) template.FuncMap {
 			var properties GenSchemaList
 			for _, one := range allOf {
 				if !one.IsBaseType {
-					for _, p := range one.Properties {
-						properties = append(properties, p)
-					}
+					properties = append(properties, one.Properties...)
 				}
 			}
 			return properties
 		},
 		"toKCLValue":    lang.ToKclValue,
-		"escapeKeyword": lang.MangleModelName,
 		"nonEmptyValue": lang.NonEmptyValue,
 	}
 }

@@ -21,6 +21,7 @@ import (
 	"path"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -32,6 +33,7 @@ import (
 var (
 	// DefaultLanguageFunc defines the default generation language
 	DefaultLanguageFunc func() *LanguageOpts
+	validNameRegexp     = regexp.MustCompile(`\$?^[a-zA-Z_][a-zA-Z0-9_]*$`)
 )
 
 const (
@@ -91,12 +93,12 @@ func (l *LanguageOpts) MangleVarName(name string) string {
 
 // MangleModelName adds "$" prefix to name if it is conflict with KCL keyword
 func (l *LanguageOpts) MangleModelName(modelName string) string {
-	// replace all the "-" to "_" in the model name
 	lastDotIndex := strings.LastIndex(modelName, ".")
 	shortName := modelName[lastDotIndex+1:]
-	if strings.Contains(shortName, "-") {
-		log.Printf("[WARN] the modelName %s contains symbol '-' which is forbidden in KCL. Will be replaced by '_'", shortName)
-		modelName = modelName[:lastDotIndex+1] + strings.Replace(shortName, "-", "_", -1)
+	// Replace all the "-" to "_" in the model name
+	if strings.Contains(shortName, "-") || strings.Contains(shortName, ".") {
+		log.Printf("[WARN] the modelName %s contains symbols '-' or '.' which is forbidden in KCL. Will be replaced by '_'", shortName)
+		modelName = modelName[:lastDotIndex+1] + strings.Replace(strings.Replace(shortName, "-", "_", -1), ".", "_", -1)
 	}
 	for _, kw := range l.ReservedWords {
 		if modelName == kw {
@@ -104,6 +106,19 @@ func (l *LanguageOpts) MangleModelName(modelName string) string {
 		}
 	}
 	return modelName
+}
+
+// ManglePropertyName adds "$" prefix to name if it is conflict with KCL keyword or adds quotes "
+func (l *LanguageOpts) ManglePropertyName(name string) string {
+	if !validNameRegexp.MatchString(name) {
+		name = fmt.Sprintf(`"%s"`, name)
+	}
+	for _, kw := range l.ReservedWords {
+		if name == kw {
+			return fmt.Sprintf("$%s", name)
+		}
+	}
+	return name
 }
 
 // MangleFileName makes sure a file name gets a safe name
