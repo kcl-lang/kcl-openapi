@@ -109,16 +109,18 @@ func (l *LanguageOpts) MangleModelName(modelName string) string {
 }
 
 // ManglePropertyName adds "$" prefix to name if it is conflict with KCL keyword or adds quotes "
-func (l *LanguageOpts) ManglePropertyName(name string) string {
+func (l *LanguageOpts) ManglePropertyName(name string) (string, bool) {
+	hasQuote := false
 	if !validNameRegexp.MatchString(name) {
 		name = fmt.Sprintf(`"%s"`, name)
+		hasQuote = true
 	}
 	for _, kw := range l.ReservedWords {
 		if name == kw {
-			return fmt.Sprintf("$%s", name)
+			return fmt.Sprintf("$%s", name), hasQuote
 		}
 	}
-	return name
+	return name, hasQuote
 }
 
 // MangleFileName makes sure a file name gets a safe name

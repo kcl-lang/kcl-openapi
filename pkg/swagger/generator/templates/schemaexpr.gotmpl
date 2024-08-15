@@ -1,4 +1,4 @@
-{{- define "schemaexpr" -}}{{- if .Maximum }}{{ if .ExclusiveMaximum }}{{ .EscapedName }} < {{.Maximum}}{{- else }}{{ .EscapedName }} <= {{.Maximum}}{{ end }}{{ if not .Required }} if {{ .EscapedName }} not in [None, Undefined]{{ end }}
+{{- define "schemaexpr" -}}{{- if not .EscapedNameHasQuote }}{{- if .Maximum }}{{ if .ExclusiveMaximum }}{{ .EscapedName }} < {{.Maximum}}{{- else }}{{ .EscapedName }} <= {{.Maximum}}{{ end }}{{ if not .Required }} if {{ .EscapedName }} not in [None, Undefined]{{ end }}
 {{- end }}
 {{- if .Minimum }}{{ if .ExclusiveMinimum }}{{ .EscapedName }} > {{.Minimum}}{{- else }}{{ .EscapedName }} >= {{.Minimum}}{{ end }}{{ if not .Required }} if {{ .EscapedName }} not in [None, Undefined]{{ end }}
 {{- end }}
@@ -20,6 +20,7 @@
 {{- end }}
 {{- if and .AdditionalProperties .AdditionalProperties.HasValidations }}all _, n in {{ .EscapedName }} { {{- template "schemaexpr" .AdditionalProperties }} }{{ if not .Required }} if {{ .EscapedName }}{{ end }}
 {{- end }}
+{{- else }}True{{- end }}
 {{- range .AllOf }}
 {{- template "schemaexpr" . }}
 {{- end }}

@@ -125,7 +125,7 @@ schema SourcesKnativeDevV1alpha1GitHubSourceSpecCeOverrides:
 
 
     check:
-        all _, extensions in extensions {len(extensions) >= 1 if extensions not in [None, Undefined] }
+        all _, extensions in extensions { len(extensions) >= 1 if extensions not in [None, Undefined] } if extensions
 
 
 schema SourcesKnativeDevV1alpha1GitHubSourceSpecSecretToken:

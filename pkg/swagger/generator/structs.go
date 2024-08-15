@@ -68,6 +68,7 @@ type GenSchema struct {
 	OriginalName               string
 	Name                       string
 	EscapedName                string
+	EscapedNameHasQuote        bool
 	Suffix                     string
 	Path                       string
 	ValueExpression            string

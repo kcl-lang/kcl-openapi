@@ -164,6 +164,12 @@ var schemaValidatorTmpl string
 //go:embed templates/schemaexpr.gotmpl
 var schemaExprTmpl string
 
+//go:embed templates/itemsvalidator.gotmpl
+var itemsValidatorTmpl string
+
+//go:embed templates/addattrvalidator.gotmpl
+var addAttrValidatorTmpl string
+
 //go:embed templates/introduction.gotmpl
 var introductionTmpl string
 
@@ -173,15 +179,17 @@ var propertyDocTmpl string
 func defaultAssets() map[string][]byte {
 	return map[string][]byte{
 		// schema generation template
-		"model.gotmpl":           []byte(modelTmpl),
-		"header.gotmpl":          []byte(headerTmpl),
-		"docstring.gotmpl":       []byte(docstringTmpl),
-		"schema.gotmpl":          []byte(schemaTmpl),
-		"schemabody.gotmpl":      []byte(schemaBodyTmpl),
-		"schemavalidator.gotmpl": []byte(schemaValidatorTmpl),
-		"schemaexpr.gotmpl":      []byte(schemaExprTmpl),
-		"introduction.gotmpl":    []byte(introductionTmpl),
-		"propertydoc.gotmpl":     []byte(propertyDocTmpl),
+		"model.gotmpl":            []byte(modelTmpl),
+		"header.gotmpl":           []byte(headerTmpl),
+		"docstring.gotmpl":        []byte(docstringTmpl),
+		"schema.gotmpl":           []byte(schemaTmpl),
+		"schemabody.gotmpl":       []byte(schemaBodyTmpl),
+		"schemavalidator.gotmpl":  []byte(schemaValidatorTmpl),
+		"schemaexpr.gotmpl":       []byte(schemaExprTmpl),
+		"itemsvalidator.gotmpl":   []byte(itemsValidatorTmpl),
+		"addattrvalidator.gotmpl": []byte(addAttrValidatorTmpl),
+		"introduction.gotmpl":     []byte(introductionTmpl),
+		"propertydoc.gotmpl":      []byte(propertyDocTmpl),
 	}
 }
 
