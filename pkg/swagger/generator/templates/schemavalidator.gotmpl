@@ -1,6 +1,7 @@
 {{- define "schemavalidator" -}}
 {{- range . -}}
 {{- if or .Maximum .Minimum .MaxLength .MinLength .Pattern .UniqueItems .MinItems .MaxItems .MultipleOf .Items .AdditionalProperties .AllOf }}
+    {{- if not .EscapedNameHasQuote }}
     {{- if .Maximum }}
         {{ if .ExclusiveMaximum }}{{ .EscapedName }} < {{.Maximum}}{{- else }}{{ .EscapedName }} <= {{.Maximum}}{{ end }}{{ if not .Required }} if {{ .EscapedName }} not in [None, Undefined]{{ end }}
     {{- end }}
@@ -29,10 +30,13 @@
         multiplyof(int({{ .EscapedName }}), int({{ .MultipleOf }})){{ if not .Required }} if {{ .EscapedName }}{{ end }}
     {{- end }}
     {{- if and .Items .Items.HasValidations }}
-        all {{ .Items.EscapedName }} in {{ .EscapedName }} { {{- template "schemaexpr" .Items }} }{{ if not .Required }} if {{ .EscapedName }}{{ end }}
+        {{- template "itemsvalidator" .Items }}
     {{- end }}
     {{- if and .AdditionalProperties .AdditionalProperties.HasValidations }}
-        all _, {{ .AdditionalProperties.EscapedName }} in {{ .EscapedName }} { {{- template "schemaexpr" .AdditionalProperties }} }{{ if not .Required }} if {{ .EscapedName }}{{ end }}
+        {{- template "addattrvalidator" .AdditionalProperties }}
+    {{- end }}
+    {{- else }}
+        True  # Skip validations for {{ .EscapedName }}
     {{- end }}
     {{- if .AllOf }}
     {{- template "schemavalidator" .AllOf }}

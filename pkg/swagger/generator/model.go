@@ -1184,7 +1184,7 @@ func (sg *schemaGenContext) buildItems() error {
 	// This is a tuple, build a new model that represents this
 	if sg.Named {
 		sg.GenSchema.Name = sg.Name
-		sg.GenSchema.EscapedName = DefaultLanguageFunc().ManglePropertyName(sg.GenSchema.Name)
+		sg.GenSchema.EscapedName, sg.GenSchema.EscapedNameHasQuote = DefaultLanguageFunc().ManglePropertyName(sg.GenSchema.Name)
 		sg.GenSchema.KclType = sg.TypeResolver.kclTypeName(sg.Name)
 		for i, s := range sg.Schema.Items.Schemas {
 			elProp := sg.NewTupleElement(&s, i)
@@ -1211,7 +1211,7 @@ func (sg *schemaGenContext) buildItems() error {
 			}
 			sg.MergeResult(elProp, false)
 			elProp.GenSchema.Name = "p" + strconv.Itoa(i)
-			elProp.GenSchema.EscapedName = DefaultLanguageFunc().ManglePropertyName(elProp.GenSchema.Name)
+			elProp.GenSchema.EscapedName, elProp.GenSchema.EscapedNameHasQuote = DefaultLanguageFunc().ManglePropertyName(elProp.GenSchema.Name)
 			sg.GenSchema.Properties = append(sg.GenSchema.Properties, elProp.GenSchema)
 			sg.GenSchema.IsTuple = true
 		}
@@ -1433,7 +1433,7 @@ func (sg *schemaGenContext) makeGenSchema() error {
 	sg.GenSchema.KeyVar = sg.KeyVar
 	sg.GenSchema.OriginalName = sg.Name
 	sg.GenSchema.Name = sg.KclName()
-	sg.GenSchema.EscapedName = DefaultLanguageFunc().ManglePropertyName(sg.GenSchema.Name)
+	sg.GenSchema.EscapedName, sg.GenSchema.EscapedNameHasQuote = DefaultLanguageFunc().ManglePropertyName(sg.GenSchema.Name)
 	sg.GenSchema.Title = sg.Schema.Title
 	sg.GenSchema.Description = trimBOM(sg.Schema.Description)
 	sg.GenSchema.ReceiverName = sg.Receiver

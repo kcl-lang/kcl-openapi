@@ -29,11 +29,3 @@ var formatMapping = map[string]map[string]string{
 		"int32": "int",
 	},
 }
-
-// kcl primitive types
-var primitives = map[string]struct{}{
-	"bool":   {},
-	"float":  {},
-	"int":    {},
-	"string": {},
-}
