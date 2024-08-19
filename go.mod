@@ -1,6 +1,6 @@
 module kcl-lang.io/kcl-openapi
 
-go 1.18
+go 1.20
 
 require (
 	github.com/go-openapi/analysis v0.21.2
