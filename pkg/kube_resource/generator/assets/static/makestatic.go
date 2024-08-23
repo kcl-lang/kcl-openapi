@@ -11,7 +11,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"kcl-lang.io/kcl-openapi/pkg/kube_resource/generator/assets/static"
@@ -29,7 +28,7 @@ func makestatic() error {
 	if err != nil {
 		return fmt.Errorf("error while generating static.go: %v\n", err)
 	}
-	err = ioutil.WriteFile("static.go", buf, 0666)
+	err = os.WriteFile("static.go", buf, 0666)
 	if err != nil {
 		return fmt.Errorf("error while writing static.go: %v\n", err)
 	}
