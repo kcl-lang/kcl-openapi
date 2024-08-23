@@ -1,7 +1,7 @@
 package cmds
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 
@@ -66,7 +66,7 @@ func Main() {
 		os.Exit(0)
 	}
 	opts.Quiet = func() {
-		log.SetOutput(ioutil.Discard)
+		log.SetOutput(io.Discard)
 	}
 	opts.LogFile = func(logfile string) {
 		f, err := os.OpenFile(logfile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
