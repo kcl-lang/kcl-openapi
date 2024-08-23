@@ -631,3 +631,115 @@ func TestSplitDocuments(t *testing.T) {
 		t.Errorf("splitDocuments failed. expected 2, got %d", len(files))
 	}
 }
+
+func TestSplitYamlStreamDocuments(t *testing.T) {
+	crds := `
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: foo.example.com
+spec:
+  group: example.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                field1:
+                  type: string
+  scope: Namespaced
+  names:
+    plural: foo
+    singular: foo
+    kind: Foo
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: bar.example.com
+spec:
+  group: example.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                field2:
+                  type: string
+  scope: Namespaced
+  names:
+    plural: bar
+    singular: bar
+    kind: Bar
+`
+	files, _ := splitDocuments(crds)
+	if len(files) != 2 {
+		t.Errorf("splitDocuments failed. expected 2, got %d", len(files))
+	}
+	if files[0] != `
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: foo.example.com
+spec:
+  group: example.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                field1:
+                  type: string
+  scope: Namespaced
+  names:
+    plural: foo
+    singular: foo
+    kind: Foo` {
+		panic(files[0])
+	}
+	if files[1] != `apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: bar.example.com
+spec:
+  group: example.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                field2:
+                  type: string
+  scope: Namespaced
+  names:
+    plural: bar
+    singular: bar
+    kind: Bar
+` {
+		panic(files[1])
+	}
+}
