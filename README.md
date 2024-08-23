@@ -84,7 +84,7 @@ The command is as follows:
 
 ## KCL OpenAPI Spec
 
-The [KCL OpenAPI Spec](https://kcl-lang.io/docs/reference/cli/openapi/spec) defines a complete specification of how OpenAPI objects are mapped to KCL language elements.
+The [KCL OpenAPI Spec](https://www.kcl-lang.io/docs/tools/cli/openapi/openapi-to-kcl) defines a complete specification of how OpenAPI objects are mapped to KCL language elements.
 
 ## Ask for help
 
