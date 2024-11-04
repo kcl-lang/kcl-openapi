@@ -1530,12 +1530,81 @@ func (sg *schemaGenContext) makeGenSchema() error {
 
 func RecoverMapValueOrder(oldValue interface{}) interface{} {
 	value := reflect.ValueOf(oldValue)
+	if ele, ok := oldValue.(yaml.MapSlice); ok {
+		var newValue yaml.MapSlice = make([]yaml.MapItem, len(ele))
+		for i, item := range ele {
+			k := item.Key
+			v := item.Value
+			mapV := reflect.ValueOf(v)
+			switch mapV.Kind() {
+			case reflect.Map:
+				hasXOrder := false
+				var order int64
+				var innerValue interface{}
+				mapIter := mapV.MapRange()
+				for mapIter.Next() {
+					kk := mapIter.Key().String()
+					if kk == xOrder {
+						hasXOrder = true
+						order = int64(mapIter.Value().Interface().(float64))
+					}
+					if kk == "value" {
+						innerValue = mapIter.Value().Interface()
+					}
+				}
+				if hasXOrder {
+					newValue[order] = yaml.MapItem{
+						Key:   k,
+						Value: RecoverMapValueOrder(innerValue),
+					}
+				} else {
+					newValue[i] = yaml.MapItem{
+						Key:   k,
+						Value: RecoverMapValueOrder(v),
+					}
+				}
+			default:
+				if ele, ok := v.(yaml.MapSlice); ok {
+					hasXOrder := false
+					var order int64
+					var innerValue interface{}
+					for _, item := range ele {
+						kk := item.Key
+						if kk == xOrder {
+							hasXOrder = true
+							order = int64(item.Value.(float64))
+						}
+						if kk == "value" {
+							innerValue = item.Value
+						}
+					}
+					if hasXOrder {
+						newValue[order] = yaml.MapItem{
+							Key:   k,
+							Value: RecoverMapValueOrder(innerValue),
+						}
+					} else {
+						newValue[i] = yaml.MapItem{
+							Key:   k,
+							Value: RecoverMapValueOrder(v),
+						}
+					}
+				} else {
+					newValue[i] = yaml.MapItem{
+						Key:   k,
+						Value: RecoverMapValueOrder(v),
+					}
+				}
+			}
+		}
+		return newValue
+	}
 	switch value.Kind() {
 	case reflect.Slice:
 		var newSlice []interface{}
 		for i := 0; i < value.Len(); i++ {
 			itemValue := value.Index(i).Interface()
-			RecoverMapValueOrder(itemValue)
+			itemValue = RecoverMapValueOrder(itemValue)
 			newSlice = append(newSlice, itemValue)
 		}
 		return newSlice
@@ -1575,9 +1644,36 @@ func RecoverMapValueOrder(oldValue interface{}) interface{} {
 					}
 				}
 			default:
-				newValue[i] = yaml.MapItem{
-					Key:   k,
-					Value: RecoverMapValueOrder(v),
+				if ele, ok := v.(yaml.MapSlice); ok {
+					hasXOrder := false
+					var order int64
+					var innerValue interface{}
+					for _, item := range ele {
+						kk := item.Key
+						if kk == xOrder {
+							hasXOrder = true
+							order = int64(item.Value.(float64))
+						}
+						if kk == "value" {
+							innerValue = item.Value
+						}
+					}
+					if hasXOrder {
+						newValue[order] = yaml.MapItem{
+							Key:   k,
+							Value: RecoverMapValueOrder(innerValue),
+						}
+					} else {
+						newValue[i] = yaml.MapItem{
+							Key:   k,
+							Value: RecoverMapValueOrder(v),
+						}
+					}
+				} else {
+					newValue[i] = yaml.MapItem{
+						Key:   k,
+						Value: RecoverMapValueOrder(v),
+					}
 				}
 			}
 		}
