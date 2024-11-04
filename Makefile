@@ -28,6 +28,7 @@ build-local-linux:
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
 		go build -o ./_build/linux/kcl-openapi \
 		-ldflags="-s -w" .
+
 build:
 	-rm -rf ./_build/local/
 	mkdir -p ./_build/local/
