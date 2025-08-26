@@ -13,7 +13,7 @@ require (
 	github.com/go-openapi/validate v0.21.0
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/kr/pretty v0.3.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.11.0
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/apiextensions-apiserver v0.24.1
 	k8s.io/apimachinery v0.24.1
