@@ -241,35 +241,41 @@ func CRDContainsValidation(crd *apiextensions.CustomResourceDefinition) bool {
 func buildSwagger(crd *apiextensions.CustomResourceDefinition) (*spec.Swagger, error) {
 	var schemas spec.Definitions = map[string]spec.Schema{}
 	group, kind := crd.Spec.Group, crd.Spec.Names.Kind
-	if crd.Spec.Validation != nil && crd.Spec.Validation.OpenAPIV3Schema != nil {
+
+	// The upstream v1→internal conversion hoists identical per-version schemas into Spec.Validation
+	// and clears them on each version. Rehydrate them here so we still emit every version.
+	if crd.Spec.Validation != nil {
+		for i := range crd.Spec.Versions {
+			if crd.Spec.Versions[i].Schema == nil {
+				crd.Spec.Versions[i].Schema = crd.Spec.Validation
+			}
+		}
+	}
+
+	if len(crd.Spec.Versions) > 0 {
+		for _, version := range crd.Spec.Versions {
+			if version.Schema == nil || version.Schema.OpenAPIV3Schema == nil {
+				continue
+			}
+			var schema spec.Schema
+			err := validation.ConvertJSONSchemaProps(version.Schema.OpenAPIV3Schema, &schema)
+			if err != nil {
+				return nil, err
+			}
+			setKubeNative(&schema, group, version.Name, kind)
+			name := fmt.Sprintf("%s.%s.%s", group, version.Name, kind)
+			schemas[name] = schema
+		}
+	} else if crd.Spec.Validation != nil && crd.Spec.Validation.OpenAPIV3Schema != nil {
 		var schema spec.Schema
 		err := validation.ConvertJSONSchemaProps(crd.Spec.Validation.OpenAPIV3Schema, &schema)
 		if err != nil {
 			return nil, err
 		}
-		var version string
-		if len(crd.Spec.Versions) >= 0 {
-			version = crd.Spec.Versions[0].Name
-		} else {
-			version = crd.Spec.Version
-		}
+		version := crd.Spec.Version
 		setKubeNative(&schema, group, version, kind)
 		name := fmt.Sprintf("%s.%s.%s", group, version, kind)
 		schemas[name] = schema
-	} else if len(crd.Spec.Versions) > 0 {
-		for _, version := range crd.Spec.Versions {
-			if version.Schema != nil && version.Schema.OpenAPIV3Schema != nil {
-				var schema spec.Schema
-				err := validation.ConvertJSONSchemaProps(version.Schema.OpenAPIV3Schema, &schema)
-				if err != nil {
-					return nil, err
-				}
-				version := version.Name
-				setKubeNative(&schema, group, version, kind)
-				name := fmt.Sprintf("%s.%s.%s", group, version, kind)
-				schemas[name] = schema
-			}
-		}
 	}
 
 	// todo: set extensions, include kcl-type and user-defined extensions
