@@ -211,7 +211,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressDenyItems0ToCIDRSetItems0:
 
 
     check:
-        len(cidrGroupRef) <= 253 if cidrGroupRef
+        len(cidrGroupRef) <= 253 if cidrGroupRef not in [None, Undefined]
         _regex_match(str(cidrGroupRef), r"^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$") if cidrGroupRef
 
 
@@ -234,8 +234,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressDenyItems0ToEndpointsItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecEgressDenyItems0ToEndpointsItems0MatchExpressionsItems0:
@@ -319,8 +319,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressDenyItems0ToNodesItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecEgressDenyItems0ToNodesItems0MatchExpressionsItems0:
@@ -408,8 +408,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressDenyItems0ToRequiresItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecEgressDenyItems0ToRequiresItems0MatchExpressionsItems0:
@@ -507,8 +507,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressDenyItems0ToServicesItems0K8sServi
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecEgressDenyItems0ToServicesItems0K8sServiceSelectorSelectorMatchExpressionsItems0:
@@ -679,7 +679,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToCIDRSetItems0:
 
 
     check:
-        len(cidrGroupRef) <= 253 if cidrGroupRef
+        len(cidrGroupRef) <= 253 if cidrGroupRef not in [None, Undefined]
         _regex_match(str(cidrGroupRef), r"^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$") if cidrGroupRef
 
 
@@ -702,8 +702,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToEndpointsItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToEndpointsItems0MatchExpressionsItems0:
@@ -811,8 +811,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToNodesItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToNodesItems0MatchExpressionsItems0:
@@ -1176,7 +1176,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToPortsItems0RulesKafkaItems
 
 
     check:
-        len(topic) <= 255 if topic
+        len(topic) <= 255 if topic not in [None, Undefined]
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToPortsItems0TerminatingTLS:
@@ -1242,8 +1242,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToRequiresItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToRequiresItems0MatchExpressionsItems0:
@@ -1341,8 +1341,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToServicesItems0K8sServiceSe
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecEgressItems0ToServicesItems0K8sServiceSelectorSelectorMatchExpressionsItems0:
@@ -1407,8 +1407,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecEndpointSelector:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecEndpointSelectorMatchExpressionsItems0:
@@ -1512,7 +1512,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecIngressDenyItems0FromCIDRSetItems0:
 
 
     check:
-        len(cidrGroupRef) <= 253 if cidrGroupRef
+        len(cidrGroupRef) <= 253 if cidrGroupRef not in [None, Undefined]
         _regex_match(str(cidrGroupRef), r"^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$") if cidrGroupRef
 
 
@@ -1535,8 +1535,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecIngressDenyItems0FromEndpointsItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecIngressDenyItems0FromEndpointsItems0MatchExpressionsItems0:
@@ -1620,8 +1620,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecIngressDenyItems0FromNodesItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecIngressDenyItems0FromNodesItems0MatchExpressionsItems0:
@@ -1665,8 +1665,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecIngressDenyItems0FromRequiresItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecIngressDenyItems0FromRequiresItems0MatchExpressionsItems0:
@@ -1872,7 +1872,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecIngressItems0FromCIDRSetItems0:
 
 
     check:
-        len(cidrGroupRef) <= 253 if cidrGroupRef
+        len(cidrGroupRef) <= 253 if cidrGroupRef not in [None, Undefined]
         _regex_match(str(cidrGroupRef), r"^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$") if cidrGroupRef
 
 
@@ -1895,8 +1895,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecIngressItems0FromEndpointsItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecIngressItems0FromEndpointsItems0MatchExpressionsItems0:
@@ -1980,8 +1980,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecIngressItems0FromNodesItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecIngressItems0FromNodesItems0MatchExpressionsItems0:
@@ -2025,8 +2025,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecIngressItems0FromRequiresItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecIngressItems0FromRequiresItems0MatchExpressionsItems0:
@@ -2430,7 +2430,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecIngressItems0ToPortsItems0RulesKafkaItem
 
 
     check:
-        len(topic) <= 255 if topic
+        len(topic) <= 255 if topic not in [None, Undefined]
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecIngressItems0ToPortsItems0TerminatingTLS:
@@ -2518,8 +2518,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecNodeSelector:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecNodeSelectorMatchExpressionsItems0:
@@ -2716,7 +2716,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressDenyItems0ToCIDRSetItems0:
 
 
     check:
-        len(cidrGroupRef) <= 253 if cidrGroupRef
+        len(cidrGroupRef) <= 253 if cidrGroupRef not in [None, Undefined]
         _regex_match(str(cidrGroupRef), r"^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$") if cidrGroupRef
 
 
@@ -2739,8 +2739,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressDenyItems0ToEndpointsItems0
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressDenyItems0ToEndpointsItems0MatchExpressionsItems0:
@@ -2824,8 +2824,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressDenyItems0ToNodesItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressDenyItems0ToNodesItems0MatchExpressionsItems0:
@@ -2913,8 +2913,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressDenyItems0ToRequiresItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressDenyItems0ToRequiresItems0MatchExpressionsItems0:
@@ -3012,8 +3012,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressDenyItems0ToServicesItems0K
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressDenyItems0ToServicesItems0K8sServiceSelectorSelectorMatchExpressionsItems0:
@@ -3184,7 +3184,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToCIDRSetItems0:
 
 
     check:
-        len(cidrGroupRef) <= 253 if cidrGroupRef
+        len(cidrGroupRef) <= 253 if cidrGroupRef not in [None, Undefined]
         _regex_match(str(cidrGroupRef), r"^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$") if cidrGroupRef
 
 
@@ -3207,8 +3207,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToEndpointsItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToEndpointsItems0MatchExpressionsItems0:
@@ -3316,8 +3316,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToNodesItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToNodesItems0MatchExpressionsItems0:
@@ -3681,7 +3681,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToPortsItems0RulesKaf
 
 
     check:
-        len(topic) <= 255 if topic
+        len(topic) <= 255 if topic not in [None, Undefined]
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToPortsItems0TerminatingTLS:
@@ -3747,8 +3747,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToRequiresItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToRequiresItems0MatchExpressionsItems0:
@@ -3846,8 +3846,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToServicesItems0K8sSe
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0EgressItems0ToServicesItems0K8sServiceSelectorSelectorMatchExpressionsItems0:
@@ -3912,8 +3912,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0EndpointSelector:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0EndpointSelectorMatchExpressionsItems0:
@@ -4017,7 +4017,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressDenyItems0FromCIDRSetItems
 
 
     check:
-        len(cidrGroupRef) <= 253 if cidrGroupRef
+        len(cidrGroupRef) <= 253 if cidrGroupRef not in [None, Undefined]
         _regex_match(str(cidrGroupRef), r"^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$") if cidrGroupRef
 
 
@@ -4040,8 +4040,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressDenyItems0FromEndpointsIte
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressDenyItems0FromEndpointsItems0MatchExpressionsItems0:
@@ -4125,8 +4125,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressDenyItems0FromNodesItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressDenyItems0FromNodesItems0MatchExpressionsItems0:
@@ -4170,8 +4170,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressDenyItems0FromRequiresItem
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressDenyItems0FromRequiresItems0MatchExpressionsItems0:
@@ -4377,7 +4377,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressItems0FromCIDRSetItems0:
 
 
     check:
-        len(cidrGroupRef) <= 253 if cidrGroupRef
+        len(cidrGroupRef) <= 253 if cidrGroupRef not in [None, Undefined]
         _regex_match(str(cidrGroupRef), r"^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$") if cidrGroupRef
 
 
@@ -4400,8 +4400,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressItems0FromEndpointsItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressItems0FromEndpointsItems0MatchExpressionsItems0:
@@ -4485,8 +4485,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressItems0FromNodesItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressItems0FromNodesItems0MatchExpressionsItems0:
@@ -4530,8 +4530,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressItems0FromRequiresItems0:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressItems0FromRequiresItems0MatchExpressionsItems0:
@@ -4935,7 +4935,7 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressItems0ToPortsItems0RulesKa
 
 
     check:
-        len(topic) <= 255 if topic
+        len(topic) <= 255 if topic not in [None, Undefined]
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0IngressItems0ToPortsItems0TerminatingTLS:
@@ -5023,8 +5023,8 @@ schema CiliumIoV2CiliumNetworkPolicySpecsItems0NodeSelector:
 
 
     check:
-        all _, matchLabels in matchLabels { len(matchLabels) <= 63 if matchLabels not in [None, Undefined] } if matchLabels
-        all _, matchLabels in matchLabels { _regex_match(str(matchLabels), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if matchLabels } if matchLabels
+        all _, k in matchLabels { len(k) <= 63 if k not in [None, Undefined] } if matchLabels
+        all _, k in matchLabels { _regex_match(str(k), r"^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$") if k } if matchLabels
 
 
 schema CiliumIoV2CiliumNetworkPolicySpecsItems0NodeSelectorMatchExpressionsItems0:

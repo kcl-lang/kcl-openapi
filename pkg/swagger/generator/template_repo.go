@@ -17,6 +17,7 @@ package generator
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"path"
@@ -140,6 +141,20 @@ func DefaultFuncMap(lang *LanguageOpts) template.FuncMap {
 		},
 		"toKCLValue":    lang.ToKclValue,
 		"nonEmptyValue": lang.NonEmptyValue,
+		"dict": func(values ...interface{}) (map[string]interface{}, error) {
+			if len(values)%2 != 0 {
+				return nil, errors.New("invalid dict call: odd arg count")
+			}
+			m := make(map[string]interface{}, len(values)/2)
+			for i := 0; i < len(values); i += 2 {
+				key, ok := values[i].(string)
+				if !ok {
+					return nil, errors.New("dict keys must be strings")
+				}
+				m[key] = values[i+1]
+			}
+			return m, nil
+		},
 	}
 }
 
@@ -161,14 +176,11 @@ var schemaBodyTmpl string
 //go:embed templates/schemavalidator.gotmpl
 var schemaValidatorTmpl string
 
-//go:embed templates/schemaexpr.gotmpl
-var schemaExprTmpl string
+//go:embed templates/collectionvalidator.gotmpl
+var collectionValidatorTmpl string
 
-//go:embed templates/itemsvalidator.gotmpl
-var itemsValidatorTmpl string
-
-//go:embed templates/addattrvalidator.gotmpl
-var addAttrValidatorTmpl string
+//go:embed templates/expressionvalidator.gotmpl
+var expressionValidatorTmpl string
 
 //go:embed templates/introduction.gotmpl
 var introductionTmpl string
@@ -179,17 +191,16 @@ var propertyDocTmpl string
 func defaultAssets() map[string][]byte {
 	return map[string][]byte{
 		// schema generation template
-		"model.gotmpl":            []byte(modelTmpl),
-		"header.gotmpl":           []byte(headerTmpl),
-		"docstring.gotmpl":        []byte(docstringTmpl),
-		"schema.gotmpl":           []byte(schemaTmpl),
-		"schemabody.gotmpl":       []byte(schemaBodyTmpl),
-		"schemavalidator.gotmpl":  []byte(schemaValidatorTmpl),
-		"schemaexpr.gotmpl":       []byte(schemaExprTmpl),
-		"itemsvalidator.gotmpl":   []byte(itemsValidatorTmpl),
-		"addattrvalidator.gotmpl": []byte(addAttrValidatorTmpl),
-		"introduction.gotmpl":     []byte(introductionTmpl),
-		"propertydoc.gotmpl":      []byte(propertyDocTmpl),
+		"model.gotmpl":               []byte(modelTmpl),
+		"header.gotmpl":              []byte(headerTmpl),
+		"docstring.gotmpl":           []byte(docstringTmpl),
+		"schema.gotmpl":              []byte(schemaTmpl),
+		"schemabody.gotmpl":          []byte(schemaBodyTmpl),
+		"schemavalidator.gotmpl":     []byte(schemaValidatorTmpl),
+		"introduction.gotmpl":        []byte(introductionTmpl),
+		"propertydoc.gotmpl":         []byte(propertyDocTmpl),
+		"collectionvalidator.gotmpl": []byte(collectionValidatorTmpl),
+		"expressionvalidator.gotmpl": []byte(expressionValidatorTmpl),
 	}
 }
 
@@ -212,8 +223,6 @@ func defaultProtectedTemplates() map[string]bool {
 		"schemaType":                  true,
 		"schemabody":                  true,
 		"schematype":                  true,
-		"schemavalidator":             true,
-		"schemaexpr":                  true,
 		"serverDoc":                   true,
 		"slicevalidator":              true,
 		"structfield":                 true,
@@ -230,6 +239,11 @@ func defaultProtectedTemplates() map[string]bool {
 		"withoutBaseTypeBody":         true,
 		"introduction":                true,
 		"propertydoc":                 true,
+		"schema_validator":            true,
+		"collection_validator":        true,
+		"expression_validator":        true,
+		"not_required_bool":           true,
+		"not_required_type_list":      true,
 	}
 }
 

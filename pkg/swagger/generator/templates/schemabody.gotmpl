@@ -30,15 +30,13 @@ schema {{ shortType .KclType }} {{- if gt (len (baseTypes .AllOf)) 0 }} ({{ rang
 {{- "\n" -}}
 {{- end -}}
 
-{{- if .HasValidations -}}{{ "    check:" }}
-{{- template "schemavalidator" .Properties }}
+{{- if or .HasValidations .HasNestedValidations -}}{{ "    check:" }}
+{{ template "schema_validator" .Properties }}
 {{- range nonBaseTypes .AllOf }}
-{{- template "schemavalidator" .Properties }}
+{{- template "schema_validator" .Properties }}
 {{- end }}
 {{- "\n" -}}
 {{- "\n" -}}
-{{- "\n" -}}
 {{- end }}
-
 
 {{- end -}}

@@ -1,0 +1,39 @@
+{{- define "not_required_bool" -}}
+{{ if not .Required }} if {{ .PathLastPart }}{{ end }}
+{{- end -}}
+
+{{- define "not_required_type_list" -}}
+{{ if not .Required }} if {{ .PathLastPart }} not in [None, Undefined]{{ end }}
+{{- end -}}
+
+{{- define "expression_validator" -}}
+{{- if not .EscapedNameHasQuote }}
+{{- if  .Item.Maximum -}}
+    {{- .Prefix }}{{- .Item.PathLastPart }} {{ if .Item.ExclusiveMaximum }}<{{ else }}<={{ end }} {{ .Item.Maximum }}{{ template "not_required_type_list" .Item }}{{ .Postfix }}
+{{ end }}
+{{- if .Item.Minimum -}}
+    {{- .Prefix }}{{ .Item.PathLastPart }} {{ if .Item.ExclusiveMinimum }}>{{ else }}>={{ end }} {{ .Item.Minimum }}{{ template "not_required_type_list" .Item }}{{ .Postfix }}
+{{ end }}
+{{- if .Item.MaxLength -}}
+    {{- .Prefix }}len({{ .Item.PathLastPart }}) <= {{ .Item.MaxLength }}{{ template "not_required_type_list" .Item }}{{ .Postfix }}
+{{ end }}
+{{- if .Item.MinLength -}}
+        {{- .Prefix }}len({{ .Item.PathLastPart }}) >= {{ .Item.MinLength }}{{ template "not_required_type_list" .Item }}{{ .Postfix }}
+{{ end }}
+{{- if .Item.Pattern -}}
+        {{- .Prefix }}_regex_match(str({{ .Item.PathLastPart }}), r"{{ .Item.Pattern }}"){{ template "not_required_bool" .Item }}{{ .Postfix }}
+{{ end }}
+{{- if .Item.UniqueItems -}}
+        {{- .Prefix }}isunique({{ .Item.PathLastPart }}){{ template "not_required_bool" .Item }}{{ .Postfix }}
+{{ end }}
+{{- if .Item.MinItems -}}
+        {{- .Prefix }}len({{ .Item.PathLastPart }}) >= {{ .Item.MinItems }}{{ template "not_required_bool" .Item }}{{ .Postfix }}
+{{ end }}
+{{- if .Item.MaxItems -}}
+        {{- .Prefix }}len({{ .Item.PathLastPart }}) <= {{ .Item.MaxItems }}{{ template "not_required_bool" .Item }}{{ .Postfix }}
+{{ end }}
+{{- if .Item.MultipleOf -}}
+        {{- .Prefix }}multiplyof(int({{ .Item.PathLastPart }}), int({{ .Item.MultipleOf }})){{ template "not_required_bool" .Item }}{{ .Postfix }}
+{{ end }}
+{{- end }}
+{{- end -}}
