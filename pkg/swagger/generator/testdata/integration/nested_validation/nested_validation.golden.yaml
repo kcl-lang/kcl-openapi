@@ -1,0 +1,21 @@
+definitions:
+  Model:
+    type: object
+    properties:
+      listOfListsOfStrings:
+        type: array
+        description: List of lists of strings with checked length
+        maxItems: 16
+        minItems: 8
+        items:
+          type: array
+          description: List of strings, strings with checked length
+          items:
+            type: string
+            maxLength: 10
+            minLength: 8
+swagger: "2.0"
+info:
+  title: kcl
+  version: v0.0.2
+paths: { }

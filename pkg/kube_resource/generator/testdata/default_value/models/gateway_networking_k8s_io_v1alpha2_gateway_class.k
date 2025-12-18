@@ -69,7 +69,7 @@ schema GatewayNetworkingK8sIoV1alpha2GatewayClassSpec:
         len(controllerName) <= 253
         len(controllerName) >= 1
         _regex_match(str(controllerName), r"^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*\/[A-Za-z0-9\/\-._~%!$&'()*+,;=:]+$")
-        len(description) <= 64 if description
+        len(description) <= 64 if description not in [None, Undefined]
 
 
 schema GatewayNetworkingK8sIoV1alpha2GatewayClassSpecParametersRef:
@@ -109,8 +109,8 @@ schema GatewayNetworkingK8sIoV1alpha2GatewayClassSpecParametersRef:
         _regex_match(str(kind), r"^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$")
         len(name) <= 253
         len(name) >= 1
-        len(namespace) <= 63 if namespace
-        len(namespace) >= 1 if namespace
+        len(namespace) <= 63 if namespace not in [None, Undefined]
+        len(namespace) >= 1 if namespace not in [None, Undefined]
         _regex_match(str(namespace), r"^[a-z0-9]([-a-z0-9]*[a-z0-9])?$") if namespace
 
 

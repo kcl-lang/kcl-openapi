@@ -47,6 +47,7 @@ func makeGenDefinitionHierarchy(name, pkg, container string, schema spec.Schema,
 
 	pg := schemaGenContext{
 		Path:           "",
+		PathLastPart:   "",
 		Name:           name,
 		Receiver:       receiver,
 		IndexVar:       "i",
@@ -344,6 +345,7 @@ type schemaGenContext struct {
 	Index                      int
 
 	Path         string
+	PathLastPart string
 	Name         string
 	ParamName    string
 	Accessor     string
@@ -372,6 +374,7 @@ func (sg *schemaGenContext) NewArrayBranch(schema *spec.Schema) *schemaGenContex
 	} else {
 		pg.Path = pg.Path + "." + indexVar
 	}
+	pg.PathLastPart = indexVar
 	// check who is parent, if it's a base type then rewrite the value expression
 	if sg.Discrimination != nil && sg.Discrimination.Discriminators != nil {
 		_, rewriteValueExpr := sg.Discrimination.Discriminators["#/definitions/"+sg.TypeResolver.ModelName]
@@ -413,6 +416,7 @@ func (sg *schemaGenContext) NewAdditionalItems(schema *spec.Schema) *schemaGenCo
 	} else {
 		pg.Path = pg.Path + ".(" + indexVar + mod + ")"
 	}
+	pg.PathLastPart = indexVar + mod
 	pg.IndexVar = indexVar
 	pg.ValueExpr = sg.ValueExpr + "." + pascalize(sg.KclName()) + "Items[" + indexVar + "]"
 	pg.Schema = spec.Schema{}
@@ -432,6 +436,7 @@ func (sg *schemaGenContext) NewTupleElement(schema *spec.Schema, index int) *sch
 	} else {
 		pg.Path = pg.Path + "." + strconv.Itoa(index)
 	}
+	pg.PathLastPart = strconv.Itoa(index)
 	pg.ValueExpr = pg.ValueExpr + ".P" + strconv.Itoa(index)
 
 	pg.Required = true
@@ -449,6 +454,7 @@ func (sg *schemaGenContext) NewSchemaBranch(name string, schema spec.Schema) *sc
 	} else {
 		pg.Path = fmt.Sprintf("%s.%s", pg.Path, name)
 	}
+	pg.PathLastPart, _ = DefaultLanguageFunc().ManglePropertyName(name)
 	pg.Name = name
 	pg.ValueExpr = pg.ValueExpr + "." + pascalize(kclName(&schema, name))
 	pg.Schema = schema
@@ -522,7 +528,18 @@ func (sg *schemaGenContext) NewAdditionalProperty(schema spec.Schema) *schemaGen
 	if sg.Path != "" {
 		pg.Path = sg.Path + "." + pg.KeyVar
 	}
+	pg.PathLastPart, _ = DefaultLanguageFunc().ManglePropertyName(pg.KeyVar)
 	return pg
+}
+
+func hasNestedValidations(model *spec.Schema) (hasNestedValidation bool) {
+	if model.Items != nil && model.Items.Schema != nil {
+		hasNestedValidation = hasValidations(model.Items.Schema)
+	}
+	if model.AdditionalProperties != nil && model.AdditionalProperties.Schema != nil {
+		hasNestedValidation = hasNestedValidation || hasValidations(model.AdditionalProperties.Schema)
+	}
+	return
 }
 
 func hasSliceValidations(model *spec.Schema) (hasSliceValidations bool) {
@@ -556,6 +573,7 @@ func (sg *schemaGenContext) schemaValidations() sharedValidations {
 
 	s.HasValidations = hasValidations(&model)
 	s.HasSliceValidations = hasSliceValidations(&model)
+	s.HasNestedValidations = hasNestedValidations(&model)
 	return s
 }
 
@@ -575,9 +593,25 @@ func mergeValidation(other *schemaGenContext) bool {
 	return other.GenSchema.HasValidations
 }
 
+func mergeNestedValidation(other *schemaGenContext) bool {
+	if other.GenSchema.AdditionalProperties != nil && other.GenSchema.AdditionalProperties.HasNestedValidations {
+		return true
+	}
+	if other.GenSchema.AdditionalItems != nil && other.GenSchema.AdditionalItems.HasNestedValidations {
+		return true
+	}
+	for _, sch := range other.GenSchema.AllOf {
+		if sch.HasNestedValidations {
+			return true
+		}
+	}
+	return other.GenSchema.HasNestedValidations
+}
+
 func (sg *schemaGenContext) MergeResult(other *schemaGenContext, liftsRequired bool) {
 	if liftsRequired {
 		sg.GenSchema.HasValidations = sg.GenSchema.HasValidations || mergeValidation(other)
+		sg.GenSchema.HasNestedValidations = sg.GenSchema.HasNestedValidations || mergeNestedValidation(other)
 	}
 	if liftsRequired && other.GenSchema.AdditionalProperties != nil && other.GenSchema.AdditionalProperties.Required {
 		sg.GenSchema.Required = true
@@ -622,6 +656,7 @@ func (sg *schemaGenContext) buildProperties() error {
 			} else {
 				pg.Path = fmt.Sprintf("%s.%s", pg.Path, k)
 			}
+			pg.PathLastPart, _ = DefaultLanguageFunc().ManglePropertyName(k)
 			if err := pg.makeGenSchema(); err != nil {
 				return err
 			}
@@ -684,6 +719,9 @@ func (sg *schemaGenContext) buildProperties() error {
 			// lift validations
 			if hasValidations(sch) {
 				emprop.GenSchema.HasValidations = true
+			}
+			if hasNestedValidations(sch) {
+				emprop.GenSchema.HasNestedValidations = true
 			}
 		}
 
@@ -901,6 +939,7 @@ func (mt *mapStack) Build() error {
 
 			// if there is a ValueRef, we must have a NewObj (from newMapStack() construction)
 			cur.ValueRef.GenSchema.HasValidations = cur.NewObj.GenSchema.HasValidations
+			cur.ValueRef.GenSchema.HasNestedValidations = cur.NewObj.GenSchema.HasNestedValidations
 			cur.Context.MergeResult(cur.ValueRef, false)
 			cur.Context.GenSchema.AdditionalProperties = &cur.ValueRef.GenSchema
 		}
@@ -1080,6 +1119,7 @@ func (sg *schemaGenContext) buildAdditionalProperties() error {
 		sg.MergeResult(newObj, false)
 
 		sg.GenSchema.HasValidations = newObj.GenSchema.HasValidations
+		sg.GenSchema.HasNestedValidations = newObj.GenSchema.HasNestedValidations
 		sg.ExtraSchemas[newObj.Name] = newObj.GenSchema
 		return nil
 	}
@@ -1099,6 +1139,7 @@ func (sg *schemaGenContext) makeNewSchema(name string, schema spec.Schema) *sche
 	sp.Definitions[name] = schema
 	pg := schemaGenContext{
 		Path:                       "",
+		PathLastPart:               "",
 		Name:                       name,
 		Receiver:                   sg.Receiver,
 		IndexVar:                   "i",
@@ -1157,9 +1198,11 @@ func (sg *schemaGenContext) buildArray() error {
 	// validations of items
 	// include format validation
 	schemaCopy.HasValidations = hasValidations(sg.Schema.Items.Schema)
+	schemaCopy.HasNestedValidations = hasNestedValidations(sg.Schema.Items.Schema)
 
 	// lift validations
 	sg.GenSchema.HasValidations = sg.GenSchema.HasValidations || schemaCopy.HasValidations
+	sg.GenSchema.HasNestedValidations = sg.GenSchema.HasNestedValidations || schemaCopy.HasNestedValidations
 	sg.GenSchema.HasSliceValidations = hasSliceValidations(&sg.Schema)
 	sg.GenSchema.Items = &schemaCopy
 	return nil
@@ -1428,6 +1471,7 @@ func (sg *schemaGenContext) makeGenSchema() error {
 		!sg.Named, sg.Required, sg.IsTuple, sg.Name, sg.Schema)
 	sg.GenSchema.IsExported = true
 	sg.GenSchema.Path = sg.Path
+	sg.GenSchema.PathLastPart = sg.PathLastPart
 	sg.GenSchema.IndexVar = sg.IndexVar
 	sg.GenSchema.ValueExpression = sg.ValueExpr
 	sg.GenSchema.KeyVar = sg.KeyVar

@@ -42,7 +42,7 @@ schema GlobalNetworkPolicy:
 
 
     check:
-        all _, capacity in capacity { _regex_match(str(capacity), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if capacity } if capacity
+        all _, k in capacity { _regex_match(str(k), r"^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$") if k } if capacity
 
 
 schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestination:
@@ -100,8 +100,8 @@ schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestination:
 
 
     check:
-        all notPorts in notPorts { _regex_match(str(notPorts), r"^.*") if notPorts } if notPorts
-        all ports in ports { _regex_match(str(ports), r"^.*") if ports } if ports
+        all i in notPorts { _regex_match(str(i), r"^.*") if i } if notPorts
+        all i in ports { _regex_match(str(i), r"^.*") if i } if ports
 
 
 schema CrdProjectcalicoOrgV1GlobalNetworkPolicyDestinationServiceAccounts:

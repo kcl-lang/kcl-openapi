@@ -71,6 +71,7 @@ type GenSchema struct {
 	EscapedNameHasQuote        bool
 	Suffix                     string
 	Path                       string
+	PathLastPart               string
 	ValueExpression            string
 	IndexVar                   string
 	KeyVar                     string
@@ -129,8 +130,9 @@ func (g GenSchemaList) Less(i, j int) bool {
 }
 
 type sharedValidations struct {
-	HasValidations bool
-	Required       bool
+	HasValidations       bool
+	HasNestedValidations bool
+	Required             bool
 
 	// String validations
 	MaxLength *int64

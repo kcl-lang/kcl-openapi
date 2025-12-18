@@ -1,0 +1,28 @@
+{{- define "collection_validator" -}}
+    {{- if and .Item.Items (or .Item.Items.HasValidations .Item.Items.HasNestedValidations) }}
+        {{- $merged_prefix := printf "%sall %s in %s { " .Prefix .Item.Items.PathLastPart .Item.PathLastPart -}}
+        {{- $local_postfix := "" -}}
+        {{ if not .Item.Items.Required }}{{- $local_postfix = printf " } if %s" .Item.PathLastPart -}}{{- else -}}{{- $local_postfix = " }" -}}{{- end -}}
+        {{- $merged_postfix := printf "%s%s" $local_postfix .Postfix -}}
+
+        {{- if .Item.Items.HasValidations }}
+            {{- template "expression_validator" (dict "Item" .Item.Items "Prefix" $merged_prefix "Postfix" $merged_postfix) }}
+        {{- end }}
+        {{- if .Item.Items.HasNestedValidations }}
+            {{- template "collection_validator" (dict "Item" .Item.Items "Prefix" $merged_prefix "Postfix" $merged_postfix) }}
+        {{- end }}
+    {{- end }}
+    {{- if and .Item.AdditionalProperties (or .Item.AdditionalProperties.HasValidations .Item.AdditionalProperties.HasNestedValidations) }}
+        {{- $merged_prefix := printf "%sall _, %s in %s { " .Prefix .Item.AdditionalProperties.PathLastPart .Item.PathLastPart -}}
+        {{- $local_postfix := "" -}}
+        {{ if not .Item.AdditionalProperties.Required }}{{- $local_postfix = printf " } if %s" .Item.PathLastPart -}}{{- else -}}{{- $local_postfix = " }" -}}{{- end -}}
+        {{- $merged_postfix := printf "%s%s" $local_postfix .Postfix -}}
+
+        {{- if .Item.AdditionalProperties.HasValidations }}
+            {{- template "expression_validator" (dict "Item" .Item.AdditionalProperties "Prefix" $merged_prefix "Postfix" $merged_postfix) }}
+        {{- end }}
+        {{- if .Item.AdditionalProperties.HasNestedValidations }}
+            {{- template "collection_validator" (dict "Item" .Item.AdditionalProperties "Prefix" $merged_prefix "Postfix" $merged_postfix) }}
+        {{- end }}
+    {{- end }}
+{{- end -}}
