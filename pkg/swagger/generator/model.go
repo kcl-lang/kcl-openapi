@@ -1463,6 +1463,10 @@ func kclName(sch *spec.Schema, orig string) string {
 	if name != "" {
 		return name
 	}
+	// Add "Schema" suffix when name ends with "Protocol" or "Mixin"
+	if strings.HasSuffix(orig, "Protocol") || strings.HasSuffix(orig, "Mixin") {
+		return orig + "Schema"
+	}
 	return orig
 }
 
