@@ -247,7 +247,7 @@ func (schema *GenSchema) getBuiltInImports() map[string]importStmt {
 
 // getImportAsName infers the <import as> name by the context of all the existing import paths and the current pkg to be imported.
 // the parent package name will be added as prefix to avoid import conflict
-func getImportAsName(imp map[string]importStmt, pkg string, module string) string {
+func getImportAsName(imp map[string]importStmt, pkg, module string) string {
 	parts := strings.Split(pkg, ".")
 	asName := ""
 	for i := len(parts) - 1; i >= 0; i-- {
@@ -649,7 +649,7 @@ func (sg *schemaGenContext) buildProperties() error {
 
 		if tpe.IsComplexObject && tpe.IsAnonymous && len(v.Properties) > 0 {
 			// this is an anonymous complex construct: build a new type for it
-			pg := sg.makeNewSchema(sg.Name+swag.ToGoName(k), v)
+			pg := sg.makeNewSchema(protectedSchemaName(sg.Name+swag.ToGoName(k)), v)
 			pg.IsTuple = sg.IsTuple
 			if sg.Path == "" {
 				pg.Path = k
@@ -710,7 +710,7 @@ func (sg *schemaGenContext) buildProperties() error {
 			}
 
 			// set property name
-			var nm = filepath.Base(emprop.Schema.Ref.GetURL().Fragment)
+			nm := filepath.Base(emprop.Schema.Ref.GetURL().Fragment)
 			tr := sg.TypeResolver.NewWithModelName(kclName(&emprop.Schema, swag.ToGoName(nm)))
 			_, err := tr.ResolveSchema(sch, false, true)
 			if err != nil {
@@ -840,7 +840,7 @@ func newMapStack(context *schemaGenContext) (first, last *mapStack, err error) {
 		}
 
 		if !tpe.IsMap {
-			//reached the end of the rabbit hole
+			// reached the end of the rabbit hole
 			if tpe.IsComplexObject && tpe.IsAnonymous {
 				// found an anonymous object: create the struct from a newly created definition
 				nw := l.Context.makeNewSchema(l.Context.Name+" Anon", *l.Type.AdditionalProperties.Schema)
@@ -863,7 +863,7 @@ func newMapStack(context *schemaGenContext) (first, last *mapStack, err error) {
 		l = l.Next
 	}
 
-	//return top and bottom entries of this stack of AdditionalProperties
+	// return top and bottom entries of this stack of AdditionalProperties
 	return ms, l, nil
 }
 
@@ -1293,9 +1293,8 @@ func (sg *schemaGenContext) buildItems() error {
 }
 
 func (sg *schemaGenContext) buildAdditionalItems() error {
-	wantsAdditionalItems :=
-		sg.Schema.AdditionalItems != nil &&
-			(sg.Schema.AdditionalItems.Allows || sg.Schema.AdditionalItems.Schema != nil)
+	wantsAdditionalItems := sg.Schema.AdditionalItems != nil &&
+		(sg.Schema.AdditionalItems.Allows || sg.Schema.AdditionalItems.Schema != nil)
 
 	sg.GenSchema.HasAdditionalItems = wantsAdditionalItems
 	if wantsAdditionalItems {
@@ -1463,11 +1462,17 @@ func kclName(sch *spec.Schema, orig string) string {
 	if name != "" {
 		return name
 	}
-	// Add "Schema" suffix when name ends with "Protocol" or "Mixin"
-	if strings.HasSuffix(orig, "Protocol") || strings.HasSuffix(orig, "Mixin") {
-		return orig + "Schema"
-	}
 	return orig
+}
+
+// protectedSchemaName adds a "Schema" suffix to schema names that end with
+// KCL built-in keywords "Protocol" or "Mixin", to avoid conflicts with KCL's
+// special schema modifiers.
+func protectedSchemaName(name string) string {
+	if strings.HasSuffix(name, "Protocol") || strings.HasSuffix(name, "Mixin") {
+		return name + "Schema"
+	}
+	return name
 }
 
 func (sg *schemaGenContext) makeGenSchema() error {
