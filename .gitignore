@@ -14,6 +14,10 @@ _build
 
 # tmp test data
 test_data/tmp*
+testdata/tmp*
+tmp_crd_*
+
+coverage.out
 
 vendor/
 

@@ -165,7 +165,7 @@ func shouldIgnore(entry os.DirEntry) bool {
 	return !entry.IsDir() || strings.HasPrefix(entry.Name(), ".") || strings.HasPrefix(entry.Name(), "_") || strings.HasPrefix(entry.Name(), "fix_me_")
 }
 
-func CompareDir(a string, b string) error {
+func CompareDir(a, b string) error {
 	dirA, err := os.ReadDir(a)
 	if err != nil {
 		return fmt.Errorf("read dir %s failed when comparing with %s", a, b)
@@ -189,7 +189,10 @@ func CompareDir(a string, b string) error {
 			return fmt.Errorf("open file failed when compare, file path: %s", bPath)
 		}
 		if fA.IsDir() {
-			return CompareDir(aPath, bPath)
+			if err := CompareDir(aPath, bPath); err != nil {
+				return err
+			}
+			continue
 		}
 		linesA, err := readLines(aPath)
 		if err != nil {
