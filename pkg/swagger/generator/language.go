@@ -23,6 +23,7 @@ import (
 	"reflect"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -158,6 +159,14 @@ func (l *LanguageOpts) ManglePackagePath(name string, suffix string) string {
 }
 
 func (l *LanguageOpts) ToKclValue(data interface{}) string {
+	return l.toKclValue(data, true)
+}
+
+func (l *LanguageOpts) ToKclDocValue(data interface{}) string {
+	return l.toKclValue(data, false)
+}
+
+func (l *LanguageOpts) toKclValue(data interface{}, allowMultiline bool) string {
 	if data == nil {
 		return "None"
 	}
@@ -167,7 +176,7 @@ func (l *LanguageOpts) ToKclValue(data interface{}) string {
 		var mapContents []string
 		iter := value.MapRange()
 		for iter.Next() {
-			mapContents = append(mapContents, fmt.Sprintf("%s: %s", l.ToKclValue(iter.Key()), l.ToKclValue(iter.Value())))
+			mapContents = append(mapContents, fmt.Sprintf("%s: %s", l.toKclValue(iter.Key(), allowMultiline), l.toKclValue(iter.Value(), allowMultiline)))
 		}
 		content := strings.Join(mapContents, ", ")
 		return fmt.Sprintf("{%s}", content)
@@ -178,7 +187,7 @@ func (l *LanguageOpts) ToKclValue(data interface{}) string {
 			for _, v := range dataSlice {
 				k := v.Key
 				v := v.Value
-				dictContents = append(dictContents, fmt.Sprintf("%s: %s", l.ToKclValue(k), l.ToKclValue(v)))
+				dictContents = append(dictContents, fmt.Sprintf("%s: %s", l.toKclValue(k, allowMultiline), l.toKclValue(v, allowMultiline)))
 			}
 			content := strings.Join(dictContents, ", ")
 			return fmt.Sprintf("{%s}", content)
@@ -186,12 +195,12 @@ func (l *LanguageOpts) ToKclValue(data interface{}) string {
 		// if is a normal slice
 		var sliceContents []string
 		for i := 0; i < value.Len(); i++ {
-			sliceContents = append(sliceContents, l.ToKclValue(value.Index(i).Interface()))
+			sliceContents = append(sliceContents, l.toKclValue(value.Index(i).Interface(), allowMultiline))
 		}
 		content := strings.Join(sliceContents, ", ")
 		return fmt.Sprintf("[%s]", content)
 	case reflect.String:
-		return fmt.Sprintf("\"%s\"", data)
+		return quoteKclString(data.(string), allowMultiline)
 	case reflect.Int,
 		reflect.Int8,
 		reflect.Int16,
@@ -213,14 +222,14 @@ func (l *LanguageOpts) ToKclValue(data interface{}) string {
 	default:
 		// Reflect value
 		if dataValue, ok := data.(reflect.Value); ok {
-			return l.ToKclValue(dataValue.Interface())
+			return l.toKclValue(dataValue.Interface(), allowMultiline)
 		} else if dataSlice, ok := data.(yaml.MapSlice); ok {
 			// If is a MapSlice
 			var dictContents []string
 			for _, v := range dataSlice {
 				k := v.Key
 				v := v.Value
-				dictContents = append(dictContents, fmt.Sprintf("%s: %s", l.ToKclValue(k), l.ToKclValue(v)))
+				dictContents = append(dictContents, fmt.Sprintf("%s: %s", l.toKclValue(k, allowMultiline), l.toKclValue(v, allowMultiline)))
 			}
 			content := strings.Join(dictContents, ", ")
 			return fmt.Sprintf("{%s}", content)
@@ -234,6 +243,13 @@ func (l *LanguageOpts) ToKclValue(data interface{}) string {
 			return valueString
 		}
 	}
+}
+
+func quoteKclString(data string, allowMultiline bool) string {
+	if allowMultiline && strings.ContainsAny(data, "\r\n") && !strings.Contains(data, `"""`) {
+		return fmt.Sprintf("\"\"\"%s\"\"\"", data)
+	}
+	return strconv.Quote(data)
 }
 
 // FormatContent formats a file with a language specific formatter

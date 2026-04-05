@@ -34,6 +34,16 @@ func TestToKCLValue(t *testing.T) {
 			expect: "\"hello\"",
 		},
 		{
+			name:   "string-with-quote",
+			value:  "hello \"world\"",
+			expect: "\"hello \\\"world\\\"\"",
+		},
+		{
+			name:   "multiline-string",
+			value:  "#!/bin/bash\nset -e\necho \"line one\"\n",
+			expect: "\"\"\"#!/bin/bash\nset -e\necho \"line one\"\n\"\"\"",
+		},
+		{
 			name: "map-string-int",
 			value: yaml.MapSlice{
 				{
@@ -97,6 +107,15 @@ func TestToKCLValue(t *testing.T) {
 				t.Fatalf("unexpected output, expect:\n%s\ngot:\n%s\n", testcase.expect, got)
 			}
 		})
+	}
+}
+
+func TestToKCLDocValue(t *testing.T) {
+	opts := LanguageOpts{}
+	got := opts.ToKclDocValue("#!/bin/bash\nset -e\necho \"line one\"\n")
+	expect := "\"#!/bin/bash\\nset -e\\necho \\\"line one\\\"\\n\""
+	if got != expect {
+		t.Fatalf("unexpected output, expect:\n%s\ngot:\n%s\n", expect, got)
 	}
 }
 
