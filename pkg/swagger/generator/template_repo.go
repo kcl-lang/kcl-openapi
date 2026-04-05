@@ -140,6 +140,7 @@ func DefaultFuncMap(lang *LanguageOpts) template.FuncMap {
 			return properties
 		},
 		"toKCLValue":    lang.ToKclValue,
+		"toKCLDocValue": lang.ToKclDocValue,
 		"nonEmptyValue": lang.NonEmptyValue,
 		"dict": func(values ...interface{}) (map[string]interface{}, error) {
 			if len(values)%2 != 0 {

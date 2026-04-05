@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	crdGen "kcl-lang.io/kcl-openapi/pkg/kube_resource/generator"
@@ -32,6 +33,72 @@ func TestGenerate_CRD2KCL(t *testing.T) {
 		t.Fatal()
 	}
 	utils.DoTestDirs(t, utils.KubeTestDirs, apiConvertModel, true)
+}
+
+func TestGenerate_CRD2KCL_MultilineStringDefault(t *testing.T) {
+	tempDir := t.TempDir()
+	specPath := filepath.Join(tempDir, "crd.yaml")
+	if err := os.WriteFile(specPath, []byte(`apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: examples.example.com
+spec:
+  group: example.com
+  names:
+    kind: Example
+    plural: examples
+    singular: example
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              singleLine:
+                type: string
+                default: "hello world"
+              multiLine:
+                type: string
+                default: |
+                  #!/bin/bash
+                  set -e
+                  echo "line one"
+                  echo "line two"
+`), 0o644); err != nil {
+		t.Fatalf("write CRD spec failed: %v", err)
+	}
+
+	if err := apiConvertModel(utils.IntegrationGenOpts{
+		SpecPath:     specPath,
+		TargetDir:    tempDir,
+		IsCrd:        true,
+		ModelPackage: "models",
+	}); err != nil {
+		t.Fatalf("generate failed: %v", err)
+	}
+
+	generatedPath := filepath.Join(tempDir, "models", "example_com_v1alpha1_example.k")
+	generated, err := os.ReadFile(generatedPath)
+	if err != nil {
+		t.Fatalf("read generated model failed: %v", err)
+	}
+	content := string(generated)
+	if !strings.Contains(content, `multiLine?: str = """#!/bin/bash
+set -e
+echo "line one"
+echo "line two"
+"""`) {
+		t.Fatalf("missing multiline default in generated model:\n%s", content)
+	}
+	if !strings.Contains(content, `multiLine : str, default is "#!/bin/bash\nset -e\necho \"line one\"\necho \"line two\"\n", optional`) {
+		t.Fatalf("missing escaped multiline doc default in generated model:\n%s", content)
+	}
 }
 
 func apiConvertModel(integrationGenOpts utils.IntegrationGenOpts) error {
