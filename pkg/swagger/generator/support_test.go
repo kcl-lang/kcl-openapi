@@ -151,15 +151,22 @@ schema Beta:
 		// The error message must surface both directories and both aliases so
 		// the operator can locate the duplicates without guessing. Regression
 		// for the previous literal "<other>" placeholder bug.
+		//
+		// The error message embeds the paths through fmt's %q, which on
+		// Windows escapes every `\` as `\\`. Format the expected fragments
+		// the same way so the comparison works on every platform without
+		// string-level normalization (which previously turned the escaped
+		// `\\` into `//` while the expected fragment still had `/`).
+		msg := err.Error()
 		for _, fragment := range []string{
 			"Beta",
-			filepath.Join(tempDir, "shared"),
-			filepath.Join(tempDir, "other"),
+			fmt.Sprintf("%q", filepath.Join(tempDir, "shared")),
+			fmt.Sprintf("%q", filepath.Join(tempDir, "other")),
 			"\"shared\"",
 			"\"other\"",
 		} {
-			if !strings.Contains(err.Error(), fragment) {
-				t.Fatalf("error message %q is missing fragment %q", err.Error(), fragment)
+			if !strings.Contains(msg, fragment) {
+				t.Fatalf("error message %q is missing fragment %q", msg, fragment)
 			}
 		}
 	})
