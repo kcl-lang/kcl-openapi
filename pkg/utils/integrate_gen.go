@@ -45,6 +45,12 @@ type IntegrationGenOpts struct {
 	TargetDir    string
 	IsCrd        bool
 	ModelPackage string
+	// PackageRoot, when set, is forwarded as --package-root to the
+	// generator (both via BinaryConvertModel and via the in-process
+	// apiConvertModel helper). It prepends the given root to every
+	// cross-package import in the generated files. See
+	// https://github.com/kcl-lang/kcl-openapi/issues/53
+	PackageRoot string
 }
 
 func InitTestDirs(projectRoot string, buildBinary bool) error {
@@ -242,6 +248,9 @@ func BinaryConvertModel(integrationGenOpts IntegrationGenOpts) error {
 	}
 	if integrationGenOpts.IsCrd {
 		convertArgs = append(convertArgs, "--skip-validation", "--crd")
+	}
+	if integrationGenOpts.PackageRoot != "" {
+		convertArgs = append(convertArgs, "--package-root", integrationGenOpts.PackageRoot)
 	}
 	cmd := exec.Command(integrationGenOpts.BinaryPath, convertArgs...)
 	cmd.Env = os.Environ()
