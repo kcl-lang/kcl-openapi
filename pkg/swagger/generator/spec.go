@@ -32,7 +32,15 @@ import (
 )
 
 func (g *GenOpts) loadSpec() (*loads.Document, error) {
-	// Load spec document
+	// Peek at the file to decide whether the input is Swagger 2.0
+	// (the only format loads.Spec understands) or OpenAPI 3.x.
+	// We treat 3.x as the broader "OpenAPI 3.x" so we don't have to
+	// pick a sub-version in advance.
+	if is3, err := detectOpenAPI3(g.Spec); err != nil {
+		return nil, fmt.Errorf("detect openapi version: %w", err)
+	} else if is3 {
+		return loadOpenAPI3(g.Spec)
+	}
 	specDoc, err := loads.Spec(g.Spec)
 	if err != nil {
 		return nil, err

@@ -1,0 +1,18 @@
+openapi: 3.0.0
+info:
+  title: openapi3_basic
+  version: 0.1.0
+paths: {}
+components:
+  schemas:
+    Pet:
+      type: object
+      description: A pet owned by a user.
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        tag:
+          type: string
