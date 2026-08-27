@@ -35,6 +35,15 @@ schema {{ shortType .KclType }} {{- if gt (len (baseTypes .AllOf)) 0 }} ({{ rang
 {{- range nonBaseTypes .AllOf }}
 {{- template "schema_validator" .Properties }}
 {{- end }}
+{{- if .CheckExprs }}
+{{- "\n" -}}
+{{- range .CheckExprs }}
+{{- if .Message }}
+        # {{ .Message }}
+{{- end }}
+        {{ .Expr }}
+{{- end }}
+{{- end }}
 {{- "\n" -}}
 {{- "\n" -}}
 {{- end }}

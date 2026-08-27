@@ -43,11 +43,12 @@ const (
 
 // Extensions supported by go-swagger
 const (
-	xSchema    = "x-schema"   // schema name used by discriminator
-	xKclName   = "x-kcl-name" // name of the generated kcl variable
-	xKclType   = "x-kcl-type" // reuse existing type (do not generate)
-	xOmitEmpty = "x-omitempty"
-	xOrder     = "x-order" // sort order for properties, and "default"/"example" fields in schema
+	xSchema          = "x-schema"             // schema name used by discriminator
+	xKclName         = "x-kcl-name"           // name of the generated kcl variable
+	xKclType         = "x-kcl-type"           // reuse existing type (do not generate)
+	xOmitEmpty       = "x-omitempty"
+	xOrder           = "x-order"               // sort order for properties, and "default"/"example" fields in schema
+	xK8sValidations  = "x-kubernetes-validations" // CEL validation rules (k8s >= 1.23)
 )
 
 // swaggerTypeName contains a mapping from go type to swagger type or format

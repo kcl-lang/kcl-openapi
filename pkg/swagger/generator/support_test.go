@@ -307,6 +307,73 @@ definitions:
 	}
 }
 
+func TestGenerate_OAI2KCL_K8sValidations(t *testing.T) {
+	// Verifies that `x-kubernetes-validations` rules are translated into
+	// KCL `check:` expressions. The spec carries the same CRD-style
+	// extension structure that kube_resource/generator produces from a
+	// CRD YAML.
+	tempDir := t.TempDir()
+
+	specPath := filepath.Join(tempDir, "spec.yaml")
+	if err := os.WriteFile(specPath, []byte(`swagger: "2.0"
+info:
+  title: test
+  version: "0.0.1"
+paths: {}
+definitions:
+  Spec:
+    type: object
+    properties:
+      minReplicas:
+        type: integer
+        minimum: 1
+      maxReplicas:
+        type: integer
+      cronSpec:
+        type: string
+    x-kubernetes-validations:
+      - rule: "self.minReplicas <= self.maxReplicas"
+        message: "minReplicas must not exceed maxReplicas"
+      - rule: "self.cronSpec.matches('^[*0-9 -/]+$')"
+        message: "cronSpec must be a valid cron expression"
+      - rule: "size(self) >= 1"
+        message: "spec must have at least one property"
+`), 0o644); err != nil {
+		t.Fatalf("write spec failed: %v", err)
+	}
+
+	if err := apiConvertModel(utils.IntegrationGenOpts{
+		SpecPath:     specPath,
+		TargetDir:    tempDir,
+		ModelPackage: "models",
+	}); err != nil {
+		t.Fatalf("generate failed: %v", err)
+	}
+
+	specFile := filepath.Join(tempDir, "models", "spec.k")
+	body, err := os.ReadFile(specFile)
+	if err != nil {
+		t.Fatalf("read spec.k failed: %v", err)
+	}
+	content := string(body)
+	for _, want := range []string{
+		"check:",
+		"minReplicas must not exceed maxReplicas",
+		"self.minReplicas <= self.maxReplicas",
+		"cronSpec must be a valid cron expression",
+		"_regex_match(str(self.cronSpec)",
+		"len(self) >= 1",     // from `size(self) >= 1` -> `len(self) >= 1`
+		"spec must have at least one property",
+	} {
+		if !strings.Contains(content, want) {
+			t.Errorf("expected %q in spec.k:\n%s", want, content)
+		}
+	}
+	if strings.Contains(content, "__UNSUPPORTED_CEL_CALL_") {
+		t.Errorf("found unsupported CEL call marker in spec.k:\n%s", content)
+	}
+}
+
 func apiConvertModel(integrationGenOpts utils.IntegrationGenOpts) error {
 	opts := new(GenOpts)
 	opts.Spec = integrationGenOpts.SpecPath

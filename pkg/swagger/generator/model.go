@@ -595,6 +595,10 @@ func (sg *schemaGenContext) schemaValidations() sharedValidations {
 	s.HasValidations = hasValidations(&model)
 	s.HasSliceValidations = hasSliceValidations(&model)
 	s.HasNestedValidations = hasNestedValidations(&model)
+	if checks := extractK8sValidations(model); len(checks) > 0 {
+		s.CheckExprs = checks
+		s.HasValidations = true
+	}
 	return s
 }
 
