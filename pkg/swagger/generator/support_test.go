@@ -101,6 +101,212 @@ echo "line two"
 	}
 }
 
+func TestLoadExistingModels(t *testing.T) {
+	tempDir := t.TempDir()
+	dir := filepath.Join(tempDir, "shared")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatalf("mkdir failed: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "alpha.k"), []byte(`"""alpha doc"""
+schema Alpha:
+    r"""Alpha schema"""
+    name?: str
+
+# a duplicate definition inside the same dir is fine, but a duplicate
+# across aliases must error
+schema Beta:
+    r"""Beta schema"""
+    name?: str
+`), 0o644); err != nil {
+		t.Fatalf("write alpha.k failed: %v", err)
+	}
+	otherDir := filepath.Join(tempDir, "other")
+	if err := os.MkdirAll(otherDir, 0o755); err != nil {
+		t.Fatalf("mkdir failed: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(otherDir, "beta.k"), []byte("schema Beta:\n    name?: str\n"), 0o644); err != nil {
+		t.Fatalf("write beta.k failed: %v", err)
+	}
+
+	t.Run("happy path", func(t *testing.T) {
+		got, err := LoadExistingModels([]ExistingModel{
+			{Alias: "shared", Path: filepath.Join(tempDir, "shared")},
+		})
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if got["Alpha"] != "shared" || got["Beta"] != "shared" {
+			t.Fatalf("unexpected map: %v", got)
+		}
+	})
+
+	t.Run("schema in multiple aliases fails", func(t *testing.T) {
+		_, err := LoadExistingModels([]ExistingModel{
+			{Alias: "shared", Path: filepath.Join(tempDir, "shared")},
+			{Alias: "other", Path: filepath.Join(tempDir, "other")},
+		})
+		if err == nil {
+			t.Fatalf("expected error for overlapping schema name")
+		}
+		// The error message must surface both directories and both aliases so
+		// the operator can locate the duplicates without guessing. Regression
+		// for the previous literal "<other>" placeholder bug.
+		//
+		// The error message embeds the paths through fmt's %q, which on
+		// Windows escapes every `\` as `\\`. Format the expected fragments
+		// the same way so the comparison works on every platform without
+		// string-level normalization (which previously turned the escaped
+		// `\\` into `//` while the expected fragment still had `/`).
+		msg := err.Error()
+		for _, fragment := range []string{
+			"Beta",
+			fmt.Sprintf("%q", filepath.Join(tempDir, "shared")),
+			fmt.Sprintf("%q", filepath.Join(tempDir, "other")),
+			"\"shared\"",
+			"\"other\"",
+		} {
+			if !strings.Contains(msg, fragment) {
+				t.Fatalf("error message %q is missing fragment %q", msg, fragment)
+			}
+		}
+	})
+
+	t.Run("empty alias fails", func(t *testing.T) {
+		_, err := LoadExistingModels([]ExistingModel{
+			{Alias: "", Path: filepath.Join(tempDir, "shared")},
+		})
+		if err == nil {
+			t.Fatalf("expected error for empty alias")
+		}
+	})
+
+	t.Run("empty input returns nil", func(t *testing.T) {
+		got, err := LoadExistingModels(nil)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if got != nil {
+			t.Fatalf("expected nil map, got %v", got)
+		}
+	})
+}
+
+func TestGenerate_OAI2KCL_ExistingModels(t *testing.T) {
+	tempDir := t.TempDir()
+
+	existingDir := filepath.Join(tempDir, "existing")
+	if err := os.MkdirAll(existingDir, 0o755); err != nil {
+		t.Fatalf("mkdir failed: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(existingDir, "cat.k"), []byte(`"""pre-existing cat model"""
+schema Cat:
+    r"""Cat schema"""
+    name?: str
+`), 0o644); err != nil {
+		t.Fatalf("write cat.k failed: %v", err)
+	}
+
+	specPath := filepath.Join(tempDir, "spec.yaml")
+	if err := os.WriteFile(specPath, []byte(`swagger: "2.0"
+info:
+  title: test
+  version: "0.0.1"
+paths: {}
+definitions:
+  Cat:
+    type: object
+    properties:
+      name:
+        type: string
+  Owner:
+    type: object
+    properties:
+      name:
+        type: string
+      pet:
+        $ref: "#/definitions/Cat"
+`), 0o644); err != nil {
+		t.Fatalf("write spec failed: %v", err)
+	}
+
+	if err := apiConvertModel(utils.IntegrationGenOpts{
+		SpecPath:       specPath,
+		TargetDir:      tempDir,
+		ModelPackage:   "models",
+		ExistingModels: []string{"existing=" + existingDir},
+	}); err != nil {
+		t.Fatalf("generate failed: %v", err)
+	}
+
+	// Cat.k should NOT be generated (it is provided by the existing-models dir).
+	catPath := filepath.Join(tempDir, "models", "cat.k")
+	if _, err := os.Stat(catPath); err == nil {
+		t.Fatalf("expected cat.k NOT to be generated (External=true), but it exists:\n%s", catPath)
+	}
+
+	ownerPath := filepath.Join(tempDir, "models", "owner.k")
+	owner, err := os.ReadFile(ownerPath)
+	if err != nil {
+		t.Fatalf("read owner.k failed: %v", err)
+	}
+	content := string(owner)
+	if !strings.Contains(content, "import existing") {
+		t.Errorf("expected `import existing` in owner.k:\n%s", content)
+	}
+	if !strings.Contains(content, "existing.Cat") {
+		t.Errorf("expected `existing.Cat` reference in owner.k:\n%s", content)
+	}
+}
+
+func TestGenerate_OAI2KCL_NoMatch_ExistingModels(t *testing.T) {
+	// When an existing-models directory is provided but none of its
+	// schemas appear in the spec, generation proceeds unchanged.
+	tempDir := t.TempDir()
+
+	existingDir := filepath.Join(tempDir, "existing")
+	if err := os.MkdirAll(existingDir, 0o755); err != nil {
+		t.Fatalf("mkdir failed: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(existingDir, "ghost.k"), []byte("schema Ghost:\n    name?: str\n"), 0o644); err != nil {
+		t.Fatalf("write ghost.k failed: %v", err)
+	}
+
+	specPath := filepath.Join(tempDir, "spec.yaml")
+	if err := os.WriteFile(specPath, []byte(`swagger: "2.0"
+info:
+  title: test
+  version: "0.0.1"
+paths: {}
+definitions:
+  Owner:
+    type: object
+    properties:
+      name:
+        type: string
+`), 0o644); err != nil {
+		t.Fatalf("write spec failed: %v", err)
+	}
+
+	if err := apiConvertModel(utils.IntegrationGenOpts{
+		SpecPath:       specPath,
+		TargetDir:      tempDir,
+		ModelPackage:   "models",
+		ExistingModels: []string{"existing=" + existingDir},
+	}); err != nil {
+		t.Fatalf("generate failed: %v", err)
+	}
+
+	ownerPath := filepath.Join(tempDir, "models", "owner.k")
+	owner, err := os.ReadFile(ownerPath)
+	if err != nil {
+		t.Fatalf("read owner.k failed: %v", err)
+	}
+	content := string(owner)
+	if strings.Contains(content, "import existing") {
+		t.Errorf("expected no `import existing` when no schema matched:\n%s", content)
+	}
+}
+
 func apiConvertModel(integrationGenOpts utils.IntegrationGenOpts) error {
 	opts := new(GenOpts)
 	opts.Spec = integrationGenOpts.SpecPath
@@ -108,6 +314,13 @@ func apiConvertModel(integrationGenOpts utils.IntegrationGenOpts) error {
 	opts.KeepOrder = true
 	opts.ValidateSpec = !integrationGenOpts.IsCrd
 	opts.ModelPackage = integrationGenOpts.ModelPackage
+	for _, raw := range integrationGenOpts.ExistingModels {
+		alias, dir, ok := strings.Cut(raw, "=")
+		if !ok || alias == "" || dir == "" {
+			return fmt.Errorf("invalid existing-models entry %q: expected <alias>=<dir>", raw)
+		}
+		opts.ExistingModels = append(opts.ExistingModels, ExistingModel{Alias: alias, Path: dir})
+	}
 
 	if err := opts.EnsureDefaults(); err != nil {
 		return fmt.Errorf("fill default options failed: %s", err.Error())

@@ -61,9 +61,23 @@ func initTypes() {
 }
 
 func newTypeResolver(pkg string, doc *loads.Document) *typeResolver {
-	resolver := typeResolver{ModelsPackage: pkg, Doc: doc}
+	return newTypeResolverWith(pkg, doc, nil)
+}
+
+// newTypeResolverWith builds a typeResolver optionally seeded with an
+// existing-defs map (schema name → alias). Definitions whose simple name
+// is present in existingDefs are excluded from KnownDefs because they
+// will be referenced via cross-package imports rather than local names.
+func newTypeResolverWith(pkg string, doc *loads.Document, existingDefs map[string]string) *typeResolver {
+	resolver := typeResolver{ModelsPackage: pkg, Doc: doc, ExistingDefs: existingDefs}
 	resolver.KnownDefs = make(map[string]struct{}, len(doc.Spec().Definitions))
 	for k, sch := range doc.Spec().Definitions {
+		simpleName := filepath.Base(k)
+		if _, ok := resolver.ExistingDefs[simpleName]; ok {
+			// Skip: this definition will be referenced via the existing
+			// model's alias instead of being emitted as a local type.
+			continue
+		}
 		tpe, _, _, _ := knownDefKclType(k, sch, nil)
 		resolver.KnownDefs[tpe] = struct{}{}
 	}
@@ -136,6 +150,11 @@ type typeResolver struct {
 	ModelsPackage string
 	ModelName     string
 	KnownDefs     map[string]struct{}
+	// ExistingDefs, when non-empty, maps a definition's simple name to the
+	// alias of an existing-model directory that already provides the
+	// schema. Resolved references to such definitions produce a cross-
+	// package `import <alias>` rather than a local reference.
+	ExistingDefs map[string]string
 	// unexported fields
 	keepDefinitionsPkg string
 	knownDefsKept      map[string]struct{}
@@ -143,7 +162,7 @@ type typeResolver struct {
 
 // NewWithModelName clones a type resolver and specifies a new model name
 func (t *typeResolver) NewWithModelName(name string) *typeResolver {
-	tt := newTypeResolver(t.ModelsPackage, t.Doc)
+	tt := newTypeResolverWith(t.ModelsPackage, t.Doc, t.ExistingDefs)
 	tt.ModelName = name
 
 	// propagates kept definitions
@@ -175,6 +194,19 @@ func (t *typeResolver) resolveSchemaRef(schema *spec.Schema, isRequired bool) (r
 	result = res
 
 	tn := filepath.Base(schema.Ref.GetURL().Fragment)
+	// If the referenced schema is provided by an existing-model
+	// directory, prefer the cross-package import reference over the
+	// local (or absent) one returned by knownDefKclType.
+	if alias, ok := t.ExistingDefs[tn]; ok {
+		debugLog("ref %s -> existing alias %s", tn, alias)
+		result.KclType = tn
+		result.Pkg = alias
+		result.PkgAlias = alias
+		result.Module = alias
+		result.HasDiscriminator = res.HasDiscriminator
+		result.IsBaseType = res.HasDiscriminator
+		return
+	}
 	tpe, pkg, alias, module := knownDefKclType(tn, *ref, t.kclTypeName)
 	debugLog("type name %s, package %s, alias %s, module %s", tpe, pkg, alias, module)
 	if tpe != "" {
@@ -314,11 +346,22 @@ func (t *typeResolver) resolveObject(schema *spec.Schema, isAnonymous bool) (res
 
 	if !isAnonymous {
 		result.SwaggerType = object
-		tpe, pkg, alias, module := knownDefKclType(t.ModelName, *schema, t.kclTypeName)
-		result.KclType = tpe
-		result.Pkg = pkg
-		result.PkgAlias = alias
-		result.Module = module
+		if alias, ok := t.ExistingDefs[t.ModelName]; ok {
+			// The model itself is provided by an existing-model
+			// directory; treat it as a remote reference so cross-file
+			// collectors emit `import <alias>`.
+			debugLog("object %s -> existing alias %s", t.ModelName, alias)
+			result.KclType = t.ModelName
+			result.Pkg = alias
+			result.PkgAlias = alias
+			result.Module = alias
+		} else {
+			tpe, pkg, alias, module := knownDefKclType(t.ModelName, *schema, t.kclTypeName)
+			result.KclType = tpe
+			result.Pkg = pkg
+			result.PkgAlias = alias
+			result.Module = module
+		}
 	}
 	if len(schema.AllOf) > 0 {
 		result.KclType = t.kclTypeName(t.ModelName)

@@ -1,9 +1,11 @@
 package cmds
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
+	"strings"
 
 	crdGen "kcl-lang.io/kcl-openapi/pkg/kube_resource/generator"
 	"kcl-lang.io/kcl-openapi/pkg/swagger/generator"
@@ -37,12 +39,13 @@ type Model struct {
 }
 
 type options struct {
-	Spec                 flags.Filename `long:"spec" short:"f" description:"the path to the OpenAPI spec file. It should be a local path in your file system" group:"shared"`
-	Crd                  bool           `long:"crd" description:"if the spec file is a kubernetes CRD" group:"shared"`
-	Target               flags.Filename `long:"target" short:"t" default:"./" description:"the base directory for generating the files" group:"shared"`
-	SkipValidation       bool           `long:"skip-validation" description:"skips validation of spec prior to generation" group:"shared"`
-	ModelPackage         string         `long:"model-package" short:"m" description:"the package to save the models" default:"models"`
-	DisableKeepSpecOrder bool           `long:"disable-keep-spec-order" description:"disable to keep schema properties order identical to spec file"`
+	Spec                 flags.Filename   `long:"spec" short:"f" description:"the path to the OpenAPI spec file. It should be a local path in your file system" group:"shared"`
+	Crd                  bool             `long:"crd" description:"if the spec file is a kubernetes CRD" group:"shared"`
+	Target               flags.Filename   `long:"target" short:"t" default:"./" description:"the base directory for generating the files" group:"shared"`
+	SkipValidation       bool             `long:"skip-validation" description:"skips validation of spec prior to generation" group:"shared"`
+	ModelPackage         string           `long:"model-package" short:"m" description:"the package to save the models" default:"models"`
+	DisableKeepSpecOrder bool             `long:"disable-keep-spec-order" description:"disable to keep schema properties order identical to spec file"`
+	ExistingModels       []flags.Filename `long:"existing-models" description:"reuse pre-generated KCL models from the given directory; the generator emits an import statement referencing <alias> instead of regenerating the schema files. Format: <alias>=<dir>. May be repeated." value-name:"ALIAS=PATH"`
 }
 
 func Main() {
@@ -90,6 +93,18 @@ func (m *Model) Execute(args []string) error {
 	opts.ValidateSpec = !m.Options.SkipValidation
 	opts.ModelPackage = m.Options.ModelPackage
 	opts.KeepOrder = !m.Options.DisableKeepSpecOrder
+
+	// Parse --existing-models entries (format: <alias>=<dir>).
+	for _, raw := range m.Options.ExistingModels {
+		alias, dir, ok := strings.Cut(string(raw), "=")
+		if !ok || alias == "" || dir == "" {
+			return fmt.Errorf("invalid --existing-models %q: expected <alias>=<dir>", raw)
+		}
+		opts.ExistingModels = append(opts.ExistingModels, generator.ExistingModel{
+			Alias: alias,
+			Path:  dir,
+		})
+	}
 
 	// set default configurations
 	if err := opts.EnsureDefaults(); err != nil {

@@ -37,9 +37,30 @@ func makeGenDefinition(name, pkg string, schema spec.Schema, specDoc *loads.Docu
 }
 
 func makeGenDefinitionHierarchy(name, pkg, container string, schema spec.Schema, specDoc *loads.Document, opts *GenOpts) (*GenDefinition, error) {
+	// If this definition is supplied by an existing-model directory,
+	// emit a stub GenDefinition with External=true. The model file is
+	// not generated; cross-references are produced via `import <alias>`
+	// by the type resolver when it resolves $refs to this name.
+	if alias, ok := opts.ExistingDefs[name]; ok {
+		log.Printf("skipping generation of %s (provided by existing-models alias %q)", name, alias)
+		gs := GenSchema{Name: name, OriginalName: name}
+		gs.KclType = name
+		gs.Pkg = alias
+		gs.PkgAlias = alias
+		gs.Module = alias
+		return &GenDefinition{
+			GenCommon: GenCommon{
+				Copyright:        opts.Copyright,
+				TargetImportPath: opts.LanguageOpts.baseImport(opts.Target),
+			},
+			Package:   opts.LanguageOpts.ManglePackageName(path.Base(filepath.ToSlash(pkg)), "definitions"),
+			GenSchema: gs,
+			External:  true,
+		}, nil
+	}
 	receiver := "m"
 	// models are resolved in the current package
-	resolver := newTypeResolver("", specDoc)
+	resolver := newTypeResolverWith("", specDoc, opts.ExistingDefs)
 	resolver.ModelName = name
 	analyzed := analysis.New(specDoc.Spec())
 
