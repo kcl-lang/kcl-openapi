@@ -21,7 +21,11 @@
         {{- .Prefix }}len({{ .Item.PathLastPart }}) >= {{ .Item.MinLength }}{{ template "not_required_type_list" .Item }}{{ .Postfix }}
 {{ end }}
 {{- if .Item.Pattern -}}
+        {{- if .Item.IsArray -}}
+        {{- .Prefix }}all i in {{ .Item.PathLastPart }} { _regex_match(str(i), r"{{ .Item.Pattern }}") if i }{{ template "not_required_bool" .Item }}{{ .Postfix }}
+        {{- else -}}
         {{- .Prefix }}_regex_match(str({{ .Item.PathLastPart }}), r"{{ .Item.Pattern }}"){{ template "not_required_bool" .Item }}{{ .Postfix }}
+        {{- end }}
 {{ end }}
 {{- if .Item.UniqueItems -}}
         {{- .Prefix }}isunique({{ .Item.PathLastPart }}){{ template "not_required_bool" .Item }}{{ .Postfix }}
