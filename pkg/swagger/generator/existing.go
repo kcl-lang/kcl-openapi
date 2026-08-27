@@ -52,8 +52,13 @@ func LoadExistingModels(existing []ExistingModel) (map[string]string, error) {
 	if len(existing) == 0 {
 		return nil, nil
 	}
+	// out keeps only the alias because that's what GenOpts.ExistingDefs
+	// expects. We retain the path of the *first* declaration of each
+	// schema name in schemaSources so a conflict can report the directory
+	// the duplicate was originally discovered in.
 	out := make(map[string]string)
 	aliasPaths := make(map[string]string)
+	schemaSources := make(map[string]string)
 	for _, e := range existing {
 		if e.Alias == "" || e.Path == "" {
 			return nil, fmt.Errorf("existing-model entry requires non-empty alias and path, got %+v", e)
@@ -77,8 +82,11 @@ func LoadExistingModels(existing []ExistingModel) (map[string]string, error) {
 			for _, m := range schemaNameRegexp.FindAllStringSubmatch(string(content), -1) {
 				name := m[1]
 				if prev, ok := out[name]; ok && prev != e.Alias {
-					return nil, fmt.Errorf("schema %q is declared in multiple existing-model directories (%q under %q and %q under %q)",
-						name, e.Path, e.Alias, "<other>", prev)
+					return nil, fmt.Errorf("schema %q is declared in multiple existing-model directories (%q under alias %q and %q under alias %q)",
+						name, schemaSources[name], prev, e.Path, e.Alias)
+				}
+				if _, already := out[name]; !already {
+					schemaSources[name] = e.Path
 				}
 				out[name] = e.Alias
 			}
