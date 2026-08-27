@@ -155,8 +155,8 @@ schema Beta:
 		// The error message embeds the paths through fmt's %q, which on
 		// Windows escapes every `\` as `\\`. Format the expected fragments
 		// the same way so the comparison works on every platform without
-		// string-level normalization (which previously turned the escaped
-		// `\\` into `//` while the expected fragment still had `/`).
+		// string-level normalization (which would turn the escaped `\\`
+		// into `//` while the expected fragment still had `/`).
 		msg := err.Error()
 		for _, fragment := range []string{
 			"Beta",
