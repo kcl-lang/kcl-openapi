@@ -429,6 +429,7 @@ spec:
 				TargetDir:    outDir,
 				IsCrd:        true,
 				ModelPackage: "models",
+				PackageRoot:  tc.packageRoot,
 			}); err != nil {
 				t.Fatalf("generate failed: %v", err)
 			}
@@ -436,35 +437,7 @@ spec:
 			if err != nil {
 				t.Fatalf("read generated model failed: %v", err)
 			}
-			// Re-run with PackageRoot by reaching into opts directly, since the
-			// IntegrationGenOpts shim does not yet expose PackageRoot.
 			content := string(generated)
-			if tc.packageRoot != "" {
-				outDirRooted := filepath.Join(tempDir, "out-"+tc.name+"-rooted")
-				opts := new(GenOpts)
-				opts.Spec = specPath
-				opts.Target = outDirRooted
-				opts.KeepOrder = true
-				opts.ValidateSpec = false
-				opts.ModelPackage = "models"
-				opts.PackageRoot = tc.packageRoot
-				if err := opts.EnsureDefaults(); err != nil {
-					t.Fatalf("fill default options failed: %s", err.Error())
-				}
-				spec, err := crdGen.GetSpec(&crdGen.GenOpts{Spec: opts.Spec})
-				if err != nil {
-					t.Fatalf("get spec from crd failed: %s", err.Error())
-				}
-				opts.Spec = spec
-				if err := Generate(opts); err != nil {
-					t.Fatalf("generate failed: %s", err.Error())
-				}
-				genRooted, err := os.ReadFile(filepath.Join(outDirRooted, "models", "example_com_v1_example.k"))
-				if err != nil {
-					t.Fatalf("read rooted generated model failed: %v", err)
-				}
-				content = string(genRooted)
-			}
 			if !strings.Contains(content, tc.wantImport) {
 				t.Fatalf("expected import %q in generated content, got:\n%s", tc.wantImport, content)
 			}
@@ -486,6 +459,7 @@ func apiConvertModel(integrationGenOpts utils.IntegrationGenOpts) error {
 		}
 		opts.ExistingModels = append(opts.ExistingModels, ExistingModel{Alias: alias, Path: dir})
 	}
+	opts.PackageRoot = integrationGenOpts.PackageRoot
 
 	if err := opts.EnsureDefaults(); err != nil {
 		return fmt.Errorf("fill default options failed: %s", err.Error())
