@@ -1,0 +1,44 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: nodepools.karpenter.sh
+spec:
+  group: karpenter.sh
+  scope: Namespaced
+  names:
+    plural: nodepools
+    singular: nodepool
+    kind: NodePool
+    listKind: NodePoolList
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                # pattern directly on the array (case 1 in #151): should iterate per element
+                tags:
+                  type: array
+                  pattern: "^[a-z]+$"
+                  items:
+                    type: string
+                # pattern on items (case 2 in #151): should also iterate per element
+                labels:
+                  type: array
+                  items:
+                    type: string
+                    pattern: "^[A-Z]+$"
+                # required string array with pattern on items
+                requiredKeys:
+                  type: array
+                  items:
+                    type: string
+                    pattern: "^[a-z][a-z0-9-]*$"
+              required:
+                - requiredKeys
