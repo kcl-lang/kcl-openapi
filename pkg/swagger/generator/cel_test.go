@@ -21,10 +21,10 @@ func TestCelToKCL(t *testing.T) {
 	}{
 		{"literal int", "42", "42"},
 		{"literal float", "3.14", "3.14"},
-		{"literal bool true", "true", "true"},
-		{"literal bool false", "false", "false"},
+		{"literal bool true", "true", "True"},
+		{"literal bool false", "false", "False"},
 		{"literal dq string", `"abc"`, `"abc"`},
-		{"literal sq string", `'abc'`, `'abc'`},
+		{"literal sq string", `'abc'`, `"abc"`},
 
 		{"self ref", "self", "self"},
 		{"field access", "self.name", "self.name"},
@@ -81,13 +81,16 @@ func TestCelToKCL(t *testing.T) {
 }
 
 func TestCelToKCL_Unsupported(t *testing.T) {
-	// Function names we don't translate should be detected so callers can
-	// warn or skip the rule.
-	got, err := celToKCL(`self.foo.unicornsFly()`)
+	// Use a CEL standard-library method that we deliberately don't
+	// translate. cel-go type-checks the expression, so an unknown
+	// identifier (unicornsFly) is rejected at compile time and never
+	// reaches our walker; instead we use `contains`, a real CEL string
+	// method we don't yet map to a KCL equivalent.
+	got, err := celToKCL(`self.name.contains("x")`)
 	if err != nil {
 		t.Fatalf("expected no parse error, got %v", err)
 	}
-	if !strings.Contains(got, "__UNSUPPORTED_CEL_CALL_unicornsFly__") {
+	if !strings.Contains(got, "__UNSUPPORTED_CEL_CALL_contains") {
 		t.Errorf("expected unsupported marker, got %s", got)
 	}
 }
@@ -99,6 +102,7 @@ func TestCelToKCL_Errors(t *testing.T) {
 	}{
 		{"unterminated string", `self.x == "abc`},
 		{"stray colon", `self.x :`},
+		{"unknown identifier", `self.foo.unicornsFly()`},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
