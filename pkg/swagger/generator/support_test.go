@@ -148,6 +148,20 @@ schema Beta:
 		if err == nil {
 			t.Fatalf("expected error for overlapping schema name")
 		}
+		// The error message must surface both directories and both aliases so
+		// the operator can locate the duplicates without guessing. Regression
+		// for the previous literal "<other>" placeholder bug.
+		for _, fragment := range []string{
+			"Beta",
+			filepath.Join(tempDir, "shared"),
+			filepath.Join(tempDir, "other"),
+			"\"shared\"",
+			"\"other\"",
+		} {
+			if !strings.Contains(err.Error(), fragment) {
+				t.Fatalf("error message %q is missing fragment %q", err.Error(), fragment)
+			}
+		}
 	})
 
 	t.Run("empty alias fails", func(t *testing.T) {
