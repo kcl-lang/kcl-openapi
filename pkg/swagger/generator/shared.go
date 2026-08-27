@@ -84,6 +84,13 @@ type GenOpts struct {
 	Spec              string
 	ModelPackage      string
 	Target            string
+	// PackageRoot, when set, is prepended (with a dot separator) to every
+	// cross-package import emitted by the generator. Use this when the
+	// generated files are placed inside a monorepo (e.g. `konfig/services/k8s`)
+	// and the import statements must reference packages by their full path
+	// instead of the default relative form. See
+	// https://github.com/kcl-lang/kcl-openapi/issues/53
+	PackageRoot       string
 	Sections          SectionOpts
 	LanguageOpts      *LanguageOpts
 	FlagStrategy      string

@@ -42,6 +42,7 @@ type options struct {
 	Target               flags.Filename `long:"target" short:"t" default:"./" description:"the base directory for generating the files" group:"shared"`
 	SkipValidation       bool           `long:"skip-validation" description:"skips validation of spec prior to generation" group:"shared"`
 	ModelPackage         string         `long:"model-package" short:"m" description:"the package to save the models" default:"models"`
+	PackageRoot          string         `long:"package-root" description:"optional package root prepended to every cross-package import in the generated files (e.g. 'konfig.services.k8s'). Use this when the generated files are placed inside a monorepo and you want the import statements to reference packages by their full path."`
 	DisableKeepSpecOrder bool           `long:"disable-keep-spec-order" description:"disable to keep schema properties order identical to spec file"`
 }
 
@@ -89,6 +90,7 @@ func (m *Model) Execute(args []string) error {
 	opts.Target = string(m.Options.Target)
 	opts.ValidateSpec = !m.Options.SkipValidation
 	opts.ModelPackage = m.Options.ModelPackage
+	opts.PackageRoot = m.Options.PackageRoot
 	opts.KeepOrder = !m.Options.DisableKeepSpecOrder
 
 	// set default configurations

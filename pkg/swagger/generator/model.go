@@ -60,6 +60,7 @@ func makeGenDefinitionHierarchy(name, pkg, container string, schema spec.Schema,
 		Discrimination: di,
 		Container:      container,
 		KeepOrder:      opts.KeepOrder,
+		PackageRoot:    opts.PackageRoot,
 	}
 	if err := pg.makeGenSchema(); err != nil {
 		return nil, fmt.Errorf("could not generate schema for %s: %v", name, err)
@@ -182,7 +183,7 @@ func (sg *schemaGenContext) collectSortedImports() []importStmt {
 
 	// collect pkg imports
 	pkgImps := map[string]importStmt{}
-	collectImports(&sg.GenSchema, sg.GenSchema.Pkg, pkgImps)
+	collectImports(&sg.GenSchema, sg.GenSchema.Pkg, sg.PackageRoot, pkgImps)
 
 	if _, ok := builtInImps[RegexPkgPath]; ok {
 		sg.HasPatternValidation = true
@@ -274,29 +275,29 @@ func getImportAsName(imp map[string]importStmt, pkg, module string) string {
 }
 
 // collectImports collect import paths from the sch to the toPkg, the result will be collected to the importStmt map.
-func collectImports(sch *GenSchema, toPkg string, imp map[string]importStmt) {
+func collectImports(sch *GenSchema, toPkg string, packageRoot string, imp map[string]importStmt) {
 	if sch.Items != nil && sch.IsArray {
-		collectImports(sch.Items, toPkg, imp)
+		collectImports(sch.Items, toPkg, packageRoot, imp)
 		sch.KclType = "[" + sch.Items.KclType + "]"
 	}
 	if sch.AdditionalItems != nil {
-		collectImports(sch.AdditionalItems, toPkg, imp)
+		collectImports(sch.AdditionalItems, toPkg, packageRoot, imp)
 	}
 	if sch.Object != nil {
-		collectImports(sch.Object, toPkg, imp)
+		collectImports(sch.Object, toPkg, packageRoot, imp)
 	}
 	if sch.Properties != nil {
 		for idx := range sch.Properties {
-			collectImports(&sch.Properties[idx], toPkg, imp)
+			collectImports(&sch.Properties[idx], toPkg, packageRoot, imp)
 		}
 	}
 	if sch.AdditionalProperties != nil {
-		collectImports(sch.AdditionalProperties, toPkg, imp)
+		collectImports(sch.AdditionalProperties, toPkg, packageRoot, imp)
 		sch.KclType = "{str:" + sch.AdditionalProperties.KclType + "}"
 	}
 	if sch.AllOf != nil {
 		for idx := range sch.AllOf {
-			collectImports(&sch.AllOf[idx], toPkg, imp)
+			collectImports(&sch.AllOf[idx], toPkg, packageRoot, imp)
 		}
 	}
 	if sch.Pkg == toPkg || sch.Pkg == "" {
@@ -312,9 +313,22 @@ func collectImports(sch *GenSchema, toPkg string, imp map[string]importStmt) {
 			return pkg[:strings.Index(pkg, ".")]
 		}
 	}
-	// the innerPkg is the full package path within the package root, which means without the root package name as prefix
+	// innerPkg is the package path that ends up in the generated `import`
+	// statement. With no PackageRoot this is `sch.Pkg` (or `sch.Pkg` minus
+	// its root segment when the import source and target share the same
+	// root). With PackageRoot set, the first segment of sch.Pkg is
+	// replaced by the user-supplied root so the generated files can be
+	// dropped into a nested monorepo layout (e.g. `konfig/services/k8s`)
+	// without breaking cross-file imports. See
+	// https://github.com/kcl-lang/kcl-openapi/issues/53
 	innerPkg := sch.Pkg
-	if rootPkgName(sch.Pkg) == rootPkgName(toPkg) {
+	if packageRoot != "" {
+		if dot := strings.Index(sch.Pkg, "."); dot >= 0 {
+			innerPkg = packageRoot + "." + sch.Pkg[dot+1:]
+		} else {
+			innerPkg = packageRoot
+		}
+	} else if rootPkgName(sch.Pkg) == rootPkgName(toPkg) {
 		// the import pkg and the toPkg reside in the same package root
 		innerPkg = sch.Pkg[strings.Index(sch.Pkg, ".")+1:]
 	}
@@ -363,6 +377,10 @@ type schemaGenContext struct {
 	Discriminator  *discor
 	Discriminated  *discee
 	Discrimination *discInfo
+	// PackageRoot is propagated from GenOpts.PackageRoot so collectImports
+	// can prepend it to every cross-package import it emits. See
+	// https://github.com/kcl-lang/kcl-openapi/issues/53
+	PackageRoot string
 }
 
 func (sg *schemaGenContext) NewArrayBranch(schema *spec.Schema) *schemaGenContext {
