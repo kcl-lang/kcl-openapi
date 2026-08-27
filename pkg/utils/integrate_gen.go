@@ -45,6 +45,10 @@ type IntegrationGenOpts struct {
 	TargetDir    string
 	IsCrd        bool
 	ModelPackage string
+	// ExistingModels is a list of <alias>=<dir> pairs. When set, the
+	// generator imports schemas discovered in <dir> under <alias>
+	// instead of regenerating them.
+	ExistingModels []string
 }
 
 func InitTestDirs(projectRoot string, buildBinary bool) error {

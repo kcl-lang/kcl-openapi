@@ -39,6 +39,15 @@ func newGenerator(opts *GenOpts) (*generator, error) {
 
 	opts.setTemplates()
 
+	// Resolve existing-models directories up front so the type resolver
+	// can consult them when deciding whether a definition is local or
+	// references an external alias.
+	existingDefs, err := LoadExistingModels(opts.ExistingModels)
+	if err != nil {
+		return nil, fmt.Errorf("load existing-models: %v", err)
+	}
+	opts.ExistingDefs = existingDefs
+
 	specDoc, analyzed, err := opts.analyzeSpec()
 	if err != nil {
 		return nil, err

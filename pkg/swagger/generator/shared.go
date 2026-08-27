@@ -89,6 +89,16 @@ type GenOpts struct {
 	FlagStrategy      string
 	CompatibilityMode string
 	Copyright         string
+
+	// ExistingModels lists pre-existing KCL model directories that the
+	// generator should reference via `import` instead of regenerating.
+	// See `LoadExistingModels` for the schema-name extraction rules.
+	ExistingModels []ExistingModel
+	// ExistingDefs is populated by `LoadExistingModels` (called from
+	// `newGenerator`) and exposed to the type resolver and codegen
+	// pipeline. It maps a discovered schema's simple name (the trailing
+	// segment of the spec definition key, e.g. "Pet") to its import alias.
+	ExistingDefs map[string]string
 }
 
 // CheckOpts carries out some global consistency checks on options.
