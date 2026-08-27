@@ -162,12 +162,15 @@ func splitDocuments(s string) ([]string, error) {
 			}
 			// Remove all whitespace
 			result := s[prev:loc[0]]
-			if len(result) > 0 && !isAllWhitespace(result) {
+			if hasMeaningfulContent(result) {
 				docs = append(docs, result)
 			}
 			prev = loc[1]
 		}
-		docs = append(docs, s[prev:])
+		rest := s[prev:]
+		if hasMeaningfulContent(rest) {
+			docs = append(docs, rest)
+		}
 	}
 	return docs, nil
 }
@@ -179,6 +182,25 @@ func isAllWhitespace(str string) bool {
 		}
 	}
 	return true
+}
+
+// hasMeaningfulContent reports whether s contains anything other than whitespace
+// and YAML comments. Files frequently start with a URL or attribution comment
+// (e.g. `# https://.../my-crd.yaml`) followed by `---` and the actual CRD; we
+// must skip those comment-only "documents" so the downstream decoder does not
+// try to parse them as CRDs and report `Object 'Kind' is missing in '# ...'`.
+func hasMeaningfulContent(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+	for _, line := range strings.Split(s, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+			continue
+		}
+		return true
+	}
+	return false
 }
 
 // generate swagger model based on crd
