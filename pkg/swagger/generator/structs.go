@@ -155,10 +155,28 @@ type sharedValidations struct {
 	UniqueItems         bool
 	HasSliceValidations bool
 
+	// CEL-derived check expressions translated to KCL. Populated
+	// from the `x-kubernetes-validations` extension (k8s >= 1.23).
+	CheckExprs []CheckExpr
+
 	// Not used yet (perhaps intended for maxProperties, minProperties validations?)
 	NeedsSize bool
 
 	// NOTE: "patternProperties" and "dependencies" not supported by Swagger 2.0
+}
+
+// CheckExpr is a single translated KCL `check:` boolean expression,
+// optionally carrying the original CEL rule and message for diagnostics.
+type CheckExpr struct {
+	// Expr is the translated KCL expression placed after `check:`.
+	Expr string
+	// Rule is the original CEL expression (kept for documentation /
+	// debugging when the translator fails or skips part of the rule).
+	Rule string
+	// Message is the human-readable message from the CRD validation
+	// rule. KCL does not yet support per-rule messages, so the
+	// generator surfaces it as a comment in the generated file.
+	Message string
 }
 
 // pruneEnums omit nil from enum values

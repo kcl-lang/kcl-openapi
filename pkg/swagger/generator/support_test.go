@@ -155,8 +155,8 @@ schema Beta:
 		// The error message embeds the paths through fmt's %q, which on
 		// Windows escapes every `\` as `\\`. Format the expected fragments
 		// the same way so the comparison works on every platform without
-		// string-level normalization (which previously turned the escaped
-		// `\\` into `//` while the expected fragment still had `/`).
+		// string-level normalization (which would turn the escaped `\\`
+		// into `//` while the expected fragment still had `/`).
 		msg := err.Error()
 		for _, fragment := range []string{
 			"Beta",
@@ -307,6 +307,144 @@ definitions:
 	}
 }
 
+func TestGenerate_OAI2KCL_K8sValidations(t *testing.T) {
+	// Verifies that `x-kubernetes-validations` rules are translated into
+	// KCL `check:` expressions. The spec carries the same CRD-style
+	// extension structure that kube_resource/generator produces from a
+	// CRD YAML.
+	tempDir := t.TempDir()
+
+	specPath := filepath.Join(tempDir, "spec.yaml")
+	if err := os.WriteFile(specPath, []byte(`swagger: "2.0"
+info:
+  title: test
+  version: "0.0.1"
+paths: {}
+definitions:
+  Spec:
+    type: object
+    properties:
+      minReplicas:
+        type: integer
+        minimum: 1
+      maxReplicas:
+        type: integer
+      cronSpec:
+        type: string
+    x-kubernetes-validations:
+      - rule: "self.minReplicas <= self.maxReplicas"
+        message: "minReplicas must not exceed maxReplicas"
+      - rule: "self.cronSpec.matches('^[*0-9 -/]+$')"
+        message: "cronSpec must be a valid cron expression"
+      - rule: "size(self) >= 1"
+        message: "spec must have at least one property"
+`), 0o644); err != nil {
+		t.Fatalf("write spec failed: %v", err)
+	}
+
+	if err := apiConvertModel(utils.IntegrationGenOpts{
+		SpecPath:     specPath,
+		TargetDir:    tempDir,
+		ModelPackage: "models",
+	}); err != nil {
+		t.Fatalf("generate failed: %v", err)
+	}
+
+	specFile := filepath.Join(tempDir, "models", "spec.k")
+	body, err := os.ReadFile(specFile)
+	if err != nil {
+		t.Fatalf("read spec.k failed: %v", err)
+	}
+	content := string(body)
+	for _, want := range []string{
+		"check:",
+		"minReplicas must not exceed maxReplicas",
+		"self.minReplicas <= self.maxReplicas",
+		"cronSpec must be a valid cron expression",
+		"_regex_match(str(self.cronSpec)",
+		"len(self) >= 1", // from `size(self) >= 1` -> `len(self) >= 1`
+		"spec must have at least one property",
+	} {
+		if !strings.Contains(content, want) {
+			t.Errorf("expected %q in spec.k:\n%s", want, content)
+		}
+	}
+	if strings.Contains(content, "__UNSUPPORTED_CEL_CALL_") {
+		t.Errorf("found unsupported CEL call marker in spec.k:\n%s", content)
+	}
+}
+
+func TestGenerate_CRD2KCL_PackageRoot(t *testing.T) {
+	// See https://github.com/kcl-lang/kcl-openapi/issues/53
+	tempDir := t.TempDir()
+	specPath := filepath.Join(tempDir, "crd.yaml")
+	if err := os.WriteFile(specPath, []byte(`apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: examples.example.com
+spec:
+  group: example.com
+  names:
+    kind: Example
+    plural: examples
+    singular: example
+  scope: Namespaced
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              metadata:
+                type: object
+`), 0o644); err != nil {
+		t.Fatalf("write CRD spec failed: %v", err)
+	}
+
+	for _, tc := range []struct {
+		name        string
+		packageRoot string
+		wantImport  string
+	}{
+		{
+			name:        "no package root keeps relative import",
+			packageRoot: "",
+			wantImport:  "import k8s.apimachinery.pkg.apis.meta.v1",
+		},
+		{
+			name:        "package root prepends a path prefix to cross-package imports",
+			packageRoot: "konfig.services.k8s",
+			wantImport:  "import konfig.services.k8s.apimachinery.pkg.apis.meta.v1",
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			outDir := filepath.Join(tempDir, "out-"+tc.name)
+			if err := apiConvertModel(utils.IntegrationGenOpts{
+				SpecPath:     specPath,
+				TargetDir:    outDir,
+				IsCrd:        true,
+				ModelPackage: "models",
+				PackageRoot:  tc.packageRoot,
+			}); err != nil {
+				t.Fatalf("generate failed: %v", err)
+			}
+			generated, err := os.ReadFile(filepath.Join(outDir, "models", "example_com_v1_example.k"))
+			if err != nil {
+				t.Fatalf("read generated model failed: %v", err)
+			}
+			content := string(generated)
+			if !strings.Contains(content, tc.wantImport) {
+				t.Fatalf("expected import %q in generated content, got:\n%s", tc.wantImport, content)
+			}
+		})
+	}
+}
+
 func apiConvertModel(integrationGenOpts utils.IntegrationGenOpts) error {
 	opts := new(GenOpts)
 	opts.Spec = integrationGenOpts.SpecPath
@@ -321,6 +459,7 @@ func apiConvertModel(integrationGenOpts utils.IntegrationGenOpts) error {
 		}
 		opts.ExistingModels = append(opts.ExistingModels, ExistingModel{Alias: alias, Path: dir})
 	}
+	opts.PackageRoot = integrationGenOpts.PackageRoot
 
 	if err := opts.EnsureDefaults(); err != nil {
 		return fmt.Errorf("fill default options failed: %s", err.Error())
