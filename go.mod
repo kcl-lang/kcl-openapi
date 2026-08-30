@@ -3,7 +3,7 @@ module kcl-lang.io/kcl-openapi
 go 1.24.0
 
 require (
-	github.com/getkin/kin-openapi v0.76.0
+	github.com/getkin/kin-openapi v0.144.0
 	github.com/go-openapi/analysis v0.21.2
 	github.com/go-openapi/errors v0.22.3
 	github.com/go-openapi/inflect v0.21.3
@@ -50,7 +50,7 @@ require (
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
 	go.mongodb.org/mongo-driver v1.17.4 // indirect
-	golang.org/x/net v0.44.0 // indirect
+	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/sys v0.36.0 // indirect
 	golang.org/x/text v0.29.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
