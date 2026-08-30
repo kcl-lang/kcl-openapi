@@ -244,6 +244,21 @@ func (schema *GenSchema) getBuiltInImports() map[string]importStmt {
 			IsBuiltIn:  true,
 		}
 	}
+	// CEL `x-kubernetes-validations` rules that use `.matches(...)`
+	// translate to KCL `_regex_match(...)`, requiring the `regex` import
+	// and the header alias. Without this, `collectSortedImports` would
+	// not set `HasPatternValidation`, the header would omit the alias,
+	// and the generated `check:` block would reference an undefined
+	// identifier.
+	for _, c := range schema.CheckExprs {
+		if strings.Contains(c.Expr, "_regex_match") {
+			imp[RegexPkgPath] = importStmt{
+				ImportPath: RegexPkgPath,
+				IsBuiltIn:  true,
+			}
+			break
+		}
+	}
 	if schema.Items != nil {
 		for k, v := range schema.Items.getBuiltInImports() {
 			imp[k] = v

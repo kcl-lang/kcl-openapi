@@ -82,15 +82,7 @@ func emitKCL(e *exprpb.Expr) (string, error) {
 	case *exprpb.Expr_IdentExpr:
 		return k.IdentExpr.GetName(), nil
 	case *exprpb.Expr_SelectExpr:
-		operand, err := emitKCL(k.SelectExpr.GetOperand())
-		if err != nil {
-			return "", err
-		}
-		if k.SelectExpr.GetTestOnly() {
-			// `has(m.f)` macro expands to a Select with TestOnly=true.
-			return fmt.Sprintf("(has %s.%s)", operand, k.SelectExpr.GetField()), nil
-		}
-		return fmt.Sprintf("%s.%s", operand, k.SelectExpr.GetField()), nil
+		return emitSelect(k.SelectExpr)
 	case *exprpb.Expr_CallExpr:
 		return emitCall(k.CallExpr)
 	case *exprpb.Expr_ComprehensionExpr:
@@ -101,6 +93,44 @@ func emitKCL(e *exprpb.Expr) (string, error) {
 		return emitStruct(k.StructExpr)
 	}
 	return unsupportedPlaceholder("ast-node", fmt.Sprintf("%T", e.GetExprKind()))
+}
+
+// emitSelect translates a CEL field-select or presence-test. KCL `check:`
+// blocks reference schema attributes directly without `self`, so when the
+// operand is the bare identifier `self` we strip the prefix. When the
+// select is a CEL presence test (`has(self.f)`), we translate it to the
+// KCL equivalent `f != None` so the rule stays semantically meaningful
+// inside a schema check. Non-`self` operands are kept verbatim so that
+// constructs we don't know how to translate still produce a placeholder
+// the caller can detect.
+func emitSelect(s *exprpb.Expr_Select) (string, error) {
+	isSelf := isSelfIdent(s.GetOperand())
+	if s.GetTestOnly() {
+		if isSelf {
+			return fmt.Sprintf("(%s != None)", s.GetField()), nil
+		}
+		// `has(m.f)` for non-`self` operands: KCL has no `has` and we
+		// can't express "attribute of an arbitrary value" safely, so
+		// mark the rule unsupported and let the caller drop it.
+		return unsupportedPlaceholder("has", s.GetField())
+	}
+	if isSelf {
+		return s.GetField(), nil
+	}
+	operand, err := emitKCL(s.GetOperand())
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%s.%s", operand, s.GetField()), nil
+}
+
+// isSelfIdent reports whether `e` is the bare CEL identifier `self`.
+func isSelfIdent(e *exprpb.Expr) bool {
+	id, ok := e.GetExprKind().(*exprpb.Expr_IdentExpr)
+	if !ok {
+		return false
+	}
+	return id.IdentExpr.GetName() == "self"
 }
 
 func emitConst(l *exprpb.Constant) (string, error) {
@@ -132,21 +162,12 @@ func emitCall(c *exprpb.Expr_Call) (string, error) {
 	fn := c.GetFunction()
 
 	// Ternary `cond ? a : b` is represented as a CallExpr with the
-	// function `_?_:_` and three arguments.
+	// function `_?_:_` and three arguments. KCL's `check:` block does
+	// not accept `if/else` expressions (the parser treats `else` as a
+	// bare name in that context), so we surface the rule as
+	// unsupported and let the caller drop it.
 	if fn == "_?_:_" {
-		cond, err := emitKCL(c.GetArgs()[0])
-		if err != nil {
-			return "", err
-		}
-		thenE, err := emitKCL(c.GetArgs()[1])
-		if err != nil {
-			return "", err
-		}
-		elseE, err := emitKCL(c.GetArgs()[2])
-		if err != nil {
-			return "", err
-		}
-		return fmt.Sprintf("(%s) if (%s) else (%s)", thenE, cond, elseE), nil
+		return unsupportedPlaceholder("ternary", "")
 	}
 
 	// Binary operators
@@ -229,6 +250,12 @@ func emitCall(c *exprpb.Expr_Call) (string, error) {
 	if fn == "size" {
 		if len(c.GetArgs()) != 1 {
 			return "", fmt.Errorf("cel: size() expects 1 arg, got %d", len(c.GetArgs()))
+		}
+		// `size(self)` asks for the field-count of the schema instance.
+		// KCL `check:` blocks have no handle for the instance, so we drop
+		// the rule rather than emit `len(self)` (undefined identifier).
+		if isSelfIdent(c.GetArgs()[0]) {
+			return unsupportedPlaceholder("size", "self")
 		}
 		arg, err := emitKCL(c.GetArgs()[0])
 		if err != nil {
