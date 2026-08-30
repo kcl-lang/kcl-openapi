@@ -3,6 +3,7 @@ package generator
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -359,19 +360,78 @@ definitions:
 	for _, want := range []string{
 		"check:",
 		"minReplicas must not exceed maxReplicas",
-		"self.minReplicas <= self.maxReplicas",
+		"(minReplicas <= maxReplicas)", // from `self.minReplicas <= self.maxReplicas` with `self.` stripped
 		"cronSpec must be a valid cron expression",
-		"_regex_match(str(self.cronSpec)",
-		"len(self) >= 1", // from `size(self) >= 1` -> `len(self) >= 1`
-		"spec must have at least one property",
+		"_regex_match(str(cronSpec)", // from `self.cronSpec.matches(...)` with `self.` stripped
 	} {
 		if !strings.Contains(content, want) {
 			t.Errorf("expected %q in spec.k:\n%s", want, content)
 		}
 	}
+	// The header must import `regex` and alias `_regex_match = regex.match`
+	// because the CEL rule `self.cronSpec.matches(...)` translates to
+	// `_regex_match(...)` inside the `check:` block. Without these the
+	// generated file references an undefined identifier.
+	for _, want := range []string{
+		"import regex",
+		"_regex_match = regex.match",
+	} {
+		if !strings.Contains(content, want) {
+			t.Errorf("expected %q in spec.k header:\n%s", want, content)
+		}
+	}
+	// `size(self)` has no faithful KCL equivalent inside a `check:`
+	// block (KCL has no handle on the schema instance), so the rule
+	// and its message are dropped by the translator. Asserting the
+	// negative guarantees we don't regress back to emitting
+	// `len(self) >= 1` (which would not compile).
+	for _, notWant := range []string{
+		"len(self)",
+		"spec must have at least one property",
+	} {
+		if strings.Contains(content, notWant) {
+			t.Errorf("did not expect %q in spec.k (rule should be dropped):\n%s", notWant, content)
+		}
+	}
 	if strings.Contains(content, "__UNSUPPORTED_CEL_CALL_") {
 		t.Errorf("found unsupported CEL call marker in spec.k:\n%s", content)
 	}
+	// Finally, compile the generated file with `kcl` to make sure the
+	// translator's output is actually valid KCL — not just text that
+	// happens to contain the substrings above.
+	if kcl := lookupKCLBinary(t); kcl != "" {
+		cmd := exec.Command(kcl, specFile)
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("kcl compile failed for generated %s:\n%s\n%v", specFile, string(out), err)
+		}
+	}
+}
+
+// lookupKCLBinary resolves a `kcl` executable for the e2e compile check.
+// The path comes from (in priority order): $KCL_BIN, the `kcl` discovered
+// via $PATH, or the well-known homebrew install location. Returns "" if no
+// binary can be found, in which case the e2e test skips the compile step
+// — substring checks above still run.
+func lookupKCLBinary(t *testing.T) string {
+	t.Helper()
+	if p := os.Getenv("KCL_BIN"); p != "" {
+		if _, err := os.Stat(p); err == nil {
+			return p
+		}
+	}
+	if p, err := exec.LookPath("kcl"); err == nil {
+		return p
+	}
+	for _, p := range []string{
+		"/opt/homebrew/bin/kcl",
+		"/usr/local/bin/kcl",
+	} {
+		if _, err := os.Stat(p); err == nil {
+			return p
+		}
+	}
+	return ""
 }
 
 func TestGenerate_CRD2KCL_PackageRoot(t *testing.T) {
