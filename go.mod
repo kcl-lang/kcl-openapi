@@ -7,7 +7,7 @@ toolchain go1.26.6
 require (
 	github.com/getkin/kin-openapi v0.144.0
 	github.com/go-openapi/analysis v0.21.2
-	github.com/go-openapi/errors v0.22.3
+	github.com/go-openapi/errors v0.22.8
 	github.com/go-openapi/inflect v0.21.3
 	github.com/go-openapi/loads v0.21.1
 	github.com/go-openapi/spec v0.20.6
