@@ -1,6 +1,8 @@
 module kcl-lang.io/kcl-openapi
 
-go 1.25
+go 1.25.0
+
+toolchain go1.26.6
 
 require (
 	github.com/getkin/kin-openapi v0.144.0
@@ -53,9 +55,9 @@ require (
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
 	go.mongodb.org/mongo-driver v1.17.4 // indirect
-	golang.org/x/net v0.44.0 // indirect
-	golang.org/x/sys v0.36.0 // indirect
-	golang.org/x/text v0.29.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
+	golang.org/x/text v0.39.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
