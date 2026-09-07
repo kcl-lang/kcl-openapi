@@ -1,6 +1,6 @@
 module kcl-lang.io/kcl-openapi
 
-go 1.25.0
+go 1.26.0
 
 toolchain go1.26.6
 
@@ -11,7 +11,7 @@ require (
 	github.com/go-openapi/inflect v0.21.3
 	github.com/go-openapi/loads v0.25.2
 	github.com/go-openapi/spec v0.22.11
-	github.com/go-openapi/strfmt v0.27.0
+	github.com/go-openapi/strfmt v0.27.2
 	github.com/go-openapi/swag v0.21.1
 	github.com/go-openapi/validate v0.21.0
 	github.com/google/cel-go v0.10.1
