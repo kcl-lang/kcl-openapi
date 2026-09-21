@@ -285,6 +285,15 @@ func buildSwagger(crd *apiextensions.CustomResourceDefinition) (*spec.Swagger, e
 				return nil, err
 			}
 			setKubeNative(&schema, group, version.Name, kind)
+			// Mark the root definition so the generator can tell CRD-derived
+			// definitions apart from bundled types (e.g. the k8s.json types)
+			// when shortening schema names. The literal is defined in
+			// pkg/swagger/generator/names.go; keep both in sync.
+			schema.AddExtension("x-kcl-crd-root", true)
+			// Record the target package (group.version) for the
+			// --crd-package-layout mode. Literal defined in
+			// pkg/swagger/generator/names.go; keep both in sync.
+			schema.AddExtension("x-kcl-crd-pkg", group+"."+version.Name)
 			name := fmt.Sprintf("%s.%s.%s", group, version.Name, kind)
 			schemas[name] = schema
 		}
@@ -296,6 +305,9 @@ func buildSwagger(crd *apiextensions.CustomResourceDefinition) (*spec.Swagger, e
 		}
 		version := crd.Spec.Version
 		setKubeNative(&schema, group, version, kind)
+		// See the matching branch above for why these markers are added.
+		schema.AddExtension("x-kcl-crd-root", true)
+		schema.AddExtension("x-kcl-crd-pkg", group+"."+version)
 		name := fmt.Sprintf("%s.%s.%s", group, version, kind)
 		schemas[name] = schema
 	}

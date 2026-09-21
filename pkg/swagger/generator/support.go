@@ -47,6 +47,9 @@ func newGenerator(opts *GenOpts) (*generator, error) {
 		return nil, fmt.Errorf("load existing-models: %v", err)
 	}
 	opts.ExistingDefs = existingDefs
+	if opts.ImportRegistry == nil {
+		opts.ImportRegistry = NewImportAliasRegistry()
+	}
 
 	specDoc, analyzed, err := opts.analyzeSpec()
 	if err != nil {
@@ -111,7 +114,19 @@ func (a *generator) makeCodegen() (GenApp, error) {
 	log.Println("planning definitions")
 
 	genModels := make(GenDefinitions, 0, len(a.Models))
-	for mn, m := range a.Models {
+	modelNames := make([]string, 0, len(a.Models))
+	for mn := range a.Models {
+		modelNames = append(modelNames, mn)
+	}
+	sort.Strings(modelNames)
+	for _, mn := range modelNames {
+		m := a.Models[mn]
+		// Definitions deduplicated against the bundled k8s types render no
+		// local file: references resolve to the external package they alias
+		// through the x-kcl-type extension.
+		if _, isDeduped := m.Extensions[extDedupeAlias]; isDeduped {
+			continue
+		}
 		model, err := makeGenDefinition(
 			mn,
 			a.ModelsPackage,

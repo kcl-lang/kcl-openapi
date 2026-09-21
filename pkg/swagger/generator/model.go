@@ -82,6 +82,7 @@ func makeGenDefinitionHierarchy(name, pkg, container string, schema spec.Schema,
 		Container:      container,
 		KeepOrder:      opts.KeepOrder,
 		PackageRoot:    opts.PackageRoot,
+		ImportRegistry: opts.ImportRegistry,
 	}
 	if err := pg.makeGenSchema(); err != nil {
 		return nil, fmt.Errorf("could not generate schema for %s: %v", name, err)
@@ -169,7 +170,7 @@ func makeGenDefinitionHierarchy(name, pkg, container string, schema spec.Schema,
 		}
 	}
 
-	return &GenDefinition{
+	genDef := &GenDefinition{
 		GenCommon: GenCommon{
 			Copyright:        opts.Copyright,
 			TargetImportPath: opts.LanguageOpts.baseImport(opts.Target),
@@ -182,7 +183,16 @@ func makeGenDefinitionHierarchy(name, pkg, container string, schema spec.Schema,
 		// To avoid conflicts between the attributes of the schema and the names of
 		// the regex module, we represent the `regex.match` function with `regex_match = regex.match`
 		HasPatternValidation: pg.HasPatternValidation,
-	}, nil
+	}
+	// In CRD package layout mode, render the definition into the sub-package
+	// recorded by the CRD conversion (group.version). References between
+	// definitions of the same CRD share the package and need no imports.
+	if opts.CrdPackageLayout {
+		if crdPkg, ok := schema.Extensions.GetString(extCrdPkg); ok && crdPkg != "" {
+			genDef.GenSchema.Pkg = crdPkg
+		}
+	}
+	return genDef, nil
 }
 
 type importStmt struct {
@@ -204,7 +214,7 @@ func (sg *schemaGenContext) collectSortedImports() []importStmt {
 
 	// collect pkg imports
 	pkgImps := map[string]importStmt{}
-	collectImports(&sg.GenSchema, sg.GenSchema.Pkg, sg.PackageRoot, pkgImps)
+	collectImports(&sg.GenSchema, sg.GenSchema.Pkg, sg.PackageRoot, pkgImps, sg.ImportRegistry)
 
 	if _, ok := builtInImps[RegexPkgPath]; ok {
 		sg.HasPatternValidation = true
@@ -282,58 +292,30 @@ func (schema *GenSchema) getBuiltInImports() map[string]importStmt {
 	return imp
 }
 
-// getImportAsName infers the <import as> name by the context of all the existing import paths and the current pkg to be imported.
-// the parent package name will be added as prefix to avoid import conflict
-func getImportAsName(imp map[string]importStmt, pkg, module string) string {
-	parts := strings.Split(pkg, ".")
-	asName := ""
-	for i := len(parts) - 1; i >= 0; i-- {
-		conflict := false
-		// when conflict with other import as name, the `import as` name will be "{parentPkgName}strings.Title({PkgAlias})"
-		asName = parts[i] + strings.ToTitle(asName)
-		for _, v := range imp {
-			if v.AsName == asName {
-				conflict = true
-				break
-			}
-		}
-		if !conflict {
-			return asName
-		}
-	}
-	mangledAsName := "kclMangled" + strings.ToTitle(asName)
-	for _, v := range imp {
-		if v.AsName == asName {
-			log.Printf("[WARN] the import paths in module %s.%s are confict, please resolve it properly", pkg, module)
-		}
-	}
-	return mangledAsName
-}
-
 // collectImports collect import paths from the sch to the toPkg, the result will be collected to the importStmt map.
-func collectImports(sch *GenSchema, toPkg string, packageRoot string, imp map[string]importStmt) {
+func collectImports(sch *GenSchema, toPkg string, packageRoot string, imp map[string]importStmt, registry *ImportAliasRegistry) {
 	if sch.Items != nil && sch.IsArray {
-		collectImports(sch.Items, toPkg, packageRoot, imp)
+		collectImports(sch.Items, toPkg, packageRoot, imp, registry)
 		sch.KclType = "[" + sch.Items.KclType + "]"
 	}
 	if sch.AdditionalItems != nil {
-		collectImports(sch.AdditionalItems, toPkg, packageRoot, imp)
+		collectImports(sch.AdditionalItems, toPkg, packageRoot, imp, registry)
 	}
 	if sch.Object != nil {
-		collectImports(sch.Object, toPkg, packageRoot, imp)
+		collectImports(sch.Object, toPkg, packageRoot, imp, registry)
 	}
 	if sch.Properties != nil {
 		for idx := range sch.Properties {
-			collectImports(&sch.Properties[idx], toPkg, packageRoot, imp)
+			collectImports(&sch.Properties[idx], toPkg, packageRoot, imp, registry)
 		}
 	}
 	if sch.AdditionalProperties != nil {
-		collectImports(sch.AdditionalProperties, toPkg, packageRoot, imp)
+		collectImports(sch.AdditionalProperties, toPkg, packageRoot, imp, registry)
 		sch.KclType = "{str:" + sch.AdditionalProperties.KclType + "}"
 	}
 	if sch.AllOf != nil {
 		for idx := range sch.AllOf {
-			collectImports(&sch.AllOf[idx], toPkg, packageRoot, imp)
+			collectImports(&sch.AllOf[idx], toPkg, packageRoot, imp, registry)
 		}
 	}
 	if sch.Pkg == toPkg || sch.Pkg == "" {
@@ -369,8 +351,9 @@ func collectImports(sch *GenSchema, toPkg string, packageRoot string, imp map[st
 		innerPkg = sch.Pkg[strings.Index(sch.Pkg, ".")+1:]
 	}
 	if _, ok := imp[sch.Pkg]; !ok {
-		// the package path is not imported, need to import the pkg
-		asName := getImportAsName(imp, innerPkg, sch.Module)
+		// the package path is not imported in this file: claim a
+		// package-wide unique alias
+		asName := registry.claim(sch.Pkg, innerPkg, sch.Module, imp)
 		imp[sch.Pkg] = importStmt{
 			ImportPath: innerPkg, // remove the root package name
 			AsName:     asName,
@@ -417,6 +400,9 @@ type schemaGenContext struct {
 	// can prepend it to every cross-package import it emits. See
 	// https://github.com/kcl-lang/kcl-openapi/issues/53
 	PackageRoot string
+	// ImportRegistry is propagated from GenOpts.ImportRegistry so that
+	// cross-package import aliases stay unique package-wide.
+	ImportRegistry *ImportAliasRegistry
 }
 
 func (sg *schemaGenContext) NewArrayBranch(schema *spec.Schema) *schemaGenContext {

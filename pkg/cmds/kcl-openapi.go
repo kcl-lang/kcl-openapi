@@ -46,6 +46,9 @@ type options struct {
 	ModelPackage         string           `long:"model-package" short:"m" description:"the package to save the models" default:"models"`
 	PackageRoot          string           `long:"package-root" description:"optional package root prepended to every cross-package import in the generated files (e.g. 'konfig.services.k8s'). Use this when the generated files are placed inside a monorepo and you want the import statements to reference packages by their full path."`
 	DisableKeepSpecOrder bool             `long:"disable-keep-spec-order" description:"disable to keep schema properties order identical to spec file"`
+	LongNames            bool             `long:"long-names" description:"keep the original long schema names derived from the CRD property paths instead of the shortened ones (short names are used by default in CRD mode)"`
+	CrdDedupeK8s         bool             `long:"crd-dedupe-k8s" description:"alias CRD-generated schemas that are structurally identical to a bundled k8s type (e.g. an inlined PodSpec) to the official k8s module instead of emitting duplicated local schemas"`
+	CrdPackageLayout     bool             `long:"crd-package-layout" description:"place the schemas of each CRD group/version into their own sub-package of the model package (e.g. models/argoproj/io/v1alpha1/) instead of one flat package"`
 	ExistingModels       []flags.Filename `long:"existing-models" description:"reuse pre-generated KCL models from the given directory; the generator emits an import statement referencing <alias> instead of regenerating the schema files. Format: <alias>=<dir>. May be repeated." value-name:"ALIAS=PATH"`
 }
 
@@ -95,6 +98,9 @@ func (m *Model) Execute(args []string) error {
 	opts.ModelPackage = m.Options.ModelPackage
 	opts.PackageRoot = m.Options.PackageRoot
 	opts.KeepOrder = !m.Options.DisableKeepSpecOrder
+	opts.LongNames = m.Options.LongNames
+	opts.CrdDedupeK8s = m.Options.CrdDedupeK8s
+	opts.CrdPackageLayout = m.Options.CrdPackageLayout
 
 	// Parse --existing-models entries (format: <alias>=<dir>).
 	for _, raw := range m.Options.ExistingModels {

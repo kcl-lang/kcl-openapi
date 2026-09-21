@@ -81,9 +81,9 @@ type GenOpts struct {
 	FlattenOpts  *analysis.FlattenOpts
 	KeepOrder    bool
 
-	Spec              string
-	ModelPackage      string
-	Target            string
+	Spec         string
+	ModelPackage string
+	Target       string
 	// PackageRoot, when set, is prepended (with a dot separator) to every
 	// cross-package import emitted by the generator. Use this when the
 	// generated files are placed inside a monorepo (e.g. `konfig/services/k8s`)
@@ -97,6 +97,26 @@ type GenOpts struct {
 	CompatibilityMode string
 	Copyright         string
 
+	// LongNames keeps the original long definition names derived from CRD
+	// property paths (e.g. "argoproj.io.v1alpha1.ClusterWorkflowTemplate.
+	// spec.affinity..."). By default, CRD-generated definition names are
+	// shortened to unique, readable schema names (e.g.
+	// "ClusterWorkflowTemplateAffinityNodeAffinity") and all local $refs
+	// are rewritten accordingly. The shortening is a no-op for specs
+	// without CRD definitions.
+	LongNames bool
+	// CrdDedupeK8s aliases CRD-generated definitions that are structurally
+	// identical to a bundled k8s type (e.g. an inlined PodSpec) to the
+	// official k8s module instead of emitting a duplicated local schema.
+	CrdDedupeK8s bool
+	// CrdPackageLayout places the definitions of each CRD group/version into
+	// their own sub-package of the model package (e.g.
+	// models/argoproj/io/v1alpha1/) instead of one flat package.
+	CrdPackageLayout bool
+	// ImportRegistry assigns package-wide unique aliases to the external
+	// packages referenced by the generated files. When nil, a fresh registry
+	// is created for the generation run.
+	ImportRegistry *ImportAliasRegistry
 	// ExistingModels lists pre-existing KCL model directories that the
 	// generator should reference via `import` instead of regenerating.
 	// See `LoadExistingModels` for the schema-name extraction rules.
