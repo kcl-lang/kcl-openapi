@@ -84,7 +84,7 @@ spec:
 		t.Fatalf("generate failed: %v", err)
 	}
 
-	generatedPath := filepath.Join(tempDir, "models", "example_com_v1alpha1_example.k")
+	generatedPath := filepath.Join(tempDir, "models", "example_spec.k")
 	generated, err := os.ReadFile(generatedPath)
 	if err != nil {
 		t.Fatalf("read generated model failed: %v", err)
@@ -434,6 +434,75 @@ func lookupKCLBinary(t *testing.T) string {
 	return ""
 }
 
+func TestGenerate_CRD2KCL_PackageLayout(t *testing.T) {
+	// --crd-package-layout places each CRD group/version into its own
+	// sub-package of the model package.
+	tempDir := t.TempDir()
+	specPath := filepath.Join(tempDir, "crd.yaml")
+	if err := os.WriteFile(specPath, []byte(`apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: examples.example.com
+spec:
+  group: example.com
+  names:
+    kind: Example
+    plural: examples
+    singular: example
+  scope: Namespaced
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              metadata:
+                type: object
+`), 0o644); err != nil {
+		t.Fatalf("write CRD spec failed: %v", err)
+	}
+
+	outDir := filepath.Join(tempDir, "out")
+	opts := new(GenOpts)
+	opts.Spec = specPath
+	opts.Target = outDir
+	opts.ValidateSpec = false
+	opts.ModelPackage = "models"
+	opts.KeepOrder = true
+	opts.CrdPackageLayout = true
+	if err := opts.EnsureDefaults(); err != nil {
+		t.Fatalf("fill default options failed: %v", err)
+	}
+	specFile, err := crdGen.GetSpec(&crdGen.GenOpts{Spec: opts.Spec})
+	if err != nil {
+		t.Fatalf("get spec from crd failed: %v", err)
+	}
+	opts.Spec = specFile
+	if err := Generate(opts); err != nil {
+		t.Fatalf("generate failed: %v", err)
+	}
+
+	for _, want := range []string{
+		"models/example/com/v1/example.k",
+		"models/example/com/v1/example_spec.k",
+		// metadata references the bundled k8s types
+		"models/k8s/apimachinery/pkg/apis/meta/v1/object_meta.k",
+	} {
+		if _, err := os.Stat(filepath.Join(outDir, filepath.FromSlash(want))); err != nil {
+			t.Errorf("expected generated file %s: %v", want, err)
+		}
+	}
+	// no flat package files
+	if _, err := os.Stat(filepath.Join(outDir, "models", "example.k")); !os.IsNotExist(err) {
+		t.Errorf("flat package file models/example.k must not exist")
+	}
+}
+
 func TestGenerate_CRD2KCL_PackageRoot(t *testing.T) {
 	// See https://github.com/kcl-lang/kcl-openapi/issues/53
 	tempDir := t.TempDir()
@@ -493,7 +562,7 @@ spec:
 			}); err != nil {
 				t.Fatalf("generate failed: %v", err)
 			}
-			generated, err := os.ReadFile(filepath.Join(outDir, "models", "example_com_v1_example.k"))
+			generated, err := os.ReadFile(filepath.Join(outDir, "models", "example.k"))
 			if err != nil {
 				t.Fatalf("read generated model failed: %v", err)
 			}

@@ -133,6 +133,19 @@ func (g *GenOpts) analyzeSpec() (*loads.Document, *analysis.Spec, error) {
 		return nil, nil, err
 	}
 
+	// shorten CRD-generated definition names unless opted out (no-op for
+	// specs without CRD definitions)
+	if !g.LongNames {
+		if mapping, hoisted := ShortenCrdDefinitionNames(specDoc.Spec()); len(mapping) > 0 {
+			log.Printf("shortened %d CRD definition names", len(mapping))
+			if g.CrdDedupeK8s {
+				if n := DedupeCrdDefsAgainstK8s(specDoc.Spec(), hoisted); n > 0 {
+					log.Printf("aliased %d CRD definitions to the bundled k8s types", n)
+				}
+			}
+		}
+	}
+
 	// analyze the spec
 	analyzed := analysis.New(specDoc.Spec())
 
