@@ -64,9 +64,12 @@ var noiseSegments = map[string]struct{}{
 // ArgoprojIoV1alpha1ClusterWorkflowTemplateSpecAffinityNodeAffinity...
 // MatchFieldsItems0). This pass instead:
 //
-//   - names each root definition (group.version.Kind) after its Kind,
-//     appending the version when several versions of the same Kind exist
-//     (e.g. ClusterWorkflowTemplateV1alpha1);
+//   - names each root definition (group.version.Kind) after its Kind with
+//     the version always appended (e.g. ClusterWorkflowTemplateV1alpha1),
+//     so single-version CRDs keep their version association too; when the
+//     same Kind+Version is declared by several groups, every root of that
+//     class is additionally qualified with its group (e.g.
+//     ArgoprojIoClusterWorkflowTemplateV1alpha1);
 //   - hoists every inline complex object below the roots into its own named
 //     definition, named rootShort + at most shortNameMaxSegments trailing
 //     meaningful path segments, with noise segments such as array
@@ -142,20 +145,30 @@ func ShortenCrdDefinitionNames(sw *spec.Swagger) (map[string]string, map[string]
 
 	mapping := make(map[string]string, len(rootOf))
 
-	// Short root names: Kind, plus the version when several roots share it.
-	kindCount := make(map[string]int, len(roots))
+	// Short root names: Kind + Version, the version always appended. The
+	// generated file name is derived from this name, and downstream tooling
+	// (e.g. `kcl import` grouping models into per-version directories)
+	// recovers the version from it; dropping the version for single-version
+	// CRDs would misplace their files (see kcl-lang/kcl-openapi#181).
 	kinds := make(map[string]string, len(roots))
 	versions := make(map[string]string, len(roots))
+	groups := make(map[string]string, len(roots))
+	kvCount := make(map[string]int, len(roots))
 	for _, r := range roots {
-		kind, version := splitRootName(r)
+		group, version, kind := splitRootName(r)
+		groups[r] = group
 		kinds[r] = kind
 		versions[r] = version
-		kindCount[kind]++
+		kvCount[kind+"\x00"+version]++
 	}
 	for _, r := range roots {
-		candidate := kinds[r]
-		if kindCount[kinds[r]] > 1 {
-			candidate += swag.ToGoName(versions[r])
+		candidate := kinds[r] + swag.ToGoName(versions[r])
+		if kvCount[kinds[r]+"\x00"+versions[r]] > 1 {
+			// The same Kind+Version is declared by several API groups
+			// (e.g. Widget in both example.com and other.com): qualify
+			// every root of the class with its group so neither
+			// overwrites the other and each name still tells them apart.
+			candidate = pascalJoin(strings.Split(groups[r], ".")) + candidate
 		}
 		mapping[r] = claimName(candidate, used)
 	}
@@ -201,14 +214,17 @@ func ShortenCrdDefinitionNames(sw *spec.Swagger) (map[string]string, map[string]
 }
 
 // splitRootName splits a CRD root definition name (group.version.Kind) into
-// its Kind and version. The group part may contain any number of dots, so the
-// version is the segment before the last dot.
-func splitRootName(root string) (kind, version string) {
+// its group, version and Kind. The group part may contain any number of
+// dots, so the version is the segment before the last dot.
+func splitRootName(root string) (group, version, kind string) {
 	i := strings.LastIndex(root, ".")
 	kind = root[i+1:]
 	j := strings.LastIndex(root[:i], ".")
 	version = root[j+1 : i]
-	return kind, version
+	if j >= 0 {
+		group = root[:j]
+	}
+	return group, version, kind
 }
 
 // isComplexObject reports whether s is an inline object schema worth its own

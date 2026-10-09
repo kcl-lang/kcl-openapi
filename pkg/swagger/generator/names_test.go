@@ -80,10 +80,10 @@ func TestShortenCrdDefinitionNames(t *testing.T) {
 	}
 
 	want := map[string]string{
-		root:    "ClusterWorkflowTemplate",
-		nested1: "ClusterWorkflowTemplateAffinityNodeAffinity",
-		nested2: "ClusterWorkflowTemplateSpecTemplates",
-		nested3: "ClusterWorkflowTemplateNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution",
+		root:    "ClusterWorkflowTemplateV1alpha1",
+		nested1: "ClusterWorkflowTemplateV1alpha1AffinityNodeAffinity",
+		nested2: "ClusterWorkflowTemplateV1alpha1SpecTemplates",
+		nested3: "ClusterWorkflowTemplateV1alpha1NodeAffinityRequiredDuringSchedulingIgnoredDuringExecution",
 	}
 	for old, wantNew := range want {
 		if mapping[old] != wantNew {
@@ -110,16 +110,16 @@ func TestShortenCrdDefinitionNames(t *testing.T) {
 	}
 
 	// local $refs rewritten, k8s refs untouched
-	rootDef := sw.Definitions["ClusterWorkflowTemplate"]
-	if got := refString(rootDef.Properties["spec"]); got != "#/definitions/ClusterWorkflowTemplateAffinityNodeAffinity" {
+	rootDef := sw.Definitions["ClusterWorkflowTemplateV1alpha1"]
+	if got := refString(rootDef.Properties["spec"]); got != "#/definitions/ClusterWorkflowTemplateV1alpha1AffinityNodeAffinity" {
 		t.Errorf("root spec ref = %q", got)
 	}
-	nested1Def := sw.Definitions["ClusterWorkflowTemplateAffinityNodeAffinity"]
+	nested1Def := sw.Definitions["ClusterWorkflowTemplateV1alpha1AffinityNodeAffinity"]
 	if got := refString(nested1Def.Properties["metadata"]); got != "#/definitions/"+k8sDef {
 		t.Errorf("k8s ref must stay untouched, got %q", got)
 	}
-	nested3Def := sw.Definitions["ClusterWorkflowTemplateNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution"]
-	if got := refString(nested3Def.Properties["preference"]); got != "#/definitions/ClusterWorkflowTemplateAffinityNodeAffinity" {
+	nested3Def := sw.Definitions["ClusterWorkflowTemplateV1alpha1NodeAffinityRequiredDuringSchedulingIgnoredDuringExecution"]
+	if got := refString(nested3Def.Properties["preference"]); got != "#/definitions/ClusterWorkflowTemplateV1alpha1AffinityNodeAffinity" {
 		t.Errorf("nested ref = %q", got)
 	}
 }
@@ -169,10 +169,10 @@ func TestShortenCrdDefinitionNamesCollision(t *testing.T) {
 	mapping, _ := ShortenCrdDefinitionNames(&sw)
 	// "fooBar" sorts before "foo_bar"; both pascalize to FooBar, so the
 	// latter falls back to a numeric suffix on the full path.
-	if got := mapping[root+".spec.fooBar"]; got != "WidgetSpecFooBar" {
+	if got := mapping[root+".spec.fooBar"]; got != "WidgetV1SpecFooBar" {
 		t.Errorf("spec.fooBar = %q", got)
 	}
-	if got := mapping[root+".spec.foo_bar"]; got != "WidgetSpecFooBar2" {
+	if got := mapping[root+".spec.foo_bar"]; got != "WidgetV1SpecFooBar2" {
 		t.Errorf("spec.foo_bar = %q", got)
 	}
 	names := map[string]bool{}
@@ -208,8 +208,8 @@ func TestShortenCrdDefinitionNamesKeepsXkclName(t *testing.T) {
 	}
 	// "items" is a noise segment, so the only meaningful path segment is
 	// "spec"; the parent carries x-kcl-name and is skipped, leaving the
-	// shortened name free to claim "WidgetSpec".
-	if got := mapping[root+".spec.items"]; got != "WidgetSpec" {
+	// shortened name free to claim "WidgetV1Spec".
+	if got := mapping[root+".spec.items"]; got != "WidgetV1Spec" {
 		t.Errorf("spec.items = %q", got)
 	}
 }
@@ -271,7 +271,7 @@ func TestShortenCrdDefinitionNamesNonLocalRefsUntouched(t *testing.T) {
 		},
 	}
 	ShortenCrdDefinitionNames(&sw)
-	got := refString(sw.Definitions["WidgetSpec"].Properties["out"])
+	got := refString(sw.Definitions["WidgetV1Spec"].Properties["out"])
 	if got != "other.json#/definitions/External" {
 		t.Errorf("non-local ref rewritten: %q", got)
 	}
@@ -315,17 +315,17 @@ func TestShortenCrdDefinitionNamesHoistsInlineObjects(t *testing.T) {
 		},
 	}
 	mapping, _ := ShortenCrdDefinitionNames(&sw)
-	if mapping[root] != "ClusterWorkflowTemplate" {
+	if mapping[root] != "ClusterWorkflowTemplateV1alpha1" {
 		t.Fatalf("root = %q", mapping[root])
 	}
 
 	wantDefs := []string{
-		"ClusterWorkflowTemplate",                     // root
-		"ClusterWorkflowTemplateSpec",                 // spec
-		"ClusterWorkflowTemplateSpecAffinity",         // spec.affinity
-		"ClusterWorkflowTemplateAffinityNodeAffinity", // spec.affinity.nodeAffinity
-		"ClusterWorkflowTemplateTemplates",            // spec.templates[]
-		"ClusterWorkflowTemplateTemplatesMetadata",    // spec.templates[].metadata
+		"ClusterWorkflowTemplateV1alpha1",                     // root
+		"ClusterWorkflowTemplateV1alpha1Spec",                 // spec
+		"ClusterWorkflowTemplateV1alpha1SpecAffinity",         // spec.affinity
+		"ClusterWorkflowTemplateV1alpha1AffinityNodeAffinity", // spec.affinity.nodeAffinity
+		"ClusterWorkflowTemplateV1alpha1Templates",            // spec.templates[]
+		"ClusterWorkflowTemplateV1alpha1TemplatesMetadata",    // spec.templates[].metadata
 	}
 	for _, name := range wantDefs {
 		if _, ok := sw.Definitions[name]; !ok {
@@ -333,19 +333,19 @@ func TestShortenCrdDefinitionNamesHoistsInlineObjects(t *testing.T) {
 		}
 	}
 
-	rootDef := sw.Definitions["ClusterWorkflowTemplate"]
-	if got := refString(rootDef.Properties["spec"]); got != "#/definitions/ClusterWorkflowTemplateSpec" {
+	rootDef := sw.Definitions["ClusterWorkflowTemplateV1alpha1"]
+	if got := refString(rootDef.Properties["spec"]); got != "#/definitions/ClusterWorkflowTemplateV1alpha1Spec" {
 		t.Errorf("spec ref = %q", got)
 	}
-	specDef := sw.Definitions["ClusterWorkflowTemplateSpec"]
-	if got := refString(specDef.Properties["affinity"]); got != "#/definitions/ClusterWorkflowTemplateSpecAffinity" {
+	specDef := sw.Definitions["ClusterWorkflowTemplateV1alpha1Spec"]
+	if got := refString(specDef.Properties["affinity"]); got != "#/definitions/ClusterWorkflowTemplateV1alpha1SpecAffinity" {
 		t.Errorf("affinity ref = %q", got)
 	}
 	templatesProp := rootDef.Properties["templates"]
 	if templatesProp.Items == nil || templatesProp.Items.Schema == nil {
 		t.Fatalf("templates items missing: %+v", templatesProp)
 	}
-	if got := refString(*templatesProp.Items.Schema); got != "#/definitions/ClusterWorkflowTemplateTemplates" {
+	if got := refString(*templatesProp.Items.Schema); got != "#/definitions/ClusterWorkflowTemplateV1alpha1Templates" {
 		t.Errorf("templates items ref = %q", got)
 	}
 	// plain maps of scalars stay inline: no named definition for labels
@@ -361,5 +361,95 @@ func TestShortenCrdDefinitionNamesHoistsInlineObjects(t *testing.T) {
 			t.Errorf("duplicate definition name %q", name)
 		}
 		seen[strings.ToLower(name)] = true
+	}
+}
+
+// TestShortenCrdDefinitionNamesSingleVersionKeepsVersion guards
+// kcl-lang/kcl-openapi#181 (defect A): a single-version CRD must keep the
+// version in its schema name, otherwise the generated file name loses the
+// `_v<version>` qualifier that `kcl import` uses to group models into the
+// per-version directory and the file lands in models/unknown/.
+func TestShortenCrdDefinitionNamesSingleVersionKeepsVersion(t *testing.T) {
+	const root = "example.com.v1.Widget"
+	sw := spec.Swagger{
+		SwaggerProps: spec.SwaggerProps{
+			Definitions: spec.Definitions{
+				root:           crdRootSchema(),
+				root + ".spec": spec.Schema{},
+			},
+		},
+	}
+	mapping, _ := ShortenCrdDefinitionNames(&sw)
+	if got := mapping[root]; got != "WidgetV1" {
+		t.Errorf("single-version root = %q, want %q", got, "WidgetV1")
+	}
+	if got := mapping[root+".spec"]; got != "WidgetV1Spec" {
+		t.Errorf("spec = %q, want %q", got, "WidgetV1Spec")
+	}
+}
+
+// TestShortenCrdDefinitionNamesSameKindAcrossGroups guards
+// kcl-lang/kcl-openapi#181 (defect B): two CRDs sharing a Kind on the same
+// version in different API groups must not collapse onto one name (which
+// made one definition silently overwrite the other). Every root of such a
+// collision class gets qualified with its group.
+func TestShortenCrdDefinitionNamesSameKindAcrossGroups(t *testing.T) {
+	const (
+		rootExample = "example.com.v1.Widget"
+		rootOther   = "other.com.v1.Widget"
+	)
+	sw := spec.Swagger{
+		SwaggerProps: spec.SwaggerProps{
+			Definitions: spec.Definitions{
+				rootExample:           crdRootSchema(),
+				rootOther:             crdRootSchema(),
+				rootExample + ".spec": spec.Schema{},
+				rootOther + ".spec":   spec.Schema{},
+			},
+		},
+	}
+	mapping, _ := ShortenCrdDefinitionNames(&sw)
+	if got := mapping[rootExample]; got != "ExampleComWidgetV1" {
+		t.Errorf("example.com root = %q, want %q", got, "ExampleComWidgetV1")
+	}
+	if got := mapping[rootOther]; got != "OtherComWidgetV1" {
+		t.Errorf("other.com root = %q, want %q", got, "OtherComWidgetV1")
+	}
+	if got := mapping[rootExample+".spec"]; got != "ExampleComWidgetV1Spec" {
+		t.Errorf("example.com spec = %q, want %q", got, "ExampleComWidgetV1Spec")
+	}
+	if got := mapping[rootOther+".spec"]; got != "OtherComWidgetV1Spec" {
+		t.Errorf("other.com spec = %q, want %q", got, "OtherComWidgetV1Spec")
+	}
+	// same Kind+Version, but the two roots keep distinct names
+	if mapping[rootExample] == mapping[rootOther] {
+		t.Errorf("roots collapsed onto one name %q", mapping[rootExample])
+	}
+}
+
+// TestShortenCrdDefinitionNamesGroupQualifiedStableAcrossVersions: the
+// group qualifier is per Kind+Version class, so a group adding another
+// version of the same Kind does not rename the unrelated class.
+func TestShortenCrdDefinitionNamesGroupQualifiedStableAcrossVersions(t *testing.T) {
+	sw := spec.Swagger{
+		SwaggerProps: spec.SwaggerProps{
+			Definitions: spec.Definitions{
+				"example.com.v1.Widget":     crdRootSchema(),
+				"other.com.v1.Widget":       crdRootSchema(),
+				"other.com.v1alpha1.Widget": crdRootSchema(),
+			},
+		},
+	}
+	mapping, _ := ShortenCrdDefinitionNames(&sw)
+	// the v1 class is shared by two groups: both are group-qualified
+	if got := mapping["example.com.v1.Widget"]; got != "ExampleComWidgetV1" {
+		t.Errorf("example.com v1 = %q", got)
+	}
+	if got := mapping["other.com.v1.Widget"]; got != "OtherComWidgetV1" {
+		t.Errorf("other.com v1 = %q", got)
+	}
+	// the v1alpha1 Kind+Version belongs to a single group: no qualifier
+	if got := mapping["other.com.v1alpha1.Widget"]; got != "WidgetV1alpha1" {
+		t.Errorf("other.com v1alpha1 = %q", got)
 	}
 }

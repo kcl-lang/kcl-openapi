@@ -53,50 +53,46 @@ func init() {
 	install.Install(scheme.Scheme)
 }
 
+// GetSpec reads the CRD file, converts it into a merged OpenAPI spec (all
+// YAML documents in the file combined into one swagger) and returns the path
+// of the temporary spec file, along with the referenced k8s.json.
 func GetSpec(opts *GenOpts) (string, error) {
-	// read crd content from file
-	path, err := filepath.Abs(opts.Spec)
+	paths, err := getSpecFiles(opts)
 	if err != nil {
-		return "", fmt.Errorf("could not locate spec: %s, err: %s", opts.Spec, err)
+		return "", err
 	}
-	crdContent, err := os.ReadFile(path)
-	if err != nil {
-		return "", fmt.Errorf("could not load spec: %s, err: %s", opts.Spec, err)
+	if len(paths) == 0 {
+		return "", fmt.Errorf("no CRD found in spec: %s", opts.Spec)
 	}
-	// generate openapi spec from crd
-	swagger, err := generate(string(crdContent))
-	if err != nil {
-		return "", fmt.Errorf("could not generate swagger spec: %s, err: %s", opts.Spec, err)
-	}
-	// write openapi spec to tmp file, along with the referenced k8s.json
-	swaggerContent, err := json.MarshalIndent(swagger, "", "")
-	if err != nil {
-		return "", fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
-	}
-	tmpSpecDir := os.TempDir()
-	tmpFile, err := os.CreateTemp(tmpSpecDir, "kcl-swagger-")
-	if err != nil {
-		return "", fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
-	}
-	// copy k8s.json to tmpDir
-	if err := os.WriteFile(filepath.Join(tmpSpecDir, "k8s.json"), []byte(k8sFile), 0644); err != nil {
-		return "", fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
-	}
-	if _, err := tmpFile.Write(swaggerContent); err != nil {
-		return "", fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
-	}
-	// return the tmp openapi spec file path
-	return tmpFile.Name(), nil
+	return paths[0], nil
 }
 
-// GetSpecs retrieves specifications from the given GenOpts and returns a list of temporary file paths for the generated OpenAPI specs.
-// It returns an error if there is any issue in fetching and generating the specs.
+// GetSpecs retrieves specifications from the given GenOpts and returns a list
+// of temporary file paths for the generated OpenAPI specs.
+//
+// Every CRD document found in the spec file is converted into a definition
+// set of the same swagger spec, so a multi-document file yields a single
+// merged spec carrying one root definition per CRD version. Generating all
+// documents in one run (rather than one generation per document) lets the
+// generator assign globally unique schema names, so two CRDs that share a
+// Kind across different API groups no longer overwrite each other
+// (kcl-lang/kcl-openapi#181).
+//
+// It returns an error if there is any issue in fetching and generating the
+// specs.
 // Parameters:
 // - opts: a GenOpts struct that contains the options and parameters required for generating the specs
 // Returns:
 // - []string: a list of temporary file paths for the generated OpenAPI specs
 // - error: an error message if any error occurs.
 func GetSpecs(opts *GenOpts) ([]string, error) {
+	return getSpecFiles(opts)
+}
+
+// getSpecFiles converts the CRD file into one merged OpenAPI spec written to
+// a temporary file (next to the referenced k8s.json) and returns its path.
+// An empty file yields no paths.
+func getSpecFiles(opts *GenOpts) ([]string, error) {
 	var result []string
 	// read crd content from file
 	path, err := filepath.Abs(opts.Spec)
@@ -111,33 +107,71 @@ func GetSpecs(opts *GenOpts) ([]string, error) {
 	if err != nil {
 		return result, fmt.Errorf("could not load spec: %s, err: %s", opts.Spec, err)
 	}
+	if len(contents) == 0 {
+		return result, nil
+	}
+
+	// generate one openapi spec per document, then merge them so every CRD
+	// of the file is generated in a single run below.
+	swaggers := make([]*spec.Swagger, 0, len(contents))
 	for _, content := range contents {
-		// generate openapi spec from crd
 		swagger, err := generate(content)
 		if err != nil {
 			return result, fmt.Errorf("could not generate swagger spec: %s, err: %s", opts.Spec, err)
 		}
-		// write openapi spec to tmp file, along with the referenced k8s.json
-		swaggerContent, err := json.MarshalIndent(swagger, "", "")
-		if err != nil {
-			return result, fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
-		}
-		tmpSpecDir := os.TempDir()
-		tmpFile, err := os.CreateTemp(tmpSpecDir, "kcl-swagger-")
-		if err != nil {
-			return result, fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
-		}
-		// copy k8s.json to tmpDir
-		if err := os.WriteFile(filepath.Join(tmpSpecDir, "k8s.json"), []byte(k8sFile), 0644); err != nil {
-			return result, fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
-		}
-		if _, err := tmpFile.Write(swaggerContent); err != nil {
-			return result, fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
-		}
-		// Append the tmp openapi spec file path
-		result = append(result, tmpFile.Name())
+		swaggers = append(swaggers, swagger)
 	}
+	merged := mergeSwaggers(swaggers)
+
+	// write openapi spec to tmp file, along with the referenced k8s.json
+	swaggerContent, err := json.MarshalIndent(merged, "", "")
+	if err != nil {
+		return result, fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
+	}
+	tmpSpecDir := os.TempDir()
+	tmpFile, err := os.CreateTemp(tmpSpecDir, "kcl-swagger-")
+	if err != nil {
+		return result, fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
+	}
+	// copy k8s.json to tmpDir
+	if err := os.WriteFile(filepath.Join(tmpSpecDir, "k8s.json"), []byte(k8sFile), 0644); err != nil {
+		return result, fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
+	}
+	if _, err := tmpFile.Write(swaggerContent); err != nil {
+		return result, fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
+	}
+	// Append the tmp openapi spec file path
+	result = append(result, tmpFile.Name())
 	return result, nil
+}
+
+// mergeSwaggers combines the swaggers produced from the individual CRD
+// documents of one file into a single swagger. Definitions keep their
+// group.version.Kind names, which are unique per CRD version; a CRD repeated
+// across documents simply overwrites its own previous definition.
+func mergeSwaggers(in []*spec.Swagger) *spec.Swagger {
+	if len(in) == 1 {
+		return in[0]
+	}
+	merged := &spec.Swagger{
+		SwaggerProps: spec.SwaggerProps{
+			Swagger:     "2.0",
+			Definitions: spec.Definitions{},
+			Paths:       &spec.Paths{},
+			Info: &spec.Info{
+				InfoProps: spec.InfoProps{
+					Title:   "Kubernetes CRD Swagger",
+					Version: "v0.1.0",
+				},
+			},
+		},
+	}
+	for _, sw := range in {
+		for name, def := range sw.Definitions {
+			merged.Definitions[name] = def
+		}
+	}
+	return merged
 }
 
 // splitDocuments returns a slice of all documents contained in a YAML string. Multiple documents can be divided by the

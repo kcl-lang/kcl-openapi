@@ -1707,6 +1707,10 @@ func RecoverMapValueOrder(oldValue interface{}) interface{} {
 		return newSlice
 	case reflect.Map:
 		keys := value.MapKeys()
+		// MapKeys iterates in random order: sort so values without an
+		// x-order annotation render deterministically (the x-order slots
+		// below are unaffected: they are indexed by the annotation value).
+		sort.Slice(keys, func(i, j int) bool { return keys[i].String() < keys[j].String() })
 		var newValue yaml.MapSlice = make([]yaml.MapItem, len(keys))
 
 		for i, key := range keys {
