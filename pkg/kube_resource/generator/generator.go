@@ -128,14 +128,25 @@ func getSpecFiles(opts *GenOpts) ([]string, error) {
 	if err != nil {
 		return result, fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
 	}
-	tmpSpecDir := os.TempDir()
+
+	// Write the swagger next to the referenced k8s.json inside a private
+	// temp directory: the CRD schemas reference the bundled k8s types
+	// through the relative "k8s.json#/definitions/..." URLs, which resolve
+	// against the spec file's directory. A shared fixed path used to race
+	// between concurrent generator runs (go test runs several test
+	// binaries in parallel), truncating the file mid-read with
+	// "unexpected end of JSON input".
+	tmpSpecDir, err := os.MkdirTemp("", "kcl-crd-spec-")
+	if err != nil {
+		return result, fmt.Errorf("could not create temp dir for swagger spec: %s, err: %s", opts.Spec, err)
+	}
+	// copy k8s.json next to the spec file
+	if err := os.WriteFile(filepath.Join(tmpSpecDir, "k8s.json"), []byte(k8sFile), 0644); err != nil {
+		return result, fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
+	}
 	tmpFile, err := os.CreateTemp(tmpSpecDir, "kcl-swagger-")
 	if err != nil {
 		return result, fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
-	}
-	// copy k8s.json to tmpDir
-	if err := os.WriteFile(filepath.Join(tmpSpecDir, "k8s.json"), []byte(k8sFile), 0644); err != nil {
-		return result, fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
 	}
 	if _, err := tmpFile.Write(swaggerContent); err != nil {
 		return result, fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
