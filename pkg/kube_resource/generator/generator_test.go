@@ -3,10 +3,12 @@ package generator
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 
 	"k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/kube-openapi/pkg/validation/spec"
 )
 
 const (
@@ -814,5 +816,96 @@ func TestSplitDocumentsTrailingCommentOnly(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+// multiDocSameKind is a two-document CRD file whose documents declare the
+// same Kind on the same version in different API groups
+// (kcl-lang/kcl-openapi#181, defect B).
+const multiDocSameKind = `apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: widgets.example.com
+spec:
+  group: example.com
+  scope: Namespaced
+  names: {kind: Widget, plural: widgets, singular: widget}
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                replicas: {type: integer}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: widgets.other.com
+spec:
+  group: other.com
+  scope: Namespaced
+  names: {kind: Widget, plural: widgets, singular: widget}
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                otherOnlyField: {type: integer}
+`
+
+func TestGetSpecsMergesDocumentsIntoOneSpec(t *testing.T) {
+	specPath := t.TempDir() + "/collide.yaml"
+	if err := os.WriteFile(specPath, []byte(multiDocSameKind), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	paths, err := GetSpecs(&GenOpts{Spec: specPath})
+	if err != nil {
+		t.Fatal(err)
+	}
+	// both CRD documents must be converted in a single merged spec so the
+	// generator assigns them distinct schema names instead of letting one
+	// overwrite the other
+	if len(paths) != 1 {
+		t.Fatalf("expected one merged spec, got %d", len(paths))
+	}
+	data, err := os.ReadFile(paths[0])
+	if err != nil {
+		t.Fatal(err)
+	}
+	var sw spec.Swagger
+	if err := json.Unmarshal(data, &sw); err != nil {
+		t.Fatal(err)
+	}
+	for _, root := range []string{"example.com.v1.Widget", "other.com.v1.Widget"} {
+		if _, ok := sw.Definitions[root]; !ok {
+			t.Errorf("merged spec missing root definition %q", root)
+		}
+	}
+}
+
+func TestGetSpecSingleDocumentUnchanged(t *testing.T) {
+	specPath := t.TempDir() + "/single.yaml"
+	first := strings.SplitN(multiDocSameKind, "\n---\n", 2)[0]
+	if err := os.WriteFile(specPath, []byte(first), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	paths, err := getSpecFiles(&GenOpts{Spec: specPath})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(paths) != 1 {
+		t.Fatalf("expected one spec, got %d", len(paths))
 	}
 }

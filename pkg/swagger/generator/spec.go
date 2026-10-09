@@ -104,9 +104,20 @@ func (g *GenOpts) flattenSpec() (*loads.Document, error) {
 }
 
 func (g *GenOpts) analyzeSpec() (*loads.Document, *analysis.Spec, error) {
+	var xOrderTmps []string
+	defer func() {
+		for _, f := range xOrderTmps {
+			// the rewritten spec is an intermediate document: the content
+			// lives in the loaded specDoc, so the file can go once the
+			// analysis below has run
+			os.Remove(f)
+		}
+	}()
+
 	// preprocess: add x-order to properties
 	if g.KeepOrder {
 		g.Spec = WithXOrder(g.Spec, AddXOrderOnProperty)
+		xOrderTmps = append(xOrderTmps, g.Spec)
 	}
 
 	// load spec document and validate spec if needed
@@ -125,6 +136,7 @@ func (g *GenOpts) analyzeSpec() (*loads.Document, *analysis.Spec, error) {
 	// this logic should run after spec validation, since x-extensions are not allowed on "default" & "example" fields
 	if g.KeepOrder {
 		g.Spec = WithXOrder(g.Spec, AddXOrderOnDefaultExample)
+		xOrderTmps = append(xOrderTmps, g.Spec)
 	}
 
 	// flatten spec
@@ -206,10 +218,16 @@ func WithXOrder(specPath string, addXOrderFunc func(yamlDoc interface{}) interfa
 		panic(err)
 	}
 
-	tmpFile, err := os.CreateTemp("", filepath.Base(specPath))
+	// Keep the rewritten document next to the original spec file, not in
+	// the temp dir root: the spec may reference sibling files through
+	// relative $refs (e.g. the CRD specs reference ./k8s.json), and those
+	// resolve against the directory of the document being loaded. Moving
+	// the document breaks the resolution (kcl-lang/kcl-openapi#182).
+	tmpFile, err := os.CreateTemp(filepath.Dir(specPath), filepath.Base(specPath))
 	if err != nil {
 		panic(err)
 	}
+	defer tmpFile.Close()
 	if err := os.WriteFile(tmpFile.Name(), out, 0); err != nil {
 		panic(err)
 	}

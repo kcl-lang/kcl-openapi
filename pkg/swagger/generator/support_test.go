@@ -84,7 +84,7 @@ spec:
 		t.Fatalf("generate failed: %v", err)
 	}
 
-	generatedPath := filepath.Join(tempDir, "models", "example_spec.k")
+	generatedPath := filepath.Join(tempDir, "models", "example_v1alpha1_spec.k")
 	generated, err := os.ReadFile(generatedPath)
 	if err != nil {
 		t.Fatalf("read generated model failed: %v", err)
@@ -488,8 +488,8 @@ spec:
 	}
 
 	for _, want := range []string{
-		"models/example/com/v1/example.k",
-		"models/example/com/v1/example_spec.k",
+		"models/example/com/v1/example_v1.k",
+		"models/example/com/v1/example_v1_spec.k",
 		// metadata references the bundled k8s types
 		"models/k8s/apimachinery/pkg/apis/meta/v1/object_meta.k",
 	} {
@@ -498,8 +498,8 @@ spec:
 		}
 	}
 	// no flat package files
-	if _, err := os.Stat(filepath.Join(outDir, "models", "example.k")); !os.IsNotExist(err) {
-		t.Errorf("flat package file models/example.k must not exist")
+	if _, err := os.Stat(filepath.Join(outDir, "models", "example_v1.k")); !os.IsNotExist(err) {
+		t.Errorf("flat package file models/example_v1.k must not exist")
 	}
 }
 
@@ -562,7 +562,7 @@ spec:
 			}); err != nil {
 				t.Fatalf("generate failed: %v", err)
 			}
-			generated, err := os.ReadFile(filepath.Join(outDir, "models", "example.k"))
+			generated, err := os.ReadFile(filepath.Join(outDir, "models", "example_v1.k"))
 			if err != nil {
 				t.Fatalf("read generated model failed: %v", err)
 			}

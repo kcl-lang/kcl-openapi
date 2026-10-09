@@ -178,6 +178,9 @@ func (l *LanguageOpts) toKclValue(data interface{}, allowMultiline bool) string 
 		for iter.Next() {
 			mapContents = append(mapContents, fmt.Sprintf("%s: %s", l.toKclValue(iter.Key(), allowMultiline), l.toKclValue(iter.Value(), allowMultiline)))
 		}
+		// Go map iteration order is random: sort so the rendered default
+		// value is deterministic across runs (golden tests compare output).
+		sort.Strings(mapContents)
 		content := strings.Join(mapContents, ", ")
 		return fmt.Sprintf("{%s}", content)
 	case reflect.Slice:
