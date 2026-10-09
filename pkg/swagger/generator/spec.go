@@ -227,6 +227,7 @@ func WithXOrder(specPath string, addXOrderFunc func(yamlDoc interface{}) interfa
 	if err != nil {
 		panic(err)
 	}
+	defer tmpFile.Close()
 	if err := os.WriteFile(tmpFile.Name(), out, 0); err != nil {
 		panic(err)
 	}

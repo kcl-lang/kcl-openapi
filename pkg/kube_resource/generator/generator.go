@@ -148,6 +148,7 @@ func getSpecFiles(opts *GenOpts) ([]string, error) {
 	if err != nil {
 		return result, fmt.Errorf("could not validate swagger spec: %s, err: %s", opts.Spec, err)
 	}
+	defer tmpFile.Close()
 	if _, err := tmpFile.Write(swaggerContent); err != nil {
 		return result, fmt.Errorf("could not generate swagger spec file: %s, err: %s", opts.Spec, err)
 	}
