@@ -1,17 +1,17 @@
 module kcl-lang.io/kcl-openapi
 
-go 1.25.0
+go 1.26.0
 
 toolchain go1.26.6
 
 require (
 	github.com/getkin/kin-openapi v0.144.0
-	github.com/go-openapi/analysis v0.26.2
+	github.com/go-openapi/analysis v1.0.0
 	github.com/go-openapi/errors v0.22.8
 	github.com/go-openapi/inflect v0.21.3
-	github.com/go-openapi/loads v0.25.2
-	github.com/go-openapi/spec v0.22.11
-	github.com/go-openapi/strfmt v0.27.0
+	github.com/go-openapi/loads v0.25.3
+	github.com/go-openapi/spec v1.0.1
+	github.com/go-openapi/strfmt v0.27.2
 	github.com/go-openapi/swag v0.21.1
 	github.com/go-openapi/validate v0.21.0
 	github.com/google/cel-go v0.10.1
@@ -30,8 +30,8 @@ require (
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20210826220005-b48c857c3a0e // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
-	github.com/go-openapi/jsonpointer v1.0.0 // indirect
-	github.com/go-openapi/jsonreference v1.0.1 // indirect
+	github.com/go-openapi/jsonpointer v1.0.1 // indirect
+	github.com/go-openapi/jsonreference v1.0.2 // indirect
 	github.com/go-openapi/swag/conv v0.29.1 // indirect
 	github.com/go-openapi/swag/jsonutils v0.29.1 // indirect
 	github.com/go-openapi/swag/loading v0.29.1 // indirect
