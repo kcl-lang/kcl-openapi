@@ -8,7 +8,7 @@ require (
 	github.com/getkin/kin-openapi v0.144.0
 	github.com/go-openapi/analysis v0.26.2
 	github.com/go-openapi/errors v0.22.8
-	github.com/go-openapi/inflect v0.21.3
+	github.com/go-openapi/inflect v1.0.0
 	github.com/go-openapi/loads v0.25.2
 	github.com/go-openapi/spec v0.22.11
 	github.com/go-openapi/strfmt v0.27.0
